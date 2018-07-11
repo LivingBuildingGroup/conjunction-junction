@@ -14,7 +14,7 @@
     "javascript",
     "helper"
   ],
-  "author": "Brad C. Garner",
+  "author": "Brad C. Garner <brad@bradgarner.com> (http://bradgarner.com)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/bradcgarner/conjunction-junction/issues"
