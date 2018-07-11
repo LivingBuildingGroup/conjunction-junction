@@ -1,0 +1,23 @@
+{
+  "name": "conjunction-junction",
+  "version": "1.0.0",
+  "description": "JavaScript pure helper functions",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bradcgarner/conjunction-junction.git"
+  },
+  "keywords": [
+    "javascript",
+    "helper"
+  ],
+  "author": "Brad C. Garner",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bradcgarner/conjunction-junction/issues"
+  },
+  "homepage": "https://github.com/bradcgarner/conjunction-junction#readme"
+}
