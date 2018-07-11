@@ -3,7 +3,9 @@
  */
 
 'use strict';
-const { isPrimitiveNumber, precisionRound, isObjectLiteral } = require('./basic');
+const { isPrimitiveNumber, 
+  precisionRound, 
+  isObjectLiteral } = require('./basic');
 
 // @@@@@@@@@@@@@@ VALIDATION @@@@@@@@@@@@
 

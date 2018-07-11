@@ -4,7 +4,7 @@
   "description": "JavaScript pure helper functions",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha --colors  */*.test.js"
+    "test": "nyc mocha --colors  functions/tests/*.test.js"
   },
   "repository": {
     "type": "git",

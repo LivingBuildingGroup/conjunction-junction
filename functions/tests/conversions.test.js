@@ -14,9 +14,9 @@ const {
   celsius2kelvin,
   kelvin2celsius,
   deg2rad,
-  rad2deg              } = require('../helpers/conversions'
+  rad2deg              } = require('../conversions'
 );
-const { precisionRound } = require('../helpers/lib-basic');
+const { precisionRound } = require('../basic');
 const {
   numbers, 
   nonNumbers, 
@@ -25,13 +25,13 @@ const {
   nonNumberArrays,
   nonStringPrimitives,
   lowerStrings,
-  upperStrings         } = require('../test/helpers');
+  upperStrings         } = require('./helper-data');
 process.env.DB_MODE = 'test';
 
 // Clear the console before each run
 // process.stdout.write('\x1Bc\n');
 
-describe('conversions', () => { // mocha has built-in promise handling in before, after, beforeEach, afterEach, and it
+describe('conjunction-junction conversions', () => { // mocha has built-in promise handling in before, after, beforeEach, afterEach, and it
 
   it('ciToCf undefined if no params', () => { 
     const result = ciToCf();

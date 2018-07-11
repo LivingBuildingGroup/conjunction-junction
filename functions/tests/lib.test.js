@@ -6,7 +6,7 @@ const expect = chai.expect;
 const { 
   isPrimitiveNumber, 
   isObjectLiteral,
-  precisionRound }     = require('../helpers/lib-basic');
+  precisionRound }     = require('../basic');
 const { 
   correctInputType,
   print,
@@ -31,7 +31,7 @@ const {
   removeAllItemsFromArray,
   addAllItemsToArray,
   getPositionToInterpolate,
-  interpolateArrayValues,} = require('../helpers/lib');
+  interpolateArrayValues,} = require('../lib');
 
 const {
   numbers, 
@@ -43,11 +43,11 @@ const {
   lowerStrings,
   upperStrings,
   nonStringNonNumbers,
-  nonCompoundArrays }   = require('../test/helpers');
+  nonCompoundArrays }   = require('./helper-data');
 process.env.DB_MODE = 'test';
 
 
-describe('helpers lib', () => { 
+describe('conjunction-junction lib', () => { 
 
   it('isPrimitiveNumber false on no parameters', () => { 
     const num = isPrimitiveNumber();

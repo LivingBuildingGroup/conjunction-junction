@@ -11,7 +11,7 @@ const {
   formatObjectForKnex, 
   formatReqBodyForKnex,
   prefixCommonKeys, 
-  createSqlFetchTableKeys, } = require('../helpers/db');
+  createSqlFetchTableKeys, } = require('../sql');
 const {
   numbers, 
   nonNumberArrays,
@@ -19,10 +19,10 @@ const {
   date1,
   date1String_d_t_z,
   date1StringDtz,
-  date1StringDtmsz,       } = require('../test/helpers');
+  date1StringDtmsz,       } = require('./helper-data');
 process.env.DB_MODE = 'test';
 
-describe('helpers db and custom', ()=> { 
+describe('conjunction-junction db', ()=> { 
 
   it('formatTimestampForSql raw date', ()=> { 
     // input: a primitive value or a date that SHOULD be a timestamp

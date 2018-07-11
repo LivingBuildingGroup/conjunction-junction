@@ -4,7 +4,7 @@ const {
   isPrimitiveNumber, 
   isObjectLiteral,
   precisionRound,
-} = require('./basic');
+} = require('./functions/basic');
 
 const {
   ciToCf,
@@ -18,7 +18,7 @@ const {
   kelvin2celsius,
   deg2rad,
   rad2deg,
-} = require('./conversions');
+} = require('./functions/conversions');
 
 const {
   isValidDate,
@@ -43,7 +43,7 @@ const {
   rangeIsIncluded,
   printDate,
   createTimestampLabel,
-} = require('./date-time');
+} = require('./functions/date-time');
 
 const {
   correctInputType,
@@ -70,7 +70,7 @@ const {
   addAllItemsToArray,
   getPositionToInterpolate,
   interpolateArrayValues,
-} = require('./lib');
+} = require('./functions/lib');
 
 const { 
   formatTimestampForSql,
@@ -81,7 +81,7 @@ const {
   formatReqBodyForKnex,
   prefixCommonKeys, 
   createSqlFetchTableKeys,
-} = require('./sql');
+} = require('./functions/sql');
 
 module.exports = {
   // basic

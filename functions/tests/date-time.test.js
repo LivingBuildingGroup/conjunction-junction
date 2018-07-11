@@ -26,7 +26,7 @@ const {
   rangeIsIncluded,
   printDate,
   createTimestampLabel,
-} = require('../helpers/date-time');
+} = require('../date-time');
 const {
   datez, date0,date1,date2,date3,date4,date5,date6,date7,date8,date9,
   date1String_d_t_z, date1String_d_t_noz, date1StringDtz, date1StringDtzDef, date1StringDtmsz, date1String, date1TimeString,
@@ -40,9 +40,9 @@ const {
   upperStrings,
   nonStringNonNumbers,
   nonCompoundArrays,  // uniqueNumber0,uniqueNumber1,uniqueNumber2,uniqueNumber3,uniqueNumber4,uniqueNumber5,uniqueNumber6,uniqueNumber7,uniqueNumber8,uniqueNumber9,
-} = require('../test/helpers');
+} = require('./helper-data');
 
-describe('date-time', () => { 
+describe('conjunction-junction date-time', () => { 
 
   it('isValidDate new Date', () => {
     const date = new Date(); 
