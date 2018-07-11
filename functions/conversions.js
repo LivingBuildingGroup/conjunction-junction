@@ -34,6 +34,13 @@ const galsToCi = gallons => {
   return precisionRound(gallons * 231, 4);
 };
 
+const ciToGals = ci => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(ci)) return;
+  return precisionRound(ci / 231, 4);
+};
+
 const galsToCf = gallons => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
@@ -146,6 +153,7 @@ module.exports = {
   ciToCf,
   galsToInches,
   galsToCi,
+  ciToGals,
   galsToCf,
   galsToLbs,
   lbsToGals,

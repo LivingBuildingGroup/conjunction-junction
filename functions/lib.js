@@ -335,6 +335,35 @@ const limitObjectKeys = (object, limitingKeys) => {
   return limitedObject;
 };
 
+const parseValuesObj2Levels = (query, object, searchInKey, returnKey) => {
+  /* input:
+   *   object: {
+   *     key1: {
+   *       searchHere: 'value1',
+   *       returnThis: 'Hey!',
+   *     },
+   *     key2: {
+   *       searchHere: 'value2',
+   *       returnThis: 'Wassup!?',
+   *     }
+   *   },
+   *   query: 'value2',
+   *   searchInKey: 'searchHere',
+   *   returnKey:  'returnThis',
+   * output: 'Wassup!?'
+   */
+  
+  let focusId = 0; // so we default to something vs undefined
+  for (let key in object) {
+    if (object[key][searchInKey] === query) {
+      focusId = object[key][returnKey];
+    }
+  }
+  return focusId;
+};
+
+// @@@@@@@@@@@@@@@ OBJECTS & ARRAYS @@@@@@@@@@@@@@@@
+
 const roundAllValues = (value, roundingKey, key) => {
   if(isPrimitiveNumber(value)){
     if(isPrimitiveNumber(roundingKey[key])){
@@ -358,7 +387,36 @@ const roundAllValues = (value, roundingKey, key) => {
   return value;
 };
 
-// @@@@@@@@@@@@@@@ ARRAYS @@@@@@@@@@@@@@@@
+const parseValuesFromArrayOfObj1Level=(array,key)=>{
+  // input: [ {key: 1, random: 6}, {key: 2, other: 5} ], 'key'  
+  // output [1,2]
+  if (Array.isArray(array)) {
+    return array.map(item=>item[key]);
+  }
+  return [];
+};
+
+const convertArrayToObject = (array, key='id')=>{
+  // input: [ {id:0}, {id:1} ]      output {0:{},1:{}}
+  const newObject = {};
+  if (Array.isArray(array)) {
+    array.forEach(item=>newObject[item[key]] = item);
+    return newObject;
+  }
+  return {};
+};
+
+const convertObjectToArray = object =>{
+  // input {0:{},1:{}}         output: [ {}, {} ]      
+  const newArray = [];
+  if (typeof object === 'object' && !Array.isArray(object)) {
+    for (let prop in object) {
+      newArray.push(object[prop]);
+    }
+    return newArray;
+  }
+  return [];
+};
 
 const subArrayByKey = (array, groupBy) => {
   const dGs  = [];
@@ -389,6 +447,8 @@ const subArrayByKey = (array, groupBy) => {
     arrayOfKeys: keys,
   };
 };
+
+// @@@@@@@@@@@@@@@ ARRAYS @@@@@@@@@@@@@@@@
 
 const totalAndAverageArrays = (compoundArray, precision=4) => {
   // input: array of arrays of numbers
@@ -581,7 +641,13 @@ module.exports = {
   validateObjectKeys,
   limitObjectKeys,
   roundAllValues,
+  parseValuesFromArrayOfObj1Level,
+  parseValuesObj2Levels,
+
+  convertArrayToObject,
+  convertObjectToArray,
   subArrayByKey,
+
   totalAndAverageArrays,
   deltaArray,
   immutableArrayInsert,
