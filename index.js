@@ -83,11 +83,6 @@ const {
   createSqlFetchTableKeys,
 } = require('./functions/sql');
 
-const x = new Date();
-console.log('new Date', x)
-console.log(convertTimestampToString(x));
-console.log(convertTimestampToIntegers(x))
-
 module.exports = {
   // basic
   isPrimitiveNumber, 
