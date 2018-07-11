@@ -2,7 +2,6 @@
 
 const chai = require('chai');
 const expect = chai.expect;
-const logger = require('../comm/logger').createLogger('./test/date-time.log'); // logs to a file
 
 const {
   isValidDate,

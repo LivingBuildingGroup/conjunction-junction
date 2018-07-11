@@ -1,7 +1,5 @@
 'use strict';
 
-const logger = require('../comm/logger').createLogger('./test/lib.log'); // logs to a file
-
 const chai = require('chai');
 const expect = chai.expect;
 
@@ -9,7 +7,8 @@ const {
   isPrimitiveNumber, 
   isObjectLiteral,
   precisionRound }     = require('../helpers/lib-basic');
-const { correctInputType,
+const { 
+  correctInputType,
   print,
   titleCaseWord, 
   lowerCaseWord,

@@ -1,8 +1,10 @@
 'use strict';
-const { helpersFile } = require('../config');
-const logger          = require('../comm/logger').createLogger(helpersFile); // logs to a file
-const { convertStringToTimestamp, isValidDate, printDate } = require('./date-time');
-const { isPrimitiveNumber, precisionRound, isObjectLiteral } = require('./lib-basic');
+const { convertStringToTimestamp,
+  isValidDate,
+  printDate }       = require('./date-time');
+const { isPrimitiveNumber,
+  precisionRound,
+  isObjectLiteral } = require('./basic');
 
 // @@@@@@@@@@@@@@@ TYPES @@@@@@@@@@@@@@@@
 
@@ -172,28 +174,28 @@ const shiftObjectKeysColumn = (object, keys, key, position1, position2) => {
   // output: object with keys shifted from position1 to position2, limited to position2 present
   // validate
   if(!isObjectLiteral(keys)) {
-    logger.info('shiftObjectKeysColumn FAILED: keys is not instanceof Object');
+    console.info('shiftObjectKeysColumn FAILED: keys is not instanceof Object');
     return{};
   }
   if(!(Array.isArray(keys[key]))) {
-    logger.error(`shiftObjectKeysColumn FAILED: keys[${key}] is not an array`);
+    console.error(`shiftObjectKeysColumn FAILED: keys[${key}] is not an array`);
     return{};
   }
   if(!(Array.isArray(keys[key][0]))){
   // position 1 must be a number, and must be valid index
-    logger.error(`shiftObjectKeysColumn FAILED: keys[${key}][0] is an array`);
+    console.error(`shiftObjectKeysColumn FAILED: keys[${key}][0] is an array`);
     return {};
   }
   if(isNaN(position1) || isNaN(position2)) {
-    logger.error(`shiftObjectKeysColumn FAILED: ${position1} or ${position2} is NaN`);
+    console.error(`shiftObjectKeysColumn FAILED: ${position1} or ${position2} is NaN`);
     return {};
   }
   if(typeof keys[key][0][position1] !== 'string') {
-    logger.error(`shiftObjectKeysColumn FAILED: keys[${key}][0][${position1}] is a not string (${keys[key][0][position1]})`);
+    console.error(`shiftObjectKeysColumn FAILED: keys[${key}][0][${position1}] is a not string (${keys[key][0][position1]})`);
     return{};
   }
   if(typeof keys[key][0][position2] !== 'string') {
-    logger.error(`shiftObjectKeysColumn FAILED: keys[${key}][0][${position2}] is a not string (${keys[key][0][position2]})`);
+    console.error(`shiftObjectKeysColumn FAILED: keys[${key}][0][${position2}] is a not string (${keys[key][0][position2]})`);
     return {};
   }
   if(object instanceof Object){

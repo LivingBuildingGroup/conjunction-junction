@@ -4,7 +4,7 @@
 
 const { isPrimitiveNumber, 
   isObjectLiteral, 
-  precisionRound } = require('./lib-basic');
+  precisionRound } = require('./basic');
 
 // @@@@@@@@@@ VOLUME @@@@@@@@@
 

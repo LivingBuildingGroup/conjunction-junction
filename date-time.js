@@ -3,9 +3,7 @@
  */
 
 'use strict';
-const { dateTimeFile } = require('../config');
-const logger = require('../comm/logger').createLogger(dateTimeFile); // logs to a file
-const { isPrimitiveNumber, precisionRound, isObjectLiteral } = require('./lib-basic');
+const { isPrimitiveNumber, precisionRound, isObjectLiteral } = require('./basic');
 
 // @@@@@@@@@@@@@@ VALIDATION @@@@@@@@@@@@
 

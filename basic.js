@@ -1,6 +1,4 @@
 'use strict';
-const { helpersFile } = require('../config');
-const logger          = require('../comm/logger').createLogger(helpersFile); // logs to a file
 
 // @@@@@@@@@@@@@@@ TYPES @@@@@@@@@@@@@@@@
 

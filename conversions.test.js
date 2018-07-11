@@ -1,7 +1,5 @@
 'use strict';
 
-const logger = require('../comm/logger').createLogger('conversions.log'); // logs to a file
-
 const chai = require('chai');
 const expect = chai.expect;
 

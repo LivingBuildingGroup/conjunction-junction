@@ -4,13 +4,10 @@
  */
 
 'use strict';
-const { helpersFile } = require('../config');
-const logger          = require('../comm/logger').createLogger(helpersFile); // logs to a file
 const dateTime        = require('./date-time');
-const { keys }        = require('./keys');
 
 const {
-  isObjectLiteral }   = require('./lib-basic');
+  isObjectLiteral }   = require('./basic');
 const { shiftObjectKeysColumn,
   getKeyArray, 
   titleCaseWord, 
