@@ -1,10 +1,10 @@
 'use strict';
 
-const basic       = require('./functions/basic');
-const conversions = require('./functions/conversions');
-const dateTime    = require('./functions/date-time');
-const lib         = require('./functions/lib');
-const sql         = require('./functions/sql');
+const basic       = require('./build/basic');
+const conversions = require('./build/conversions');
+const dateTime    = require('./build/date-time');
+const lib         = require('./build/lib');
+const sql         = require('./build/sql');
 
 module.exports = Object.assign({},
   basic,
