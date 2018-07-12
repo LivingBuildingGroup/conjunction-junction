@@ -11,7 +11,7 @@ const {
   formatObjectForKnex, 
   formatReqBodyForKnex,
   prefixCommonKeys, 
-  createSqlFetchTableKeys, } = require('../sql');
+  createSqlFetchTableKeys, } = require('../index');
 const {
   numbers, 
   nonNumberArrays,

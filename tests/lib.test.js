@@ -6,8 +6,7 @@ const expect = chai.expect;
 const { 
   isPrimitiveNumber, 
   isObjectLiteral,
-  precisionRound }     = require('../basic');
-const { 
+  precisionRound,
   correctInputType,
   print,
   titleCaseWord, 
@@ -31,7 +30,7 @@ const {
   removeAllItemsFromArray,
   addAllItemsToArray,
   getPositionToInterpolate,
-  interpolateArrayValues,} = require('../lib');
+  interpolateArrayValues,} = require('../index');
 
 const {
   numbers, 

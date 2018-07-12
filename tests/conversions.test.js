@@ -14,9 +14,8 @@ const {
   celsius2kelvin,
   kelvin2celsius,
   deg2rad,
-  rad2deg              } = require('../conversions'
-);
-const { precisionRound } = require('../basic');
+  rad2deg,
+  precisionRound             } = require('..index');
 const {
   numbers, 
   nonNumbers, 
@@ -26,10 +25,7 @@ const {
   nonStringPrimitives,
   lowerStrings,
   upperStrings         } = require('./helper-data');
-process.env.DB_MODE = 'test';
 
-// Clear the console before each run
-// process.stdout.write('\x1Bc\n');
 
 describe('conjunction-junction conversions', () => { // mocha has built-in promise handling in before, after, beforeEach, afterEach, and it
 

@@ -1,9 +1,10 @@
 'use strict';
 // GENERAL VALID AND INVALID INPUTS
 
-const {convertTimestampToString,
-  convertStringToTimestamp} = require('../date-time');
-const {isObjectLiteral}     = require('../basic');
+const {
+  convertTimestampToString,
+  convertStringToTimestamp,
+  isObjectLiteral  }    = require('../index');
 
 const numbers           = [ -0.5 , -1.3 , 0 , 1 , 3 , 1.3 ];
 const nonNumbers        = ['string', undefined, null, {}, [] ];

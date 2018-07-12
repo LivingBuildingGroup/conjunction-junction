@@ -26,7 +26,7 @@ const {
   rangeIsIncluded,
   printDate,
   createTimestampLabel,
-} = require('../date-time');
+} = require('../index');
 const {
   datez, date0,date1,date2,date3,date4,date5,date6,date7,date8,date9,
   date1String_d_t_z, date1String_d_t_noz, date1StringDtz, date1StringDtzDef, date1StringDtmsz, date1String, date1TimeString,
