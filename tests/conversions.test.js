@@ -15,7 +15,7 @@ const {
   kelvin2celsius,
   deg2rad,
   rad2deg,
-  precisionRound             } = require('..index');
+  precisionRound             } = require('../index');
 const {
   numbers, 
   nonNumbers, 

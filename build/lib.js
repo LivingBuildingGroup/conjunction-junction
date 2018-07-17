@@ -17,6 +17,7 @@ var _require2 = require('./basic'),
 // @@@@@@@@@@@@@@@ TYPES @@@@@@@@@@@@@@@@
 
 var correctInputType = function correctInputType(value, key) {
+  // IMPROVE THIS SO SIGNATURES ARE NOT HARD-CODED !!!!
   // input, particularly from selectors, may be a string, when it should be an integer
   // input may come in as a string, even from a "number" input
   var numberKeysSignatures = ['number', 'Lbs', 'nessIn', 'Sf', 'Cf', 'idSlope'];
@@ -185,7 +186,7 @@ var shiftObjectKeysColumn = function shiftObjectKeysColumn(object, keys, key, po
   // output: object with keys shifted from position1 to position2, limited to position2 present
   // validate
   if (!isObjectLiteral(keys)) {
-    console.info('shiftObjectKeysColumn FAILED: keys is not instanceof Object');
+    console.error('shiftObjectKeysColumn FAILED: keys is not instanceof Object');
     return {};
   }
   if (!Array.isArray(keys[key])) {

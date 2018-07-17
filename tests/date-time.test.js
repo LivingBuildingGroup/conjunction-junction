@@ -746,6 +746,7 @@ describe('conjunction-junction date-time', () => {
       minutes,
       seconds
     );
+    // in summer this is: 2018-04-04T09:06:07.000Z'
     const expectedResult = newDate;
     const result = convertIntegersToTimestamp(
       year,

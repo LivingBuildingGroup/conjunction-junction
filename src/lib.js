@@ -9,6 +9,7 @@ const { isPrimitiveNumber,
 // @@@@@@@@@@@@@@@ TYPES @@@@@@@@@@@@@@@@
 
 const correctInputType = (value, key) => {
+  // IMPROVE THIS SO SIGNATURES ARE NOT HARD-CODED !!!!
   // input, particularly from selectors, may be a string, when it should be an integer
   // input may come in as a string, even from a "number" input
   const numberKeysSignatures  = ['number','Lbs','nessIn','Sf','Cf','idSlope'];
@@ -174,7 +175,7 @@ const shiftObjectKeysColumn = (object, keys, key, position1, position2) => {
   // output: object with keys shifted from position1 to position2, limited to position2 present
   // validate
   if(!isObjectLiteral(keys)) {
-    console.info('shiftObjectKeysColumn FAILED: keys is not instanceof Object');
+    console.error('shiftObjectKeysColumn FAILED: keys is not instanceof Object');
     return{};
   }
   if(!(Array.isArray(keys[key]))) {

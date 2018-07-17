@@ -345,7 +345,7 @@ const convertIntegersToTimestamp = (year, month=0, date=1, hours=12, minutes=0, 
   );
 
   // if you don't pass in an offset, this calculates the offset based on that date in the user's current time zone (i.e. in eastern US daylight savings: -4, or -5 if not daylight savings)
-  const offset = !isNaN(tzOffset) ? tzOffset : getTheTimezoneOffset(timestamp);
+  const offset = isPrimitiveNumber(tzOffset) ? tzOffset : getTheTimezoneOffset(timestamp);
 
   const adjustedTimestamp = offset < 0 ?
     new Date(timestamp - (-offset * milliSecondsPerMinute)) : // - is earlier
@@ -459,8 +459,6 @@ const addTime = ( timestamp, timeToAdd, option='minutes' ) => {
 
   const newMs = ms + msToAdd;
   const newDate = new Date(newMs);
-  console.log('timestamp',timestamp);
-  console.log('newDate',newDate);
   if(option === 'months'){
     const exMonth = newDate.getMonth();
     const newMonth = timeToAdd + exMonth;

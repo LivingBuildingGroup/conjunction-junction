@@ -15,7 +15,6 @@ const { shiftObjectKeysColumn,
   limitObjectKeys,  } = require('./lib');
 
 const formatTimestampForSql = (value, sqlOption={type:'raw'}) => {
-  console.log('formatTimestampForSql0', sqlOption);
   // input: a primitive value or a date that SHOULD be a timestamp
   // i.e. before calling this function, determine that it SHOULD be a timestamp
   // raw sqlOption returns a single-quote-wrapped string with time zone
@@ -25,14 +24,11 @@ const formatTimestampForSql = (value, sqlOption={type:'raw'}) => {
   // raw keeps the latter, knex keeps the former; below does the conversion
   // any other type of input on a timestamp key is nullified
   if(type==='raw') {
-    console.log('formatTimestampForSql1');
     if(dateTime.isValidDate(value)){
       return `'${dateTime.convertTimestampToString(value, 'd t z')}'`;
     } else if (value && typeof value === 'string') {
-      console.log('formatTimestampForSql2');
       const timestamp = dateTime.convertStringToTimestamp(value);
       if(dateTime.isValidDate(timestamp)){
-        console.log('formatTimestampForSql3');
         return `'${value}'`;
       } else {
         return 'null';
@@ -73,7 +69,6 @@ const unEscapeSpecial = data => {
 };
 
 const formatDataForSql = (data, key, option={type:'raw'}) => {
-  console.log('formatDataForSql',data, key, option);
   // input: data: of any type, EXCEPT object literal
   // option: 'knex' formats data for object to use with knex, e.g. keeps arrays intact, and keeps timestamps as instances of Date, keeps null as null
   // option: 'raw' formats data for raw SQL, e.g. formats arrays as joined strings as '{1,2,3}', converts timestamps to string, converts null to a string 'null'
