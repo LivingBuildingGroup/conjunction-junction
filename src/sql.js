@@ -173,18 +173,16 @@ const formatObjectForKnex = object => {
   return o;
 };
 
-const formatReqBodyForKnex = (body, keys, table, action='PUT') => {
+const formatReqBodyForKnex = (body, keys, table, option) => {
   // input: body = req.body, expect to be sent in camelCase
   // keys: all keys
   // table: db table, corresponds with keys
   // action: HTTP method: put or post , defaults to 'PUT'
   // output: object formatted for Knex with ONLY the acceptable keys
-  const keysColumnStart = 1; // column 1 in keys = cC
-  const keysColumnEnd   = 0; // column 0 in keys = sC
-  const keysColumnLimit =
-    action === 'PUT' ? 4 :
-      action === 'POST' ? 2 :
-        4 ;
+  const { keysColumnStart,
+    keysColumnEnd,
+    keysColumnLimit } = option;
+
   const objectCase    = shiftObjectKeysColumn(body, keys, table, keysColumnStart, keysColumnEnd);
   const objectForKnex = formatObjectForKnex(objectCase);
   const keysLimiting  = getKeyArray(keys, table , keysColumnEnd, keysColumnLimit); // limit keys to column 0 if column 2 is true (POST)

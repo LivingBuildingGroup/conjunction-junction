@@ -330,40 +330,60 @@ describe('conjunction-junction db', ()=> {
     expect(result).to.deep.equal(expectedResult);
   });
 
-  it.skip('formatReqBodyForKnex simple keys users', ()=> { 
+  it('formatReqBodyForKnex shift column', ()=> { 
     const body = {
       id: 7,
       username: 'brad',
       lastName: 'garner',
-      badKey: 'delete this one'
+      badKey:   'delete this one'
     };
     const table = 'users';
-    const action = 'PUT';
+    const option = {
+      keysColumnStart: 1,
+      keysColumnEnd:   0,
+      keysColumnLimit: 3,
+    };
     const expectedResult = {
-      username: 'brad',
+      username:  'brad',
       last_name: 'garner',
     };
     const keys = {
-
+      users: [
+        // end here    start here   ignore   limit by
+        ['username'  , 'username' , true    , true ],
+        ['first_name', 'firstName', true    , true ],
+        ['last_name' , 'lastName' , true    , true ],
+      ],
     };
-    const result = formatReqBodyForKnex(body, keys, table, action);
+    const result = formatReqBodyForKnex(body, keys, table, option);
     expect(result).to.deep.equal(expectedResult);
   });
-  it.skip('formatReqBodyForKnex simple keys cassettes', ()=> { 
+  it('formatReqBodyForKnex same column', ()=> { 
     const body = {
       id: 7,
-      nameCassette: 'brad cassette',
-      badKey: 'delete this one'
+      username:  'brad',
+      last_name: 'garner',
+      bad_key:   'delete this one'
     };
-    const table = 'cassettes';
-    const action = 'PUT';
+    const table = 'users';
+    const option = {
+      keysColumnStart: 0,
+      keysColumnEnd:   0,
+      keysColumnLimit: 3,
+    };
     const expectedResult = {
-      name_cassette: 'brad cassette',
+      username:  'brad',
+      last_name: 'garner',
     };
     const keys = {
-
+      users: [
+        // end here    start here   ignore   limit by
+        ['username'  , 'username' , true    , true ],
+        ['first_name', 'firstName', true    , true ],
+        ['last_name' , 'lastName' , true    , true ],
+      ],
     };
-    const result = formatReqBodyForKnex(body, keys, table, action);
+    const result = formatReqBodyForKnex(body, keys, table, option);
     expect(result).to.deep.equal(expectedResult);
   });
 
