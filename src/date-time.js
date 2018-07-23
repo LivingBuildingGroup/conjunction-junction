@@ -471,7 +471,7 @@ const addTime = ( timestamp, timeToAdd, option='minutes' ) => {
   return newDate; 
 };
 
-const createTimeframes = () => {
+const createTimeframes = option => {
   // improve this to accept a parameter
   /* PURPOSE: identify timeframes to be used for retention policies
    * TRIGGERED: when cleaning schedule runs
@@ -480,30 +480,27 @@ const createTimeframes = () => {
    */
   const rightNow   = new Date();
   const msPerDay   = 1000 * 60 * 60 * 24;
-  const daysAgo1Ms = rightNow - msPerDay;
-  const daysAgo1   = new Date(daysAgo1Ms);
-  const daysAgo2Ms = rightNow - (2 * msPerDay);
-  const daysAgo2   = new Date(daysAgo2Ms);
-  const daysAgo7Ms = rightNow - (7 * msPerDay);
-  const daysAgo7   = new Date(daysAgo7Ms);
-  const daysAgo14Ms= rightNow - (14 * msPerDay);
-  const daysAgo14  = new Date(daysAgo14Ms);
-  const daysAgo21Ms= rightNow - (21 * msPerDay);
-  const daysAgo21  = new Date(daysAgo21Ms);
-  const daysAgo28Ms= rightNow - (28 * msPerDay);
-  const daysAgo28  = new Date(daysAgo28Ms);
-  const daysAgo30Ms= rightNow - (30 * msPerDay);
-  const daysAgo30  = new Date(daysAgo30Ms);
-  return {
-    rightNow, 
-    daysAgo1, 
-    daysAgo2, 
-    daysAgo7, 
-    daysAgo14,
-    daysAgo21,
-    daysAgo28,
-    daysAgo30,
-  };
+  const ro = {};
+  if(!isObjectLiteral(option)){
+    const daysAgo1Ms = rightNow - msPerDay;
+    ro.daysAgo1   = new Date(daysAgo1Ms);
+    const daysAgo2Ms = rightNow - (2 * msPerDay);
+    ro.daysAgo2   = new Date(daysAgo2Ms);
+    const daysAgo7Ms = rightNow - (7 * msPerDay);
+    ro.daysAgo7   = new Date(daysAgo7Ms);
+    const daysAgo14Ms= rightNow - (14 * msPerDay);
+    ro.daysAgo14  = new Date(daysAgo14Ms);
+    const daysAgo21Ms= rightNow - (21 * msPerDay);
+    ro.daysAgo21  = new Date(daysAgo21Ms);
+    const daysAgo28Ms= rightNow - (28 * msPerDay);
+    ro.daysAgo28  = new Date(daysAgo28Ms);
+    const daysAgo30Ms= rightNow - (30 * msPerDay);
+    ro.daysAgo30  = new Date(daysAgo30Ms);
+  } else {
+    const daysAgoMs = rightNow - msPerDay;
+    ro[`${option.daysAgo}DaysAgo`] = new Date(daysAgoMs);
+  }
+  return ro;
 };
 
 // @@@@@@@@@@@@@@@@ RANGES @@@@@@@@@@@@@@@

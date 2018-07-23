@@ -433,7 +433,7 @@ var addTime = function addTime(timestamp, timeToAdd) {
   return newDate;
 };
 
-var createTimeframes = function createTimeframes() {
+var createTimeframes = function createTimeframes(option) {
   // improve this to accept a parameter
   /* PURPOSE: identify timeframes to be used for retention policies
    * TRIGGERED: when cleaning schedule runs
@@ -442,30 +442,27 @@ var createTimeframes = function createTimeframes() {
    */
   var rightNow = new Date();
   var msPerDay = 1000 * 60 * 60 * 24;
-  var daysAgo1Ms = rightNow - msPerDay;
-  var daysAgo1 = new Date(daysAgo1Ms);
-  var daysAgo2Ms = rightNow - 2 * msPerDay;
-  var daysAgo2 = new Date(daysAgo2Ms);
-  var daysAgo7Ms = rightNow - 7 * msPerDay;
-  var daysAgo7 = new Date(daysAgo7Ms);
-  var daysAgo14Ms = rightNow - 14 * msPerDay;
-  var daysAgo14 = new Date(daysAgo14Ms);
-  var daysAgo21Ms = rightNow - 21 * msPerDay;
-  var daysAgo21 = new Date(daysAgo21Ms);
-  var daysAgo28Ms = rightNow - 28 * msPerDay;
-  var daysAgo28 = new Date(daysAgo28Ms);
-  var daysAgo30Ms = rightNow - 30 * msPerDay;
-  var daysAgo30 = new Date(daysAgo30Ms);
-  return {
-    rightNow: rightNow,
-    daysAgo1: daysAgo1,
-    daysAgo2: daysAgo2,
-    daysAgo7: daysAgo7,
-    daysAgo14: daysAgo14,
-    daysAgo21: daysAgo21,
-    daysAgo28: daysAgo28,
-    daysAgo30: daysAgo30
-  };
+  var ro = {};
+  if (!isObjectLiteral(option)) {
+    var daysAgo1Ms = rightNow - msPerDay;
+    ro.daysAgo1 = new Date(daysAgo1Ms);
+    var daysAgo2Ms = rightNow - 2 * msPerDay;
+    ro.daysAgo2 = new Date(daysAgo2Ms);
+    var daysAgo7Ms = rightNow - 7 * msPerDay;
+    ro.daysAgo7 = new Date(daysAgo7Ms);
+    var daysAgo14Ms = rightNow - 14 * msPerDay;
+    ro.daysAgo14 = new Date(daysAgo14Ms);
+    var daysAgo21Ms = rightNow - 21 * msPerDay;
+    ro.daysAgo21 = new Date(daysAgo21Ms);
+    var daysAgo28Ms = rightNow - 28 * msPerDay;
+    ro.daysAgo28 = new Date(daysAgo28Ms);
+    var daysAgo30Ms = rightNow - 30 * msPerDay;
+    ro.daysAgo30 = new Date(daysAgo30Ms);
+  } else {
+    var daysAgoMs = rightNow - msPerDay;
+    ro[option.daysAgo + 'DaysAgo'] = new Date(daysAgoMs);
+  }
+  return ro;
 };
 
 // @@@@@@@@@@@@@@@@ RANGES @@@@@@@@@@@@@@@
