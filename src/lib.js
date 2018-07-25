@@ -143,6 +143,25 @@ const convertCcToSc = word => {
 };
 
 const convertCcToSpace = word => {
+  // input: string in camelCase
+  // disregards any other type of formatting, such as spaces and hyphens
+  if(isPrimitiveNumber(word)) return `${word}`;
+  if(typeof word !== 'string') return '';
+  // const theWord = 'theWord';
+  let newWord = '';
+  const caps  = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+  const lower = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']; 
+  for(let i=0; i<= word.length; i++ ) {
+    const char =
+      caps.includes(word.charAt(i)) ?
+        ` ${lower[caps.findIndex(letter=>letter===word.charAt(i))]}`
+        : word.charAt(i);
+    newWord += char;
+  }
+  return newWord;
+};
+
+const convertScToSpace = word => {
   if(typeof word !== 'string') return;
   const split = word.split('_');
   return split.join(' ');
@@ -634,6 +653,7 @@ module.exports = {
   convertScToCc,
   convertCcToSc,
   convertCcToSpace,
+  convertScToSpace,
   convertObjectKeyCase, 
   shiftObjectKeysColumn,
   shiftArrayKeysColumn,

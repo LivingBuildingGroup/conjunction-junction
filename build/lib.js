@@ -153,6 +153,29 @@ var convertCcToSc = function convertCcToSc(word) {
 };
 
 var convertCcToSpace = function convertCcToSpace(word) {
+  // input: string in camelCase
+  // disregards any other type of formatting, such as spaces and hyphens
+  if (isPrimitiveNumber(word)) return '' + word;
+  if (typeof word !== 'string') return '';
+  // const theWord = 'theWord';
+  var newWord = '';
+  var caps = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+  var lower = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+
+  var _loop2 = function _loop2(i) {
+    var char = caps.includes(word.charAt(i)) ? ' ' + lower[caps.findIndex(function (letter) {
+      return letter === word.charAt(i);
+    })] : word.charAt(i);
+    newWord += char;
+  };
+
+  for (var i = 0; i <= word.length; i++) {
+    _loop2(i);
+  }
+  return newWord;
+};
+
+var convertScToSpace = function convertScToSpace(word) {
   if (typeof word !== 'string') return;
   var split = word.split('_');
   return split.join(' ');
@@ -651,6 +674,7 @@ module.exports = {
   convertScToCc: convertScToCc,
   convertCcToSc: convertCcToSc,
   convertCcToSpace: convertCcToSpace,
+  convertScToSpace: convertScToSpace,
   convertObjectKeyCase: convertObjectKeyCase,
   shiftObjectKeysColumn: shiftObjectKeysColumn,
   shiftArrayKeysColumn: shiftArrayKeysColumn,
