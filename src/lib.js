@@ -278,7 +278,7 @@ const getKeyArray = input => {
           action;
 
   if(column1 !== 'field') return [];
-  // four possible actions
+  // five possible actions
   if(column2 === 'list') { // returns a list of keys in this column
     return keys[key].map(array=>array[position1]);
   }
@@ -286,6 +286,13 @@ const getKeyArray = input => {
     let newArray = [];
     keys[key].forEach(array=>{
       if(array[position2]) newArray.push(array[position1]);
+    });
+    return newArray;
+  }
+  if(column2 === 'reverse filter') { // returns a filtered list of keys (use position 1 if position 2 is falsey)
+    let newArray = [];
+    keys[key].forEach(array=>{
+      if(!array[position2]) newArray.push(array[position1]);
     });
     return newArray;
   }

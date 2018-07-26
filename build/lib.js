@@ -294,7 +294,7 @@ var getKeyArray = function getKeyArray(input) {
   var column2 = !action ? 'list' : action === 'list' ? 'list' : position2 === undefined ? 'list' : action;
 
   if (column1 !== 'field') return [];
-  // four possible actions
+  // five possible actions
   if (column2 === 'list') {
     // returns a list of keys in this column
     return keys[key].map(function (array) {
@@ -308,6 +308,14 @@ var getKeyArray = function getKeyArray(input) {
       if (array[position2]) newArray.push(array[position1]);
     });
     return newArray;
+  }
+  if (column2 === 'reverse filter') {
+    // returns a filtered list of keys (use position 1 if position 2 is falsey)
+    var _newArray = [];
+    keys[key].forEach(function (array) {
+      if (!array[position2]) _newArray.push(array[position1]);
+    });
+    return _newArray;
   }
   if (column2 === 'field') {
     // returns a list of keys AS other keys
@@ -581,13 +589,13 @@ var immutableArrayInsert = function immutableArrayInsert(index, array, itemToUpd
   }
   if (index <= 0) {
     var remainder = array.slice(1, array.length);
-    var _newArray = [itemToUpdate].concat(_toConsumableArray(remainder));
-    return _newArray;
+    var _newArray2 = [itemToUpdate].concat(_toConsumableArray(remainder));
+    return _newArray2;
   }
   if (index >= array.length - 1) {
     var _remainder = array.slice(0, array.length - 1);
-    var _newArray2 = [].concat(_toConsumableArray(_remainder), [itemToUpdate]);
-    return _newArray2;
+    var _newArray3 = [].concat(_toConsumableArray(_remainder), [itemToUpdate]);
+    return _newArray3;
   }
   var remainderFront = array.slice(0, index);
   var remainderBack = array.slice(index + 1, array.length);
