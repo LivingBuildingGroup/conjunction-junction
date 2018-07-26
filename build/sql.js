@@ -203,7 +203,7 @@ var formatReqBodyForKnex = function formatReqBodyForKnex(body, keys, table, opti
   var keyInput = {
     keys: keys,
     key: table,
-    action: 'list',
+    action: 'filter',
     position1: keysColumnEnd,
     position2: keysColumnLimit
   };

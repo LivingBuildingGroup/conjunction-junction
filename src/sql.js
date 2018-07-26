@@ -188,10 +188,10 @@ const formatReqBodyForKnex = (body, keys, table, option) => {
   const keyInput = {
     keys: keys,
     key: table,
-    action: 'list',
+    action: 'filter',
     position1: keysColumnEnd,
     position2: keysColumnLimit,
-  }
+  };
   const keysLimiting  = getKeyArray(keyInput); // limit keys to column 0 if column 2 is true (POST)
   const objectLimited = limitObjectKeys(objectForKnex, keysLimiting);
   return objectLimited;
