@@ -185,7 +185,7 @@ const formatReqBodyForKnex = (body, keys, table, option) => {
 
   const objectCase    = shiftObjectKeysColumn(body, keys, table, keysColumnStart, keysColumnEnd);
   const objectForKnex = formatObjectForKnex(objectCase);
-  const keysLimiting  = getKeyArray(keys, table , keysColumnEnd, keysColumnLimit); // limit keys to column 0 if column 2 is true (POST)
+  const keysLimiting  = getKeyArray(keys, table, 'list', keysColumnEnd, keysColumnLimit); // limit keys to column 0 if column 2 is true (POST)
   const objectLimited = limitObjectKeys(objectForKnex, keysLimiting);
   return objectLimited;
 };

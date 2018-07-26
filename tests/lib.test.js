@@ -883,7 +883,8 @@ describe('conjunction-junction lib', () => {
     expect(result).to.deep.equal(expectedResult);
   });
 
-  it('getKeyArray returns list of column 0', () => {
+  it('getKeyArray returns list of column 0, default action', () => {
+    const action = null;
     const position1 = 0;
     // const position2 = 1; // leave this undefined intentionally
     const key = 'users';
@@ -912,10 +913,44 @@ describe('conjunction-junction lib', () => {
       'pw_reset',
       'permissions',
     ];
-    const result = getKeyArray(keys, key, position1);
+    const result = getKeyArray(keys, key, action, position1);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('getKeyArray returns list of column 0, explicit action', () => {
+    const action = 'list';
+    const position1 = 0;
+    // const position2 = 1; // leave this undefined intentionally
+    const key = 'users';
+    const keys = {
+      users: [
+        //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
+        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
+        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
+        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
+        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
+        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
+        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
+        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
+        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
+        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
+      ],
+    };
+    const expectedResult = [
+      'id',
+      'timestamp_created',
+      'username',
+      'password',
+      'first_name',
+      'last_name',
+      'email',
+      'pw_reset',
+      'permissions',
+    ];
+    const result = getKeyArray(keys, key, action, position1);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray returns list of column 1', () => {
+    const action = 'list';
     const position1 = 1;
     // const position2 = 1; // leave this undefined intentionally
     const key = 'users';
@@ -944,10 +979,11 @@ describe('conjunction-junction lib', () => {
       'pwReset',
       'permissions',
     ];
-    const result = getKeyArray(keys, key, position1);
+    const result = getKeyArray(keys, key, action, position1);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray returns filter of column 0', () => {
+    const action = 'filter';
     const position1 = 0;
     const position2 = 2; // filter by column 2
     const key = 'users';
@@ -973,10 +1009,11 @@ describe('conjunction-junction lib', () => {
       'email',
       'permissions',
     ];
-    const result = getKeyArray(keys, key, position1, position2);
+    const result = getKeyArray(keys, key, action, position1, position2);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray returns column 0 as column 1', () => {
+    const action = 'field';
     const position1 = 0;
     const position2 = 1;
     const key = 'users';
@@ -1005,12 +1042,13 @@ describe('conjunction-junction lib', () => {
       'pw_reset as pwReset',
       'permissions',
     ];
-    const result = getKeyArray(keys, key, position1, position2);
+    const result = getKeyArray(keys, key, action, position1, position2);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray returns filter of column 0', () => {
+    const action = 'object list';
     const position1 = 0;
-    const position2 = 7; // filter by column 2
+    const position2 = 7; 
     const key = 'users';
     const keys = {
       users: [
@@ -1030,10 +1068,11 @@ describe('conjunction-junction lib', () => {
       username: {min: 1 },
       password: {min: 8, max: 72 },
     };
-    const result = getKeyArray(keys, key, position1, position2);
+    const result = getKeyArray(keys, key, action, position1, position2);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray empty array on invalid key lookup', () => {
+    const action = 'list';
     const position1 = 1;
     const position2 = 0;
     const key = 'components';
@@ -1052,10 +1091,11 @@ describe('conjunction-junction lib', () => {
       ],
     };
     const expectedResult = [];
-    const result = getKeyArray(keys, key, position1, position2);
+    const result = getKeyArray(keys, key, action, position1, position2);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray empty array on invalid key array', () => {
+    const action = 'filter';
     const position1 = 1;
     const position2 = 0;
     const key = 'components';
@@ -1063,10 +1103,11 @@ describe('conjunction-junction lib', () => {
       users: 'whoa! There should be an array here!'
     };
     const expectedResult = [];
-    const result = getKeyArray(keys, key, position1, position2);
+    const result = getKeyArray(keys, key, action, position1, position2);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray empty array on invalid key compound array', () => {
+    const action = 'list';
     const position1 = 1;
     const position2 = 0;
     const key = 'components';
@@ -1074,10 +1115,11 @@ describe('conjunction-junction lib', () => {
       users: ['whoa! There should be a COMPOUND array here!']
     };
     const expectedResult = [];
-    const result = getKeyArray(keys, key, position1, position2);
+    const result = getKeyArray(keys, key, action, position1, position2);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray empty array on invalid position1', () => {
+    const action = 'object list';
     const position1 = {notNumber: true};
     const position2 = 0;
     const key = 'components';
@@ -1096,10 +1138,11 @@ describe('conjunction-junction lib', () => {
       ],
     };
     const expectedResult = [];
-    const result = getKeyArray(keys, key, position1, position2);
+    const result = getKeyArray(keys, key, action, position1, position2);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray empty array on invalid position1', () => {
+    const action = 'list';
     const position1 = 2;
     const position2 = 'invalid!!!!';
     const key = 'components';
@@ -1118,10 +1161,11 @@ describe('conjunction-junction lib', () => {
       ],
     };
     const expectedResult = [];
-    const result = getKeyArray(keys, key, position1, position2);
+    const result = getKeyArray(keys, key, action, position1, position2);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray empty array on non-string position1', () => {
+    const action = 'list';
     const position1 = 12; // position is invalid
     const position2 = 0;
     const key = 'components';
@@ -1140,10 +1184,11 @@ describe('conjunction-junction lib', () => {
       ],
     };
     const expectedResult = [];
-    const result = getKeyArray(keys, key, position1, position2);
+    const result = getKeyArray(keys, key, action, position1, position2);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray empty array on non-string position2', () => {
+    const action = 'list';
     const position1 = 0; 
     const position2 = -1;// position -1 is invalid
     const key = 'components';
@@ -1162,7 +1207,7 @@ describe('conjunction-junction lib', () => {
       ],
     };
     const expectedResult = [];
-    const result = getKeyArray(keys, key, position1, position2);
+    const result = getKeyArray(keys, key, action, position1, position2);
     expect(result).to.deep.equal(expectedResult);
   });
 

@@ -21,7 +21,7 @@ var correctInputType = function correctInputType(value, key) {
   // input, particularly from selectors, may be a string, when it should be an integer
   // input may come in as a string, even from a "number" input
   var numberKeysSignatures = ['number', 'Lbs', 'nessIn', 'Sf', 'Cf', 'idSlope'];
-  var integerKeysSignatures = ['integer', 'idComponent', 'idProfile', 'idCassette', 'idStorm', 'idTest'];
+  var integerKeysSignatures = ['integer', 'idComponent', 'idProfile', 'idCassette', 'idStorm', 'idTest', 'initialPlantHealth'];
   var isNumber = false;
   var isInteger = false;
   numberKeysSignatures.forEach(function (sig) {
@@ -264,7 +264,7 @@ var shiftArrayKeysColumn = function shiftArrayKeysColumn(array, keys, key, posit
   return newArray;
 };
 
-var getKeyArray = function getKeyArray(keys, key, position1, position2) {
+var getKeyArray = function getKeyArray(keys, key, action, position1, position2) {
   // input: key to look up in keys, 1 or 2 positions in the array of keys
   // output: array of keys
   // validate
@@ -274,39 +274,43 @@ var getKeyArray = function getKeyArray(keys, key, position1, position2) {
   if (!Array.isArray(keys[key])) return [];
   if (!Array.isArray(keys[key][0])) return [];
   // position 1 must be a number, and must be valid index
-  if (isNaN(position1)) return [];
+  if (!isPrimitiveNumber(position1)) return [];
   if (!keys[key][0][position1]) return [];
   // position 2 can be undefined, but if defined, must be a number and must exist
   if (position2 !== undefined) {
-    if (isNaN(position2)) return [];
+    if (!isPrimitiveNumber(position2)) return [];
     if (keys[key][0][position2] === undefined) return [];
   }
-  // read pattern
-  var column1 = typeof keys[key][0][position1] === 'string' ? 'field' : null;
-  var column2 = position2 === undefined ? 'list' :
-  // EXCEPTION!!! IMPROVE THIS!!!
-  position2 === 7 ? 'object list' : typeof keys[key][0][position2] === 'string' ? 'field' : typeof keys[key][0][position2] === 'boolean' ? 'filter' : null;
+  // decipher action
+  var column1 = // column 1 must be a field; check first line only
+  typeof keys[key][0][position1] === 'string' ? 'field' : null;
+  var column2 = !action ? 'list' : action === 'list' ? 'list' : position2 === undefined ? 'list' : action;
 
   if (column1 !== 'field') return [];
+  // four possible actions
   if (column2 === 'list') {
+    // returns a list of keys in this column
     return keys[key].map(function (array) {
       return array[position1];
     });
   }
+  if (column2 === 'filter') {
+    // returns a filtered list of keys (use position 1 if position 2 is truthy)
+    var newArray = [];
+    keys[key].forEach(function (array) {
+      if (array[position2]) newArray.push(array[position1]);
+    });
+    return newArray;
+  }
   if (column2 === 'field') {
+    // returns a list of keys AS other keys
     return keys[key].map(function (array) {
       if (array[position1] === array[position2]) return array[position1];
       return array[position1] + ' as ' + array[position2];
     });
   }
-  if (column2 === 'filter') {
-    var newArray = [];
-    keys[key].forEach(function (array) {
-      if (array[position2] === true) newArray.push(array[position1]);
-    });
-    return newArray;
-  }
   if (column2 === 'object list') {
+    // similar to above, but returns an object with the key as position 1, and value as the value of position 2 
     var newObject = {};
     keys[key].forEach(function (array) {
       if (array[position2] instanceof Object) newObject[array[position1]] = array[position2];

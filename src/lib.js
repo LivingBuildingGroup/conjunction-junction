@@ -13,7 +13,7 @@ const correctInputType = (value, key) => {
   // input, particularly from selectors, may be a string, when it should be an integer
   // input may come in as a string, even from a "number" input
   const numberKeysSignatures  = ['number','Lbs','nessIn','Sf','Cf','idSlope'];
-  const integerKeysSignatures = ['integer','idComponent','idProfile','idCassette', 'idStorm','idTest'];
+  const integerKeysSignatures = ['integer','idComponent','idProfile','idCassette', 'idStorm','idTest','initialPlantHealth'];
   let isNumber = false;
   let isInteger = false;
   numberKeysSignatures.forEach(sig=>{
@@ -249,7 +249,7 @@ const shiftArrayKeysColumn = (array, keys, key, position1, position2) => {
   return newArray;
 };
 
-const getKeyArray = (keys, key, position1, position2) => {
+const getKeyArray = (keys, key, action, position1, position2) => {
   // input: key to look up in keys, 1 or 2 positions in the array of keys
   // output: array of keys
   // validate
@@ -259,42 +259,41 @@ const getKeyArray = (keys, key, position1, position2) => {
   if(!(Array.isArray(keys[key]))) return [];
   if(!(Array.isArray(keys[key][0]))) return [];
   // position 1 must be a number, and must be valid index
-  if(isNaN(position1)) return [];
+  if(!isPrimitiveNumber(position1)) return [];
   if(!(keys[key][0][position1])) return [];
   // position 2 can be undefined, but if defined, must be a number and must exist
   if(position2 !== undefined){
-    if(isNaN(position2)) return [];
+    if(!isPrimitiveNumber(position2)) return [];
     if(keys[key][0][position2]===undefined) return [];
   }
-  // read pattern
-  const column1 = 
+  // decipher action
+  const column1 = // column 1 must be a field; check first line only
     typeof keys[key][0][position1] === 'string' ? 'field' : null ;
   const column2 = 
-    position2 === undefined ? 'list' :
-    // EXCEPTION!!! IMPROVE THIS!!!
-      position2 === 7 ? 'object list' :
-        typeof keys[key][0][position2] === 'string' ? 'field' :
-          typeof keys[key][0][position2] === 'boolean' ? 'filter' :
-            null;
+    !action ? 'list' :
+      action === 'list' ? 'list' :
+        position2 === undefined ? 'list' :
+          action;
 
   if(column1 !== 'field') return [];
-  if(column2 === 'list') {
+  // four possible actions
+  if(column2 === 'list') { // returns a list of keys in this column
     return keys[key].map(array=>array[position1]);
   }
-  if(column2 === 'field') {
+  if(column2 === 'filter') { // returns a filtered list of keys (use position 1 if position 2 is truthy)
+    let newArray = [];
+    keys[key].forEach(array=>{
+      if(array[position2]) newArray.push(array[position1]);
+    });
+    return newArray;
+  }
+  if(column2 === 'field') { // returns a list of keys AS other keys
     return keys[key].map(array=>{
       if(array[position1]===array[position2]) return array[position1];
       return `${array[position1]} as ${array[position2]}`;
     });
   }
-  if(column2 === 'filter') {
-    let newArray = [];
-    keys[key].forEach(array=>{
-      if(array[position2]===true) newArray.push(array[position1]);
-    });
-    return newArray;
-  }
-  if(column2 === 'object list') {
+  if(column2 === 'object list') { // similar to above, but returns an object with the key as position 1, and value as the value of position 2 
     let newObject = {};
     keys[key].forEach(array=>{
       if(array[position2] instanceof Object) newObject[array[position1]] = array[position2];
