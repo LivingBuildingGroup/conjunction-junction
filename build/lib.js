@@ -264,12 +264,19 @@ var shiftArrayKeysColumn = function shiftArrayKeysColumn(array, keys, key, posit
   return newArray;
 };
 
-var getKeyArray = function getKeyArray(keys, key, action, position1, position2) {
+var getKeyArray = function getKeyArray(input) {
+  if (!isObjectLiteral(input)) return [];
+  var keys = input.keys,
+      key = input.key,
+      action = input.action,
+      position1 = input.position1,
+      position2 = input.position2;
   // input: key to look up in keys, 1 or 2 positions in the array of keys
   // output: array of keys
   // validate
   // keys must be an object
-  if (!(keys instanceof Object)) return [];
+
+  if (!isObjectLiteral(keys)) return [];
   // key within keys must be array of arrays
   if (!Array.isArray(keys[key])) return [];
   if (!Array.isArray(keys[key][0])) return [];

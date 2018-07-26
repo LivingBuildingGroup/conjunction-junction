@@ -200,7 +200,14 @@ var formatReqBodyForKnex = function formatReqBodyForKnex(body, keys, table, opti
 
   var objectCase = shiftObjectKeysColumn(body, keys, table, keysColumnStart, keysColumnEnd);
   var objectForKnex = formatObjectForKnex(objectCase);
-  var keysLimiting = getKeyArray(keys, table, 'list', keysColumnEnd, keysColumnLimit); // limit keys to column 0 if column 2 is true (POST)
+  var keyInput = {
+    keys: keys,
+    key: table,
+    action: 'list',
+    position1: keysColumnEnd,
+    position2: keysColumnLimit
+  };
+  var keysLimiting = getKeyArray(keyInput); // limit keys to column 0 if column 2 is true (POST)
   var objectLimited = limitObjectKeys(objectForKnex, keysLimiting);
   return objectLimited;
 };

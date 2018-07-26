@@ -884,23 +884,25 @@ describe('conjunction-junction lib', () => {
   });
 
   it('getKeyArray returns list of column 0, default action', () => {
-    const action = null;
-    const position1 = 0;
-    // const position2 = 1; // leave this undefined intentionally
-    const key = 'users';
-    const keys = {
-      users: [
+    const input = {
+      action: null,
+      position1: 0,
+      // const position2 = 1; // leave this undefined intentionally
+      key: 'users',
+      keys: {
+        users: [
         //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
+          ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
+          ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
+          ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
+          ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
+          ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
+          ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
+          ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
+          ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
+          ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
+        ],
+      }
     };
     const expectedResult = [
       'id',
@@ -913,27 +915,29 @@ describe('conjunction-junction lib', () => {
       'pw_reset',
       'permissions',
     ];
-    const result = getKeyArray(keys, key, action, position1);
+    const result = getKeyArray(input);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray returns list of column 0, explicit action', () => {
-    const action = 'list';
-    const position1 = 0;
-    // const position2 = 1; // leave this undefined intentionally
-    const key = 'users';
-    const keys = {
-      users: [
+    const input = {
+      action: 'list',
+      position1: 0,
+      // position2: 1, // leave this undefined intentionally
+      key: 'users',
+      keys: {
+        users: [
         //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
+          ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
+          ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
+          ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
+          ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
+          ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
+          ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
+          ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
+          ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
+          ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
+        ],
+      }
     };
     const expectedResult = [
       'id',
@@ -946,27 +950,29 @@ describe('conjunction-junction lib', () => {
       'pw_reset',
       'permissions',
     ];
-    const result = getKeyArray(keys, key, action, position1);
+    const result = getKeyArray(input);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray returns list of column 1', () => {
-    const action = 'list';
-    const position1 = 1;
-    // const position2 = 1; // leave this undefined intentionally
-    const key = 'users';
-    const keys = {
-      users: [
+    const input = {
+      action: 'list',
+      position1: 1,
+      // position2: 1, // leave this undefined intentionally
+      key: 'users',
+      keys: {
+        users: [
         //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
+          ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
+          ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
+          ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
+          ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
+          ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
+          ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
+          ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
+          ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
+          ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
+        ],
+      }
     };
     const expectedResult = [
       'id',
@@ -979,27 +985,29 @@ describe('conjunction-junction lib', () => {
       'pwReset',
       'permissions',
     ];
-    const result = getKeyArray(keys, key, action, position1);
+    const result = getKeyArray(input);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray returns filter of column 0', () => {
-    const action = 'filter';
-    const position1 = 0;
-    const position2 = 2; // filter by column 2
-    const key = 'users';
-    const keys = {
-      users: [
+    const input = {
+      action: 'filter',
+      position1: 0,
+      position2: 2, // filter by column 2
+      key: 'users',
+      keys: {
+        users: [
         //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
+          ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
+          ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
+          ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
+          ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
+          ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
+          ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
+          ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
+          ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
+          ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
+        ],
+      }
     };
     const expectedResult = [
       'username',
@@ -1009,27 +1017,29 @@ describe('conjunction-junction lib', () => {
       'email',
       'permissions',
     ];
-    const result = getKeyArray(keys, key, action, position1, position2);
+    const result = getKeyArray(input);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray returns column 0 as column 1', () => {
-    const action = 'field';
-    const position1 = 0;
-    const position2 = 1;
-    const key = 'users';
-    const keys = {
-      users: [
+    const input = {
+      action: 'field',
+      position1: 0,
+      position2: 1,
+      key: 'users',
+      keys: {
+        users: [
         //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
+          ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
+          ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
+          ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
+          ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
+          ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
+          ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
+          ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
+          ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
+          ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
+        ],
+      }
     };
     const expectedResult = [
       'id',
@@ -1042,172 +1052,188 @@ describe('conjunction-junction lib', () => {
       'pw_reset as pwReset',
       'permissions',
     ];
-    const result = getKeyArray(keys, key, action, position1, position2);
+    const result = getKeyArray(input);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray returns filter of column 0', () => {
-    const action = 'object list';
-    const position1 = 0;
-    const position2 = 7; 
-    const key = 'users';
-    const keys = {
-      users: [
+    const input = {
+      action: 'object list',
+      position1: 0,
+      position2: 7, 
+      key: 'users',
+      keys: {
+        users: [
         //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
+          ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
+          ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
+          ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
+          ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
+          ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
+          ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
+          ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
+          ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
+          ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
+        ],
+      }
     };
     const expectedResult = {
       username: {min: 1 },
       password: {min: 8, max: 72 },
     };
-    const result = getKeyArray(keys, key, action, position1, position2);
+    const result = getKeyArray(input);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray empty array on invalid key lookup', () => {
-    const action = 'list';
-    const position1 = 1;
-    const position2 = 0;
-    const key = 'components';
-    const keys = {
-      users: [
+    const input = {
+      action: 'list',
+      position1: 1,
+      position2: 0,
+      key: 'components',
+      keys: {
+        users: [
         //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
+          ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
+          ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
+          ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
+          ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
+          ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
+          ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
+          ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
+          ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
+          ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
+        ],
+      }
     };
     const expectedResult = [];
-    const result = getKeyArray(keys, key, action, position1, position2);
+    const result = getKeyArray(input);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray empty array on invalid key array', () => {
-    const action = 'filter';
-    const position1 = 1;
-    const position2 = 0;
-    const key = 'components';
-    const keys = {
-      users: 'whoa! There should be an array here!'
+    const input = {
+      action: 'filter',
+      position1: 1,
+      position2: 0,
+      key: 'components',
+      keys: {
+        users: 'whoa! There should be an array here!'
+      }
     };
     const expectedResult = [];
-    const result = getKeyArray(keys, key, action, position1, position2);
+    const result = getKeyArray(input);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray empty array on invalid key compound array', () => {
-    const action = 'list';
-    const position1 = 1;
-    const position2 = 0;
-    const key = 'components';
-    const keys = {
-      users: ['whoa! There should be a COMPOUND array here!']
+    const input = {
+      action: 'list',
+      position1: 1,
+      position2: 0,
+      key: 'components',
+      keys: {
+        users: ['whoa! There should be a COMPOUND array here!']
+      }
     };
     const expectedResult = [];
-    const result = getKeyArray(keys, key, action, position1, position2);
+    const result = getKeyArray(input);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray empty array on invalid position1', () => {
-    const action = 'object list';
-    const position1 = {notNumber: true};
-    const position2 = 0;
-    const key = 'components';
-    const keys = {
-      users: [
+    const input = {
+      action: 'object list',
+      position1: {notNumber: true},
+      position2: 0,
+      key: 'components',
+      keys: {
+        users: [
         //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
+          ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
+          ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
+          ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
+          ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
+          ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
+          ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
+          ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
+          ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
+          ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
+        ],
+      }
     };
     const expectedResult = [];
-    const result = getKeyArray(keys, key, action, position1, position2);
+    const result = getKeyArray(input);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray empty array on invalid position1', () => {
-    const action = 'list';
-    const position1 = 2;
-    const position2 = 'invalid!!!!';
-    const key = 'components';
-    const keys = {
-      users: [
+    const input = {
+      action: 'list',
+      position1: 2,
+      position2: 'invalid!!!!',
+      key: 'components',
+      keys: {
+        users: [
         //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
+          ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
+          ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
+          ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
+          ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
+          ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
+          ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
+          ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
+          ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
+          ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
+        ],
+      },
     };
     const expectedResult = [];
-    const result = getKeyArray(keys, key, action, position1, position2);
+    const result = getKeyArray(input);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray empty array on non-string position1', () => {
-    const action = 'list';
-    const position1 = 12; // position is invalid
-    const position2 = 0;
-    const key = 'components';
-    const keys = {
-      users: [
+    const input = {
+      action: 'list',
+      position1: 12, // position is invalid
+      position2: 0,
+      key: 'components',
+      keys: {
+        users: [
         //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
+          ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
+          ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
+          ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
+          ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
+          ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
+          ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
+          ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
+          ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
+          ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
+        ],
+      }
     };
     const expectedResult = [];
-    const result = getKeyArray(keys, key, action, position1, position2);
+    const result = getKeyArray(input);
     expect(result).to.deep.equal(expectedResult);
   });
   it('getKeyArray empty array on non-string position2', () => {
-    const action = 'list';
-    const position1 = 0; 
-    const position2 = -1;// position -1 is invalid
-    const key = 'components';
-    const keys = {
-      users: [
+    const input = {
+      action: 'list',
+      position1: 0, 
+      position2: -1,// position -1 is invalid
+      key: 'components',
+      keys: {
+        users: [
         //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
+          ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
+          ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
+          ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
+          ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
+          ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
+          ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
+          ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
+          ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
+          ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
+        ],
+      }
     };
     const expectedResult = [];
-    const result = getKeyArray(keys, key, action, position1, position2);
+    const result = getKeyArray(input);
     expect(result).to.deep.equal(expectedResult);
   });
 

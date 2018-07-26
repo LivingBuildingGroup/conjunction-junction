@@ -249,12 +249,14 @@ const shiftArrayKeysColumn = (array, keys, key, position1, position2) => {
   return newArray;
 };
 
-const getKeyArray = (keys, key, action, position1, position2) => {
+const getKeyArray = input => {
+  if(!isObjectLiteral(input)) return [];
+  const {keys, key, action, position1, position2} = input;
   // input: key to look up in keys, 1 or 2 positions in the array of keys
   // output: array of keys
   // validate
   // keys must be an object
-  if(!(keys instanceof Object)) return [];
+  if(!isObjectLiteral(keys)) return [];
   // key within keys must be array of arrays
   if(!(Array.isArray(keys[key]))) return [];
   if(!(Array.isArray(keys[key][0]))) return [];
