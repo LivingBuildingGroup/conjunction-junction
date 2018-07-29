@@ -28,6 +28,16 @@ var galsToInches = function galsToInches(gallons, squareFeet) {
   return precisionRound(cubicInches / squareInches, 4);
 };
 
+var inchesToGals = function inchesToGals(inches, squareFeet) {
+  // input: numbers, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if (!isPrimitiveNumber(inches) || !isPrimitiveNumber(squareFeet)) return;
+  if (squareFeet === 0) return 0;
+  var squareInches = squareFeet * 144;
+  var cubicInches = squareInches * inches;
+  return ciToGals(cubicInches);
+};
+
 var galsToCi = function galsToCi(gallons) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
@@ -135,6 +145,7 @@ var rad2deg = function rad2deg(radians) {
 module.exports = {
   ciToCf: ciToCf,
   galsToInches: galsToInches,
+  inchesToGals: inchesToGals,
   galsToCi: galsToCi,
   ciToGals: ciToGals,
   galsToCf: galsToCf,
