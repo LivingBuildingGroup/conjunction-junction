@@ -42,7 +42,7 @@ const {
   nonCompoundArrays,  // uniqueNumber0,uniqueNumber1,uniqueNumber2,uniqueNumber3,uniqueNumber4,uniqueNumber5,uniqueNumber6,uniqueNumber7,uniqueNumber8,uniqueNumber9,
 } = require('./helper-data');
 
-describe('conjunction-junction date-time', () => { 
+describe.only('conjunction-junction date-time', () => { 
 
   it('isValidDate new Date', () => {
     const date = new Date(); 
@@ -146,8 +146,11 @@ describe('conjunction-junction date-time', () => {
     expect(result).to.deep.equal(false);
   });
 
-  it('getDaysOfMonth',()=>{
-
+  it('getDaysOfMonth Feb',()=>{
+    const month = 'Feb';
+    const expectedResult = 28;
+    const result = getDaysOfMonth(month);
+    expect(result).to.equal(expectedResult);
   });
 
   it('formatOffsetAsString -240 default colon', () => {

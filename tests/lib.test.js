@@ -7,7 +7,7 @@ const {
   isPrimitiveNumber, 
   isObjectLiteral,
   precisionRound,
-  correctInputType,
+  correctInputType, // do not do a test for this yet
   print,
   titleCaseWord, 
   lowerCaseWord,

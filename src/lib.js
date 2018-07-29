@@ -250,11 +250,10 @@ const shiftArrayKeysColumn = (array, keys, key, position1, position2) => {
 };
 
 const getKeyArray = input => {
-  if(!isObjectLiteral(input)) return [];
-  const {keys, key, action, position1, position2} = input;
   // input: key to look up in keys, 1 or 2 positions in the array of keys
-  // output: array of keys
-  // validate
+  // output: array of keys  
+  if(!isObjectLiteral(input)) return [];
+  const {keys, key, action, position1, position2, match} = input;
   // keys must be an object
   if(!isObjectLiteral(keys)) return [];
   // key within keys must be array of arrays
@@ -278,9 +277,16 @@ const getKeyArray = input => {
           action;
 
   if(column1 !== 'field') return [];
-  // five possible actions
+  // six possible actions
   if(column2 === 'list') { // returns a list of keys in this column
     return keys[key].map(array=>array[position1]);
+  }
+  if(column2 === 'match') { // returns a filtered list of keys (use position 1 if position 2 is an exact match to match)
+    let newArray = [];
+    keys[key].forEach(array=>{
+      if(array[position2] === match) newArray.push(array[position1]);
+    });
+    return newArray;
   }
   if(column2 === 'filter') { // returns a filtered list of keys (use position 1 if position 2 is truthy)
     let newArray = [];
