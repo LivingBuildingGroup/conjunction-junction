@@ -265,15 +265,15 @@ var shiftArrayKeysColumn = function shiftArrayKeysColumn(array, keys, key, posit
 };
 
 var getKeyArray = function getKeyArray(input) {
+  // input: key to look up in keys, 1 or 2 positions in the array of keys
+  // output: array of keys  
   if (!isObjectLiteral(input)) return [];
   var keys = input.keys,
       key = input.key,
       action = input.action,
       position1 = input.position1,
-      position2 = input.position2;
-  // input: key to look up in keys, 1 or 2 positions in the array of keys
-  // output: array of keys
-  // validate
+      position2 = input.position2,
+      match = input.match;
   // keys must be an object
 
   if (!isObjectLiteral(keys)) return [];
@@ -294,28 +294,36 @@ var getKeyArray = function getKeyArray(input) {
   var column2 = !action ? 'list' : action === 'list' ? 'list' : position2 === undefined ? 'list' : action;
 
   if (column1 !== 'field') return [];
-  // five possible actions
+  // six possible actions
   if (column2 === 'list') {
     // returns a list of keys in this column
     return keys[key].map(function (array) {
       return array[position1];
     });
   }
-  if (column2 === 'filter') {
-    // returns a filtered list of keys (use position 1 if position 2 is truthy)
+  if (column2 === 'match') {
+    // returns a filtered list of keys (use position 1 if position 2 is an exact match to match)
     var newArray = [];
     keys[key].forEach(function (array) {
-      if (array[position2]) newArray.push(array[position1]);
+      if (array[position2] === match) newArray.push(array[position1]);
     });
     return newArray;
   }
-  if (column2 === 'reverse filter') {
-    // returns a filtered list of keys (use position 1 if position 2 is falsey)
+  if (column2 === 'filter') {
+    // returns a filtered list of keys (use position 1 if position 2 is truthy)
     var _newArray = [];
     keys[key].forEach(function (array) {
-      if (!array[position2]) _newArray.push(array[position1]);
+      if (array[position2]) _newArray.push(array[position1]);
     });
     return _newArray;
+  }
+  if (column2 === 'reverse filter') {
+    // returns a filtered list of keys (use position 1 if position 2 is falsey)
+    var _newArray2 = [];
+    keys[key].forEach(function (array) {
+      if (!array[position2]) _newArray2.push(array[position1]);
+    });
+    return _newArray2;
   }
   if (column2 === 'field') {
     // returns a list of keys AS other keys
@@ -589,13 +597,13 @@ var immutableArrayInsert = function immutableArrayInsert(index, array, itemToUpd
   }
   if (index <= 0) {
     var remainder = array.slice(1, array.length);
-    var _newArray2 = [itemToUpdate].concat(_toConsumableArray(remainder));
-    return _newArray2;
+    var _newArray3 = [itemToUpdate].concat(_toConsumableArray(remainder));
+    return _newArray3;
   }
   if (index >= array.length - 1) {
     var _remainder = array.slice(0, array.length - 1);
-    var _newArray3 = [].concat(_toConsumableArray(_remainder), [itemToUpdate]);
-    return _newArray3;
+    var _newArray4 = [].concat(_toConsumableArray(_remainder), [itemToUpdate]);
+    return _newArray4;
   }
   var remainderFront = array.slice(0, index);
   var remainderBack = array.slice(index + 1, array.length);

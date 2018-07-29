@@ -1083,6 +1083,36 @@ describe('conjunction-junction lib', () => {
     const result = getKeyArray(input);
     expect(result).to.deep.equal(expectedResult);
   });
+  it('getKeyArray returns match of column 0', () => {
+    const input = {
+      action: 'match',
+      position1: 0,
+      position2: 4, 
+      key: 'users',
+      match: 'bag',
+      keys: {
+        users: [
+        //snake all             cC all              2POST   3POST req. 4  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
+          ['id'               ,'id'                ,false,  false,    'bag', false,  false, false,'user id'          ,'unique id'],
+          ['timestamp_created','timestampCreated'  ,false,  false,    'shoe', false,  false, false,'timestamp created','date and time of record creation'],
+          ['username'         ,'username'          ,true ,  true ,    'hat' , true ,  true , {min: 1 },'username'     ,'username'], 
+          ['password'         ,'password'          ,true ,  true ,    'hat' , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
+          ['first_name'       ,'firstName'         ,true ,  true ,    'hat' , true ,  false, false,'first name'       ,'user\'s first name'], 
+          ['last_name'        ,'lastName'          ,true ,  true ,    'shoe' , true ,  false, false,'last name'        ,'user\'s last name'], 
+          ['email'            ,'email'             ,true ,  true ,    'bag' , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
+          ['pw_reset'         ,'pwReset'           ,false,  false,    'bag' , true ,  false, false,'password reset'   ,'true if user must reset password'], 
+          ['permissions'      ,'permissions'       ,true ,  true ,    'shoe' , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
+        ],
+      }
+    };
+    const expectedResult = [
+      'id',
+      'email',
+      'pw_reset',
+    ];
+    const result = getKeyArray(input);
+    expect(result).to.deep.equal(expectedResult);
+  });
   it('getKeyArray empty array on invalid key lookup', () => {
     const input = {
       action: 'list',
