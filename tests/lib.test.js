@@ -23,6 +23,8 @@ const {
   limitObjectKeys,
   roundAllValues,
   subArrayByKey,
+  totalValuesByKey,
+
   totalAndAverageArrays,
   deltaArray,
   immutableArrayInsert,
@@ -1493,6 +1495,31 @@ describe('conjunction-junction lib', () => {
       ],
     };
     const result = subArrayByKey(array, groupBy);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('totalValuesByKey', () => {
+    const arrayOfObjects = [
+      {
+        platform_runoff1a_gals_tot: 3,
+        platform_runoff1b_gals_tot: 5,
+        platform_runoff2a_gals_tot: 7, 
+      },
+      {
+        platform_runoff1a_gals_tot: 9,
+        platform_runoff1b_gals_tot: 15,
+        platform_runoff2a_gals_tot: 27, 
+      },
+    ];
+    const key = 'platform_runoff1a_gals_tot';
+    const expectedResult = {
+      value: 12,
+      messages: [
+        'index 0: key platform_runoff1a_gals_tot: 3 added; new cum. value: 3',
+        'index 1: key platform_runoff1a_gals_tot: 9 added; new cum. value: 12',
+      ],
+    };
+    const result = totalValuesByKey(arrayOfObjects, key);
     expect(result).to.deep.equal(expectedResult);
   });
 
