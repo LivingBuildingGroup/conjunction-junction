@@ -517,28 +517,28 @@ var subArrayByKey = function subArrayByKey(array, groupBy) {
 };
 
 var totalValuesByKey = function totalValuesByKey(arrayOfObjects, key) {
-  // // input: array of objects, and a single key (for numeric keys, stringify numbers)
-  // // output: sum of all values of all matching keys with numeric values
-  // // output: array of messages identifying how each index was handled
-  // if(!Array.isArray(arrayOfObjects)) return {value: null, message: 'no array of objects'};
-  // if(typeof key !== 'string') return {value: null, message: 'key must be a string'};
-  // let value = 0;
-  // const messages = arrayOfObjects.map((o,i)=>{
-  //   if(o[key] === undefined){
-  //     return `index ${i}: key ${key}: was undefined`;
-  //   } else {
-  //     if(!isPrimitiveNumber(o[key])){
-  //       return `index ${i} key ${key}: was ${o[key]} (not a number)`;
-  //     } else {
-  //       value += o[key];
-  //       return `index ${i}: key ${key}: ${o[key]} added; new cum. value: ${value}`;
-  //     }
-  //   }
-  // });
-  // return {
-  //   value,
-  //   messages,
-  // };
+  // input: array of objects, and a single key (for numeric keys, stringify numbers)
+  // output: sum of all values of all matching keys with numeric values
+  // output: array of messages identifying how each index was handled
+  if (!Array.isArray(arrayOfObjects)) return { value: null, message: 'no array of objects' };
+  if (typeof key !== 'string') return { value: null, message: 'key must be a string' };
+  var value = 0;
+  var messages = arrayOfObjects.map(function (o, i) {
+    if (o[key] === undefined) {
+      return 'index ' + i + ': key ' + key + ': was undefined';
+    } else {
+      if (!isPrimitiveNumber(o[key])) {
+        return 'index ' + i + ' key ' + key + ': was ' + o[key] + ' (not a number)';
+      } else {
+        value += o[key];
+        return 'index ' + i + ': key ' + key + ': ' + o[key] + ' added; new cum. value: ' + value;
+      }
+    }
+  });
+  return {
+    value: value,
+    messages: messages
+  };
 };
 
 // @@@@@@@@@@@@@@@ ARRAYS @@@@@@@@@@@@@@@@
