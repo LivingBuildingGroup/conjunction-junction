@@ -6,7 +6,7 @@ const isPrimitiveNumber = number => {
   const isNumberOrNull = !isNaN(number); // limits to Arrays, numbers, null
   const isNotNull = number !== null; // limits to Arrays, null
   const typeIsNumber = typeof number === 'number'; // eliminates Arrays
-  return isNumberOrNull && isNotNull && typeIsNumber;
+  return isNumberOrNull && isNotNull && typeIsNumber && isFinite(number);
 };
 
 const isObjectLiteral = object => {
@@ -17,10 +17,11 @@ const isObjectLiteral = object => {
 
 // @@@@@@@@@@@@@@@ NUMBERS @@@@@@@@@@@@@@@@
 
-const precisionRound = (number, precision) => {
+const precisionRound = (number, precision = 4) => {
   if(!isPrimitiveNumber(number) || !isPrimitiveNumber(precision)) return 0;
   const factor = Math.pow(10, precision);
   if(factor === 0) return 0;
+  if(!isPrimitiveNumber(factor)) return 0;
   return Math.round(number * factor) / factor;
 };
 

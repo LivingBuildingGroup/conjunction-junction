@@ -117,9 +117,9 @@ describe('conjunction-junction conversions', () => { // mocha has built-in promi
     expect(result).to.equal(expectedResult);
   });
 
-  it.skip('galsToCF true on numbers', () => { 
+  it('galsToCf true on numbers', () => { 
     const gallons = 33;
-    const expectedResult = 7623; //  33 * 231 rounded to 4
+    const expectedResult = 4.4115; //  33 * 0.133681 rounded to 4
     const result = galsToCf(gallons);
     expect(result).to.equal(expectedResult);
   });

@@ -4,16 +4,19 @@ const chai = require('chai');
 const expect = chai.expect;
 
 const { 
-  isPrimitiveNumber, 
-  isObjectLiteral,
-  precisionRound,
+  // types
   correctInputType, // do not do a test for this yet
+  // numbers (none yet)
+  // mixed types
   print,
+  numberToLetter,
+  // strings
   titleCaseWord, 
   lowerCaseWord,
   convertScToCc,
   convertCcToSc,
   convertCcToSpace,
+  // object keys
   convertObjectKeyCase, 
   shiftObjectKeysColumn,
   shiftArrayKeysColumn,
@@ -21,10 +24,18 @@ const {
   validateObjectKeysPresent,
   validateObjectKeys,
   limitObjectKeys,
+  parseValuesObj2Levels,
+  // objects and arrays
   roundAllValues,
+  parseValuesFromArrayOfObj1Level,
+  convertArrayToObject,
+  convertObjectToArray,
   subArrayByKey,
   totalValuesByKey,
-
+  averageValuesByKey,
+  mergeArraysOfObjectsByKey,
+  filterSequentialItems,
+  // arrays
   totalAndAverageArrays,
   deltaArray,
   immutableArrayInsert,
@@ -35,68 +46,31 @@ const {
   interpolateArrayValues,} = require('../index');
 
 const {
-  numbers, 
-  nonNumbers, 
   nonObjects,
-  nonNumberObjects, 
-  nonNumberArrays,
   nonStringPrimitives,
   lowerStrings,
   upperStrings,
   nonStringNonNumbers,
-  nonCompoundArrays }   = require('./helper-data');
+  nonCompoundArrays,
+  date0, 
+  date1, }   = require('./helper-data');
 process.env.DB_MODE = 'test';
 
 
 describe('conjunction-junction lib', () => { 
 
-  it('isPrimitiveNumber false on no parameters', () => { 
-    const num = isPrimitiveNumber();
-    expect(num).to.equal(false);
-  });
-  it('isPrimitiveNumber false on nonNumbers', () => { 
-    nonNumbers.forEach(item=>{
-      const num = isPrimitiveNumber(item);
-      expect(num).to.equal(false);
-    });
-  });
-  it('isPrimitiveNumber false on nonNumberObjects', () => { 
-    nonNumberObjects.forEach(item=>{
-      const num = isPrimitiveNumber(item);
-      expect(num).to.equal(false);
-    });
-  });
-  it('isPrimitiveNumber false on nonNumberArrays', () => { 
-    nonNumberArrays.forEach(item=>{
-      const num = isPrimitiveNumber(item);
-      expect(num).to.equal(false);
-    });
-  });
-  it('isPrimitiveNumber true on number', () => { 
-    numbers.forEach(number=>{
-      const num = isPrimitiveNumber(number);
-      expect(num).to.equal(true);
-    });
+  it('correctInputType',()=>{
+
   });
 
-  it('isObjectLiteral false on no parameters', () => { 
-    const object = isObjectLiteral();
-    expect(object).to.equal(false);
+  it('print',()=>{
+
   });
-  it('isObjectLiteral false on nonObjects', () => { 
-    nonObjects.forEach(item=>{
-      const object = isObjectLiteral(item);
-      expect(object).to.equal(false);
-    });
+  
+  it('numberToLetter',()=>{
+
   });
-  it('isObjectLiteral true on object with no keys', () => { 
-    const object = isObjectLiteral({});
-    expect(object).to.equal(true);
-  });
-  it('isObjectLiteral true on object with keys', () => { 
-    const object = isObjectLiteral({x:1});
-    expect(object).to.equal(true);
-  });
+  
 
   it('titleCaseWord undefined on non-String input', () => { 
     nonStringPrimitives.forEach(item=>{
@@ -122,6 +96,10 @@ describe('conjunction-junction lib', () => {
     expect(result).to.equal(expectedResult);
   });
 
+  it('lowerCaseWord',()=>{
+
+  });
+  
   it('convertScToCc valid on valid input', () => { 
     const strings = [
       'snake_case', 'snake case', 'snakeCase',
@@ -166,36 +144,10 @@ describe('conjunction-junction lib', () => {
     expect(result).to.equal('');
   });
 
-  it('precisionRound', () => { 
-    const arrayOfNumbers = [
-      1,3,5,2000,2021,103567,
-      1.0345823,
-      1.304623,
-      1.304423,
-      1.09,
-      1.089,
-    ];
-    const expectedResults =[
-      1,3,5,2000,2021,103567,
-      1.0346,
-      1.3046,
-      1.3044,
-      1.09,
-      1.089
-    ];
-    arrayOfNumbers.forEach((num,i)=>{
-      expect(precisionRound(num, 4)).to.equal(expectedResults[i]);
-    });
-  });
-  it('precisionRound non-num', () => { 
-    nonNumbers.forEach(num=>{
-      expect(precisionRound(num, 4)).to.equal(0);
-    });
-  });
-  it('precisionRound no precision', () => { 
-    expect(precisionRound(1.03984, 'x')).to.equal(0);
-  });
+  it('convertCcToSpace',()=>{
 
+  });
+  
   it('convertObjectKeyCase empty string on invalid input', () => { 
     const objects = [
       {
@@ -254,64 +206,6 @@ describe('conjunction-junction lib', () => {
       const result = convertObjectKeyCase(o);
       expect(result).to.deep.equal({});
     });
-  });
-
-  it('roundAllValues', ()=>{
-    const roundingKey = {
-      two: 2,
-    };
-    const object = {
-      two: 2.222,
-    };
-    const expectedResult = {
-      two: 2.22,
-    };
-    const result = roundAllValues(object, roundingKey);
-    expect(result).to.deep.equal(expectedResult);
-  });
-  it('roundAllValues long', ()=>{
-    const roundingKey = {
-      one: 1,
-      two: 2,
-      three: 3,
-      four: 4,
-      five: 5,
-      six: 6,
-    };
-    const object = {
-      one: [1.1243, 2.34343, 5],
-      two: 2.222,
-      three: 3.3333333,
-      four: 4.4444444444,
-      arrayOfNums: [
-        2,3,4
-      ],
-      arrayMixed: [
-        1,2,{two: 2.2222222,}
-      ],
-      five: {
-        six: 6.2454254523543253253,
-        seven: 7,
-      },
-    };
-    const expectedResult = {
-      two: 2.22,
-      three: 3.333,
-      four: 4.4444,
-      arrayOfNums: [
-        2,3,4
-      ],
-      one: [1.1, 2.3, 5],
-      arrayMixed: [
-        1,2,{two: 2.22,}
-      ],
-      five: {
-        six: 6.245425,
-        seven: 7,
-      },
-    };
-    const result = roundAllValues(object, roundingKey);
-    expect(result).to.deep.equal(expectedResult);
   });
 
   it('shiftObjectKeysColumn snake to camel', () => {
@@ -1443,6 +1337,80 @@ describe('conjunction-junction lib', () => {
     expect(result).to.deep.equal(expectedResult);
   });
 
+  it('parseValuesObj2Levels',()=>{
+
+  });
+  
+  it('roundAllValues', ()=>{
+    const roundingKey = {
+      two: 2,
+    };
+    const object = {
+      two: 2.222,
+    };
+    const expectedResult = {
+      two: 2.22,
+    };
+    const result = roundAllValues(object, roundingKey);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('roundAllValues long', ()=>{
+    const roundingKey = {
+      one: 1,
+      two: 2,
+      three: 3,
+      four: 4,
+      five: 5,
+      six: 6,
+    };
+    const object = {
+      one: [1.1243, 2.34343, 5],
+      two: 2.222,
+      three: 3.3333333,
+      four: 4.4444444444,
+      arrayOfNums: [
+        2,3,4
+      ],
+      arrayMixed: [
+        1,2,{two: 2.2222222,}
+      ],
+      five: {
+        six: 6.2454254523543253253,
+        seven: 7,
+      },
+    };
+    const expectedResult = {
+      two: 2.22,
+      three: 3.333,
+      four: 4.4444,
+      arrayOfNums: [
+        2,3,4
+      ],
+      one: [1.1, 2.3, 5],
+      arrayMixed: [
+        1,2,{two: 2.22,}
+      ],
+      five: {
+        six: 6.245425,
+        seven: 7,
+      },
+    };
+    const result = roundAllValues(object, roundingKey);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('parseValuesFromArrayOfObj1Level',()=>{
+
+  });
+
+  it('convertArrayToObject',()=>{
+
+  });
+
+  it('convertObjectToArray',()=>{
+
+  });
+
   it('subArrayByKey', () => {
     const array = [
       {
@@ -1521,6 +1489,174 @@ describe('conjunction-junction lib', () => {
     };
     const result = totalValuesByKey(arrayOfObjects, key);
     expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('averageValuesByKey', ()=>{
+    const arrayOfObjects = [
+      {
+        platform_runoff1a_gals_tot: 3,
+        platform_runoff1b_gals_tot: 5,
+        platform_runoff2a_gals_tot: 7, 
+      },
+      {
+        platform_runoff1a_gals_tot: 9,
+        platform_runoff1b_gals_tot: 15,
+        platform_runoff2a_gals_tot: 27, 
+      },
+    ];
+    const key = 'platform_runoff1a_gals_tot';
+    const expectedResult = {
+      value: 6,
+      messages: [
+        'index 0: key platform_runoff1a_gals_tot: 3 added; new cum. value: 3, counter: 1',
+        'index 1: key platform_runoff1a_gals_tot: 9 added; new cum. value: 12, counter: 2',
+      ],
+    };
+    const result = averageValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);  
+  });
+
+  it('mergeArraysOfObjectsByKey empty array if no arr1', () => {
+    const o1 = 'not an array';
+    const o2 = [
+      {
+        timestamp_cr6: date0,
+        key4: 4,
+        key5: 5,
+      },
+      {
+        timestamp_cr6: date1,
+        key6: 6,
+      },
+    ];
+    const expectedResult = [];
+    const mergeOptions = {key1: 'timestamp_cr6', key2: 'timestamp_cr6', prefix: 'prefix_'};
+    const result = mergeArraysOfObjectsByKey(o1, o2, mergeOptions);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('mergeArraysOfObjectsByKey arr1 if arr2 not array', () => {
+    const o1 = [
+      {
+        timestamp_cr6: date0,
+        key1: 1,
+        key2: 2,
+      },
+      {
+        timestamp_cr6: date1,
+        key3: 3,
+      },
+    ];
+    const o2 = 'not an array';
+    const expectedResult = o1;
+    const mergeOptions = {key1: 'timestamp_cr6', key2: 'timestamp_cr6', prefix: 'prefix_'};
+    const result = mergeArraysOfObjectsByKey(o1, o2, mergeOptions);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('mergeArraysOfObjectsByKey empty array if no options', () => {
+    const o1 = [
+      {
+        timestamp_cr6: date0,
+        key1: 1,
+        key2: 2,
+      },
+      {
+        timestamp_cr6: date1,
+        key3: 3,
+      },
+    ];
+    const o2 = [
+      {
+        timestamp_cr6: date0,
+        key4: 4,
+        key5: 5,
+      },
+      {
+        timestamp_cr6: date1,
+        key6: 6,
+      },
+    ];
+    const expectedResult = [];
+    const mergeOptions = 'not an object';
+    const result = mergeArraysOfObjectsByKey(o1, o2, mergeOptions);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('mergeArraysOfObjectsByKey empty array if options key missing', () => {
+    const o1 = [
+      {
+        timestamp_cr6: date0,
+        key1: 1,
+        key2: 2,
+      },
+      {
+        timestamp_cr6: date1,
+        key3: 3,
+      },
+    ];
+    const o2 = [
+      {
+        timestamp_cr6: date0,
+        key4: 4,
+        key5: 5,
+      },
+      {
+        timestamp_cr6: date1,
+        key6: 6,
+      },
+    ];
+    const expectedResult = [];
+    const mergeOptions = {key1: 'timestamp_cr6', key2: 'timestamp_cr6', prefix: 'prefix_'};
+    for(let k in mergeOptions){
+      const mO = Object.assign({}, mergeOptions, {[k]: undefined});
+      const result = mergeArraysOfObjectsByKey(o1, o2, mO);
+      expect(result).to.deep.equal(expectedResult);
+    }
+  });
+  it('mergeArraysOfObjectsByKey', () => {
+    const o1 = [
+      {
+        timestamp_cr6: date0,
+        key1: 1,
+        key2: 2,
+      },
+      {
+        timestamp_cr6: date1,
+        key3: 3,
+      },
+    ];
+    const o2 = [
+      {
+        timestamp_cr6: date0,
+        key4: 4,
+        key5: 5,
+      },
+      {
+        timestamp_cr6: date1,
+        key6: 6,
+      },
+    ];
+    const expectedResult = [
+      {
+        timestamp_cr6: date0,
+        prefix_timestamp_cr6: date0,
+        key1: 1,
+        key2: 2,
+        key4: 4,
+        key5: 5,
+      },
+      {
+        timestamp_cr6: date1,
+        prefix_timestamp_cr6: date1,
+        key3: 3,
+        key6: 6,
+      },
+    ];
+    const mergeOptions = {key1: 'timestamp_cr6', key2: 'timestamp_cr6', prefix: 'prefix_'};
+    const result = mergeArraysOfObjectsByKey(o1, o2, mergeOptions);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('filterSequentialItems',()=>{
+
   });
 
   it('totalAndAverageArrays fails nicely on non-compound array', () => {
@@ -1880,6 +2016,43 @@ describe('conjunction-junction lib', () => {
     expect(result).to.deep.equal(expectedResult);
   });
 
+  it('getPositionToInterpolate no decimal', () => {
+    const value = 3;
+    const increments = 1;
+    const expectedResult = {
+      position: 3,
+      decimal: 0,
+      hi: 3,
+      lo: 3
+    };
+    const result = getPositionToInterpolate(value, increments);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('getPositionToInterpolate decimal', () => {
+    const value = .0143;
+    const increment = .007;
+    const expectedResult = {
+      position: 2.0429, // 0.0143 / 0.007 
+      decimal: 0.0429,
+      hi: 3,
+      lo: 2,
+    };
+    const result = getPositionToInterpolate(value, increment);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('getPositionToInterpolate decimal 2', () => {
+    const value = .0011;
+    const increment = .00025;
+    const expectedResult = {
+      position: 4.4,
+      decimal: 0.4,
+      hi: 5,
+      lo: 4,
+    };
+    const result = getPositionToInterpolate(value, increment);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
   it('interpolateArrayValues decimal', () => {
     const arr = [5,10,15,20,25,30];
     const decimal = 0.5;
@@ -1959,43 +2132,6 @@ describe('conjunction-junction lib', () => {
     const lo = 33;
     const expectedResult = undefined;
     const result = interpolateArrayValues(arr, decimal, hi, lo);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('getPositionToInterpolate no decimal', () => {
-    const value = 3;
-    const increments = 1;
-    const expectedResult = {
-      position: 3,
-      decimal: 0,
-      hi: 3,
-      lo: 3
-    };
-    const result = getPositionToInterpolate(value, increments);
-    expect(result).to.deep.equal(expectedResult);
-  });
-  it('getPositionToInterpolate decimal', () => {
-    const value = .0143;
-    const increment = .007;
-    const expectedResult = {
-      position: 2.0429, // 0.0143 / 0.007 
-      decimal: 0.0429,
-      hi: 3,
-      lo: 2,
-    };
-    const result = getPositionToInterpolate(value, increment);
-    expect(result).to.deep.equal(expectedResult);
-  });
-  it('getPositionToInterpolate decimal 2', () => {
-    const value = .0011;
-    const increment = .00025;
-    const expectedResult = {
-      position: 4.4,
-      decimal: 0.4,
-      hi: 5,
-      lo: 4,
-    };
-    const result = getPositionToInterpolate(value, increment);
     expect(result).to.deep.equal(expectedResult);
   });
 

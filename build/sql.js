@@ -294,17 +294,17 @@ var createSqlFetchTableKeys = function createSqlFetchTableKeys(input) {
   if (!Array.isArray(tables)) return;
   if (!Array.isArray(keysToFetch)) return;
   if (typeof matchingKey !== 'string') return;
-  var joinTos = joinTosArray === undefined || !Array.isArray(joinTosArray) ? tables.map(function () {
+  var joinTos = !Array.isArray(joinTosArray) ? tables.map(function () {
     return 0;
   }) : joinTosArray.length !== tables.length ? tables.map(function () {
     return 0;
   }) : joinTosArray;
-  var keyLocs = keyLocsArray === undefined || !Array.isArray(keyLocsArray) ? tables.map(function () {
+  var keyLocs = !Array.isArray(keyLocsArray) ? tables.map(function () {
     return 0;
   }) : keyLocsArray.length !== tables.length ? tables.map(function () {
     return 0;
   }) : keyLocsArray;
-  var joinTypes = joinTypesArray === undefined || !Array.isArray(joinTypesArray) ? tables.map(function () {
+  var joinTypes = !Array.isArray(joinTypesArray) ? tables.map(function () {
     return 'left';
   }) : joinTypesArray.length !== tables.length ? tables.map(function () {
     return 'left';
@@ -314,13 +314,13 @@ var createSqlFetchTableKeys = function createSqlFetchTableKeys(input) {
     var joinFrom = tables[joinTos[i]];
     var keyLoc = tables[keyLocs[i]];
     var joinDir = joinFrom === keyLoc ? 'down' : 'up';
-    var joinKey = joinDir === 'down' ? matchingKey + '_' + joinTo.slice(0, joinTo.length - 1) : // e.g. id_profile if current table is profiles, and joining down
-    matchingKey + '_' + joinFrom.slice(0, joinFrom.length - 1); // e.g. id_cassette if current table is profiles, and joining up to cassette
+    var joinToTail = joinTo.charAt(joinTo.length - 1) === 's' ? joinTo.slice(0, joinTo.length - 1) : joinTo;
+    var joinFromTail = joinFrom.charAt(joinFrom.length - 1) === 's' ? joinFrom.slice(0, joinFrom.length - 1) : joinFrom;
+    var joinKey = joinDir === 'down' ? matchingKey + '_' + joinToTail : // e.g. id_profile if current table is profiles, and joining down
+    matchingKey + '_' + joinFromTail; // e.g. id_cassette if current table is profiles, and joining up to cassette
     var joinArrangement = joinDir === 'down' ? // i.e. key is to the left
-    // e.g. cassettes.id_profile = profiles.id
-    joinFrom + '.' + joinKey + ' = ' + joinTo + '.' + matchingKey :
-    // e.g. coinuses.id_profile = profiles.id
-    joinFrom + '.' + matchingKey + ' = ' + joinTo + '.' + joinKey;
+    joinFrom + '.' + joinKey + ' = ' + joinTo + '.' + matchingKey : // e.g. cassettes.id_profile = profiles.id
+    joinFrom + '.' + matchingKey + ' = ' + joinTo + '.' + joinKey; // e.g. coinuses.id_profile = profiles.id
     var joinType = joinTypes[i];
     return joinType + ' join ' + joinTo + ' on ' + joinArrangement;
   });
@@ -332,6 +332,18 @@ var createSqlFetchTableKeys = function createSqlFetchTableKeys(input) {
   return { fetch: fetch, table: table, join: join };
 };
 
+var validateRawKnex = function validateRawKnex(data, label) {
+  var flag = typeof label === 'string' ? label : 'raw fetch';
+  // IMPROVE THIS AS AN ALL-PURPOSE FUNCTION
+  // make sure data argument is Raw format (key of rows)
+  if (!isObjectLiteral(data)) return { message: flag + ' is not an object' };
+  if (!data.rows) return { message: flag + ' does not include rows' };
+  if (!Array.isArray(data.rows)) return { message: flag + ' rows is not an array' };
+  if (data.rows.length <= 0) return { message: flag + ' rows is empty, stopping' };
+  if (!isObjectLiteral(data.rows[0])) return { message: flag + ' row 0 is not an object, stopping' };
+  return data.rows;
+};
+
 module.exports = {
   formatTimestampForSql: formatTimestampForSql,
   escapeSpecial: escapeSpecial,
@@ -340,5 +352,6 @@ module.exports = {
   formatObjectForKnex: formatObjectForKnex,
   formatReqBodyForKnex: formatReqBodyForKnex,
   prefixCommonKeys: prefixCommonKeys,
-  createSqlFetchTableKeys: createSqlFetchTableKeys
+  createSqlFetchTableKeys: createSqlFetchTableKeys,
+  validateRawKnex: validateRawKnex
 };

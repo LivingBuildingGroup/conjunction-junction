@@ -386,7 +386,7 @@ const totalMinsHoursDays = minOrObjInput => {
 
 // @@@@@@@@@@@@@@@@ ARITHMETIC @@@@@@@@@@@@@@@
 
-const dateDelta = ( date1st, date2nd, option='minutes' ) => {
+const dateDelta = (date1st, date2nd, option='minutes') => {
   // input: 2 dates, date1 is assumed to be chronologically 1st
   // output: signed integer of delta between dates; if date1 is first: positive, if date1 is later than date2: negative
   // timestamp objects have embedded time zone, so no tz conversion needed

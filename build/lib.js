@@ -7,7 +7,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 var _require = require('./date-time'),
     convertStringToTimestamp = _require.convertStringToTimestamp,
     isValidDate = _require.isValidDate,
-    printDate = _require.printDate;
+    printDate = _require.printDate,
+    dateDelta = _require.dateDelta;
 
 var _require2 = require('./basic'),
     isPrimitiveNumber = _require2.isPrimitiveNumber,
@@ -93,6 +94,17 @@ var print = function print(data, options) {
     return nullValue;
   }
   return ':(';
+};
+
+var numberToLetter = function numberToLetter(num, option) {
+  // 1-indexed, not 0-indexed, so subtract 1
+  // move to conjunction-junction
+  // make A if neg, Z if over
+  // round number
+  // exercise option for caps or lowercase
+  var letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+  var rawLetter = letters[num - 1];
+  return rawLetter;
 };
 
 // @@@@@@@@@@@@@@@ STRINGS @@@@@@@@@@@@@@@@
@@ -541,6 +553,145 @@ var totalValuesByKey = function totalValuesByKey(arrayOfObjects, key) {
   };
 };
 
+var averageValuesByKey = function averageValuesByKey(arrayOfObjects, key) {
+  // input: array of objects, and a single key (for numeric keys, stringify numbers)
+  // output: sum of all values of all matching keys with numeric values
+  // output: array of messages identifying how each index was handled
+  if (!Array.isArray(arrayOfObjects)) return { value: null, message: 'no array of objects' };
+  if (typeof key !== 'string') return { value: null, message: 'key must be a string' };
+  var value = 0;
+  var counter = 0;
+  var messages = arrayOfObjects.map(function (o, i) {
+    if (o[key] === undefined) {
+      return 'index ' + i + ': key ' + key + ': was undefined';
+    } else {
+      if (!isPrimitiveNumber(o[key])) {
+        return 'index ' + i + ' key ' + key + ': was ' + o[key] + ' (not a number)';
+      } else {
+        counter++;
+        value += o[key];
+        return 'index ' + i + ': key ' + key + ': ' + o[key] + ' added; new cum. value: ' + value + ', counter: ' + counter;
+      }
+    }
+  });
+  var average = precisionRound(value / counter, 4);
+  return {
+    value: average,
+    messages: messages
+  };
+};
+
+var mergeArraysOfObjectsByKey = function mergeArraysOfObjectsByKey(arr1, arr2, options) {
+  if (!Array.isArray(arr1)) {
+    return [];
+  }
+  if (!Array.isArray(arr2)) {
+    return arr1;
+  }
+  if (!isObjectLiteral(options)) {
+    return [];
+  }
+  var key1 = options.key1,
+      key2 = options.key2,
+      prefix = options.prefix;
+
+  if (key1 === undefined || key2 === undefined || prefix === undefined) {
+    return [];
+  }
+  var combo = arr1.map(function (obj1, i) {
+    // follow primary list of objects
+    var merged = Object.assign({}, obj1);
+    // this handles arrays of unmatched length.
+    // if arr1 is longer than arr2, returns this PORTION of arr1 (returns entire array a few lines up)
+    if (!isObjectLiteral(arr2[i])) {
+      return obj1;
+    }
+    var theMatch = {};
+    // improve this by looking for other ways to match
+    var delta = dateDelta(obj1[key1], arr2[i][key2]);
+    if (delta <= 2) {
+      theMatch = arr2[i];
+    } else {
+      theMatch = arr2.find(function (c) {
+        var delta = dateDelta(obj1[key1], arr2[i][key2]);
+        if (delta <= 2) {
+          return c;
+        }
+      });
+    }
+    for (var key in theMatch) {
+      if (merged.hasOwnProperty(key)) {
+        merged['' + prefix + key] = theMatch[key];
+      } else {
+        merged[key] = theMatch[key];
+      }
+    }
+    return merged;
+  });
+  return combo;
+};
+
+var filterSequentialItems = function filterSequentialItems(arr, options) {
+  // input: sorted array, options (see below for options)
+  // output: array containing ONLY sequential items, starting with index 0
+  // does not sort, does not skip. Checks each item you sent in as supposed to be sequential, and ensures it is actually sequential
+  var returnOnError = { array: [], index: 0, stop: 0 };
+  if (!Array.isArray(arr)) return Object.assign({}, returnOnError, { message: 'array to check for sequentiality is not an array' });
+  if (!isObjectLiteral(options)) return Object.assign({}, returnOnError, { message: 'options for array sequentiality is not an object' });
+  var key = options.key,
+      increment = options.increment,
+      tolerance = options.tolerance,
+      timestampUnits = options.timestampUnits,
+      extraLoggingKey = options.extraLoggingKey;
+
+  if (typeof key !== 'string') return Object.assign({}, returnOnError, { message: 'key to check for sequentiality is not a string' });
+  if (!isPrimitiveNumber(increment)) return Object.assign({}, returnOnError, { message: 'increment to check for sequentiality is not a number' });
+  if (!isPrimitiveNumber(tolerance)) return Object.assign({}, returnOnError, { message: 'tolerance to check for sequentiality is not a number' });
+  // validated
+  var id = typeof extraLoggingKey === 'string' ? extraLoggingKey : 'id';
+  var index = void 0,
+      stop = void 0,
+      message = void 0;
+  var range = increment + tolerance;
+  var tsUnits = key.includes('imestamp') && typeof timestampUnits === 'string' ? timestampUnits : key.includes('imestamp') ? 'minutes' : null;
+  arr.forEach(function (o, i) {
+    if (i === 0) {
+      index = 0;
+    } else {
+      if (!stop) {
+        if (isObjectLiteral(o)) {
+          if (o.hasOwnProperty(key)) {
+            var delta = key.includes('imestamp') ? dateDelta(o[key], arr[index][key], tsUnits) : o[key] - arr[index][key];
+            var absDelta = Math.abs(delta);
+            if (absDelta > range) {
+              stop = i;
+              message = 'at record ' + i + ' exceeded range of ' + range + ' (' + id + ': ' + o[id] + ', delta: ' + delta + ', absolute: ' + absDelta + ', key: ' + key + ', value at ' + i + ': ' + o[key] + ', value at last sequential index #' + index + '/' + id + ': ' + arr[index][id] + ': ' + arr[index][key] + ')';
+            } else if (absDelta === 0) {
+              stop = i;
+              message = 'at record ' + i + ' no sequentiality detected (' + id + ': ' + o[id] + ', delta: ' + delta + ', absolute: ' + absDelta + '), key: ' + key + ', value at ' + i + ': ' + o[key] + ', value at last sequential index #' + index + '/' + id + ': ' + arr[index][id] + ': ' + arr[index][key];
+            } else {
+              message = 'ok';
+              index = i; // success!
+            }
+          } else {
+            stop = i;
+            message = 'at record ' + i + '/' + id + ': ' + o[id] + ' key of ' + key + ' not found.';
+          }
+        } else {
+          stop = i;
+          message = 'at record ' + i + '/' + id + ': ' + o[id] + ' no sequentiality object found.';
+        }
+      }
+    }
+  });
+  return {
+    array: arr.slice(0, index + 1),
+    index: index,
+    stop: stop,
+    message: message
+  };
+};
+
 // @@@@@@@@@@@@@@@ ARRAYS @@@@@@@@@@@@@@@@
 
 var totalAndAverageArrays = function totalAndAverageArrays(compoundArray) {
@@ -719,14 +870,19 @@ var interpolateArrayValues = function interpolateArrayValues(arr, decimal, hi, l
 };
 
 module.exports = {
-  correctInputType: correctInputType,
+  // types
+  correctInputType: correctInputType, // do not do a test for this yet
+  // numbers (none yet)
+  // mixed types
   print: print,
+  numberToLetter: numberToLetter,
+  // strings
   titleCaseWord: titleCaseWord,
   lowerCaseWord: lowerCaseWord,
   convertScToCc: convertScToCc,
   convertCcToSc: convertCcToSc,
   convertCcToSpace: convertCcToSpace,
-  convertScToSpace: convertScToSpace,
+  // object keys
   convertObjectKeyCase: convertObjectKeyCase,
   shiftObjectKeysColumn: shiftObjectKeysColumn,
   shiftArrayKeysColumn: shiftArrayKeysColumn,
@@ -734,15 +890,18 @@ module.exports = {
   validateObjectKeysPresent: validateObjectKeysPresent,
   validateObjectKeys: validateObjectKeys,
   limitObjectKeys: limitObjectKeys,
+  parseValuesObj2Levels: parseValuesObj2Levels,
+  // objects and arrays
   roundAllValues: roundAllValues,
   parseValuesFromArrayOfObj1Level: parseValuesFromArrayOfObj1Level,
-  parseValuesObj2Levels: parseValuesObj2Levels,
-
   convertArrayToObject: convertArrayToObject,
   convertObjectToArray: convertObjectToArray,
   subArrayByKey: subArrayByKey,
   totalValuesByKey: totalValuesByKey,
-
+  averageValuesByKey: averageValuesByKey,
+  mergeArraysOfObjectsByKey: mergeArraysOfObjectsByKey,
+  filterSequentialItems: filterSequentialItems,
+  // arrays
   totalAndAverageArrays: totalAndAverageArrays,
   deltaArray: deltaArray,
   immutableArrayInsert: immutableArrayInsert,

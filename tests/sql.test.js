@@ -11,7 +11,8 @@ const {
   formatObjectForKnex, 
   formatReqBodyForKnex,
   prefixCommonKeys, 
-  createSqlFetchTableKeys, } = require('../index');
+  createSqlFetchTableKeys,
+  validateRawKnex, } = require('../index');
 const {
   numbers, 
   nonNumberArrays,
@@ -660,16 +661,6 @@ describe('conjunction-junction db', ()=> {
     expect(prefixedKeys1).to.deep.equal(expectedResult);
   });
 
-  it.skip('createSqlFetchTableKeys testsJoinInstructions', ()=> { 
-    const expectedResult = {
-      fetch: 'tests.id as id, tests.id_user as id_user, id_cassette, id_storm, slope_pct, tests.timestamp_created as timestamp_created, timestamp_on, timestamp_off, timestamp_end, timestamp_start, timestamp_rain_peak, timestamp_retention_peak, timestamp_runoff_peak_trans, timestamp_runoff_peak_sheet, timestamp_runoff_peak, timestamp_runoff_last, timestamp_absorbed_peak, rain_rate_peak_in_sf_min, runoff_rate_peak_in_sf_min, runoff_rate_peak_reduction_pct, runoff_delay_peak_mins, runoff_delay_tail_mins, absorbed_peak_pct, tests.links as links, tests.captions as captions, tests.notes as notes, auto_off, auto_end, status_test, tests.error_level as error_level, tests.locked as locked, measurements, indices, storms.id as storms_id, storms.id_user as storms_id_user, name_storm, name_program, durations_mins_raw, duration_mins, rates_dispensed_gpm_raw, rates_dispensed_gpm, rates_applied_gpm_raw, rates_applied_gpm, rates_overspray_gpm_raw, rates_overspray_gpm, storms.timestamp_created as storms_timestamp_created, timestamp_start_capture, timestamp_end_capture, pressure_max_raw, pressure_min_raw, pressure_raw, rain_temp_c, storms.links as storms_links, storms.captions as storms_captions, storms.notes as storms_notes, storms.locked as storms_locked, storms.id_user_locked as storms_id_user_locked, storms.error_level as storms_error_level, cassettes.id as cassettes_id, cassettes.id_user as cassettes_id_user, cassettes.id_profile as cassettes_id_profile, name_cassette, size_sf, wt_cassette_empty_lbs, wt_initial_scale_lbs, wt_dry_astm_lbs, wt_max_astm_lbs, media_cf, initial_contents_lbs, contents_dry_astm_lbs, contents_max_astm_lbs, cassette_max_lbs_water, initial_water_lbs, initial_pct_sat, media_thickness_in_actual, cassette_astm_dry_lbs_sf, cassette_astm_max_lbs_sf, cassette_thickness_in, total_ci, initial_water_gals, initial_water_ci, initial_vwc, coinuse_details, cassettes.timestamp_created as cassettes_timestamp_created, timestamp_built, timestamp_dismantled, cassettes.links as cassettes_links, cassettes.captions as cassettes_captions, cassettes.notes as cassettes_notes, cassettes.locked as cassettes_locked, cassettes.id_user_locked as cassettes_id_user_locked, cassettes.error_level as cassettes_error_level, profiles.id as profiles_id, profiles.id_user as profiles_id_user, name_profile, media_thickness_in, profile_astm_dry_lbs_sf, profile_astm_max_lbs_sf, profile_thickness_in, profiles.media_cf_sf as profiles_media_cf_sf, media_dry_lbs_sf, media_max_lbs_sf, coinuses_max_lbs_sf, profile_max_vwc_pct, profile_max_water_lbs_sf, list_components, profiles.timestamp_created as profiles_timestamp_created, profiles.links as profiles_links, profiles.captions as profiles_captions, profiles.notes as profiles_notes, profiles.locked as profiles_locked, profiles.id_user_locked as profiles_id_user_locked, profiles.error_level as profiles_error_level',
-      table: 'tests',
-      join: 'left join storms on tests.id_storm = storms.id left join cassettes on tests.id_cassette = cassettes.id left join profiles on cassettes.id_profile = profiles.id' 
-    };
-    const result = createSqlFetchTableKeys();
-    expect(result).to.deep.equal(expectedResult);
-  });
-
   it('createSqlFetchTableKeys joinTo 000, keyLoc 000', ()=> { 
     const tables = ['profiles', 'cassettes', 'tests'];
     const keysToFetch = [
@@ -758,7 +749,28 @@ describe('conjunction-junction db', ()=> {
     const result = createSqlFetchTableKeys({tables, keysToFetch, matchingKey, joinTosArray, keyLocsArray});
     expect(result).to.deep.equal(expectedResult);
   });
-  it('createSqlFetchTableKeys undefined on tables', ()=> { 
+  it('createSqlFetchTableKeys joinTo 001, keyLoc 002 table not ending in s', ()=> { 
+    const tables = ['profiles', 'weatherLoFreq', 'tests'];
+    const keysToFetch = [
+      'profiles.id as id',
+      'cassettes.id as cassettesId',
+      'tests.id as testsId',
+      'mediaCfSf',
+      'wtAstmDry',
+    ];
+    const matchingKey  = 'id';
+    const joinTosArray = [0,0,1];
+    const keyLocsArray = [0,0,2];
+    const expectedResult = {
+      fetch: 'profiles.id as id, cassettes.id as cassettesId, tests.id as testsId, mediaCfSf, wtAstmDry',
+      table: 'profiles',
+      // first 0 in joinToing says cassettes joins to 0 of tables (profiles); the 1 in joinToing says join tests to cassettes (not profiles); the 1 in keyLocping says the foreign key is in tests, not cassettes
+      join: 'left join weatherLoFreq on profiles.id_weatherLoFreq = weatherLoFreq.id left join tests on weatherLoFreq.id = tests.id_weatherLoFreq',
+    };
+    const result = createSqlFetchTableKeys({tables, keysToFetch, matchingKey, joinTosArray, keyLocsArray});
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('createSqlFetchTableKeys undefined on invalid table', ()=> { 
     const tables = 'tables';
     const keysToFetch = [
       'profiles.id as id',
@@ -797,13 +809,42 @@ describe('conjunction-junction db', ()=> {
     const result = createSqlFetchTableKeys({tables, keysToFetch, matchingKey, joinTosArray, keyLocsArray});
     expect(result).to.deep.equal(undefined);
   });
+
+  it('validateRawKnex errs data not an object', () => {
+    const data = undefined;
+    const result = validateRawKnex(data);
+    expect(result).to.haveOwnProperty('message');
+  });
+  it('validateRawKnex errs data has no rows', () => {
+    const data = {};
+    const result = validateRawKnex(data);
+    expect(result).to.haveOwnProperty('message');
+  });
+  it('validateRawKnex errs rows not array', () => {
+    const data = {rows: 1};
+    const result = validateRawKnex(data);
+    expect(result).to.haveOwnProperty('message');
+  });
+  it('validateRawKnex errs rows empty', () => {
+    const data = {rows: []};
+    const result = validateRawKnex(data);
+    expect(result).to.haveOwnProperty('message');
+  });
+  it('validateRawKnex errs rows 0 not an object', () => {
+    const data = {rows: ['not an object']};
+    const result = validateRawKnex(data);
+    expect(result).to.haveOwnProperty('message');
+  });
+  it('validateRawKnex does not err if rows[0] is an object', () => {
+    const data = {rows: [{key: 'val'}]};
+    const result = validateRawKnex(data);
+    expect(result).to.not.haveOwnProperty('message');
+  });
+  it('validateRawKnex', () => {
+    const data = {rows: [{k: 'v'}, {k: 'a'}]};
+    const expectedResult = [{k: 'v'}, {k: 'a'}];
+    const result = validateRawKnex(data);
+    expect(result).to.deep.equal(expectedResult);
+  });
   
-  it('createRetentionRawSql', () => {
-
-  });
-
-  it('validateLinkUpdate', () => {
-
-  });
-
 });

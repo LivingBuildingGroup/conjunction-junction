@@ -261,34 +261,34 @@ const createSqlFetchTableKeys = input => {
   // input: joinTypeArray: LATER... allow switching between left (default), inner, right...
   // Alternate of [0,0,1], e.g., says in the 3rd instance, the child contains foreign keys for the parent.
   // output: fetch (keys), join statement; join with 'from' for a get; use separately in other statements;
-  if(!Array.isArray(tables)) return;
-  if(!Array.isArray(keysToFetch)) return;
+  if(!Array.isArray(tables))          return;
+  if(!Array.isArray(keysToFetch))     return;
   if(typeof matchingKey !== 'string') return;
   const joinTos =
-    joinTosArray   === undefined || !Array.isArray(joinTosArray)   ? tables.map(()=>0) :
-      joinTosArray.length    !== tables.length                     ? tables.map(()=>0) :
+    !Array.isArray(joinTosArray)               ? tables.map(()=>0) :
+      joinTosArray.length   !== tables.length  ? tables.map(()=>0) :
         joinTosArray;
   const keyLocs =
-    keyLocsArray   === undefined || !Array.isArray(keyLocsArray)   ? tables.map(()=>0) :
-      keyLocsArray.length   !== tables.length                      ? tables.map(()=>0) :
+    !Array.isArray(keyLocsArray)               ? tables.map(()=>0) :
+      keyLocsArray.length   !== tables.length  ? tables.map(()=>0) :
         keyLocsArray;
   const joinTypes = 
-    joinTypesArray === undefined || !Array.isArray(joinTypesArray) ? tables.map(()=>'left') :
-      joinTypesArray.length !== tables.length                      ? tables.map(()=>'left') :
+    !Array.isArray(joinTypesArray)             ? tables.map(()=>'left') :
+      joinTypesArray.length !== tables.length  ? tables.map(()=>'left') :
         joinTypesArray;
 
   const joinStatementArray = tables.map((joinTo, i)=>{
-    const joinFrom = tables[joinTos[i]]; 
-    const keyLoc   = tables[keyLocs[i]];
-    const joinDir  = joinFrom === keyLoc ? 'down' : 'up' ;
-    const joinKey  =  joinDir === 'down' ? 
-      `${matchingKey}_${joinTo.slice(0,joinTo.length-1)}` : // e.g. id_profile if current table is profiles, and joining down
-      `${matchingKey}_${joinFrom.slice(0,joinFrom.length-1)}` ; // e.g. id_cassette if current table is profiles, and joining up to cassette
-    const joinArrangement = joinDir === 'down' ?                // i.e. key is to the left
-    // e.g. cassettes.id_profile = profiles.id
-    `${joinFrom}.${joinKey} = ${joinTo}.${matchingKey}` : 
-      // e.g. coinuses.id_profile = profiles.id
-      `${joinFrom}.${matchingKey} = ${joinTo}.${joinKey}` ; 
+    const joinFrom     = tables[joinTos[i]]; 
+    const keyLoc       = tables[keyLocs[i]];
+    const joinDir      = joinFrom === keyLoc ? 'down' : 'up' ;
+    const joinToTail   = joinTo.charAt(joinTo.length-1)     === 's' ? joinTo.slice(  0,joinTo.length-1)   : joinTo   ;
+    const joinFromTail = joinFrom.charAt(joinFrom.length-1) === 's' ? joinFrom.slice(0,joinFrom.length-1) : joinFrom ;
+    const joinKey      = joinDir === 'down' ? 
+      `${matchingKey}_${joinToTail}` :            // e.g. id_profile if current table is profiles, and joining down
+      `${matchingKey}_${joinFromTail}` ;          // e.g. id_cassette if current table is profiles, and joining up to cassette
+    const joinArrangement = joinDir === 'down' ?  // i.e. key is to the left
+    `${joinFrom}.${joinKey} = ${joinTo}.${matchingKey}` :   // e.g. cassettes.id_profile = profiles.id
+      `${joinFrom}.${matchingKey} = ${joinTo}.${joinKey}` ; // e.g. coinuses.id_profile = profiles.id
     const joinType = joinTypes[i];
     return `${joinType} join ${joinTo} on ${joinArrangement}`;
   });
@@ -300,6 +300,18 @@ const createSqlFetchTableKeys = input => {
   return { fetch, table, join };
 };
 
+const validateRawKnex = (data, label) => {
+  const flag = typeof label === 'string' ? label : 'raw fetch';
+  // IMPROVE THIS AS AN ALL-PURPOSE FUNCTION
+  // make sure data argument is Raw format (key of rows)
+  if(!isObjectLiteral(data))         return { message: `${flag} is not an object` };
+  if(!data.rows)                     return { message: `${flag} does not include rows` };
+  if(!Array.isArray(data.rows))      return { message: `${flag} rows is not an array` };
+  if(data.rows.length <= 0)          return { message: `${flag} rows is empty, stopping` };
+  if(!isObjectLiteral(data.rows[0])) return { message: `${flag} row 0 is not an object, stopping` };
+  return data.rows;
+};
+
 module.exports = { 
   formatTimestampForSql,
   escapeSpecial,
@@ -309,4 +321,5 @@ module.exports = {
   formatReqBodyForKnex,
   prefixCommonKeys, 
   createSqlFetchTableKeys,
+  validateRawKnex,
 };
