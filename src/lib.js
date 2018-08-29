@@ -446,7 +446,11 @@ const convertArrayToObject = (array, key='id')=>{
   // input: [ {id:0}, {id:1} ]      output {0:{},1:{}}
   const newObject = {};
   if (Array.isArray(array)) {
-    array.forEach(item=>newObject[item[key]] = item);
+    array.forEach(obj=>{
+      if(isObjectLiteral(obj)){
+        newObject[obj[key]] = obj;
+      }
+    });
     return newObject;
   }
   return {};
@@ -843,6 +847,7 @@ module.exports = {
   convertScToCc,
   convertCcToSc,
   convertCcToSpace,
+  convertScToSpace,
   // object keys
   convertObjectKeyCase, 
   shiftObjectKeysColumn,

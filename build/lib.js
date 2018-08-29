@@ -476,8 +476,10 @@ var convertArrayToObject = function convertArrayToObject(array) {
   // input: [ {id:0}, {id:1} ]      output {0:{},1:{}}
   var newObject = {};
   if (Array.isArray(array)) {
-    array.forEach(function (item) {
-      return newObject[item[key]] = item;
+    array.forEach(function (obj) {
+      if (isObjectLiteral(obj)) {
+        newObject[obj[key]] = obj;
+      }
     });
     return newObject;
   }
@@ -882,6 +884,7 @@ module.exports = {
   convertScToCc: convertScToCc,
   convertCcToSc: convertCcToSc,
   convertCcToSpace: convertCcToSpace,
+  convertScToSpace: convertScToSpace,
   // object keys
   convertObjectKeyCase: convertObjectKeyCase,
   shiftObjectKeysColumn: shiftObjectKeysColumn,

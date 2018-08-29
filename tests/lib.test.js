@@ -16,6 +16,7 @@ const {
   convertScToCc,
   convertCcToSc,
   convertCcToSpace,
+  convertScToSpace,
   // object keys
   convertObjectKeyCase, 
   shiftObjectKeysColumn,
