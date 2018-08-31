@@ -499,6 +499,14 @@ var convertObjectToArray = function convertObjectToArray(object) {
 };
 
 var subArrayByKey = function subArrayByKey(array, groupBy) {
+  if (!Array.isArray(array) || typeof groupBy !== 'string') {
+    return {
+      groupBy: groupBy,
+      arraysOfDataObjects: [{}],
+      arrayOfDataGroups: [],
+      arrayOfKeys: []
+    };
+  }
   var dGs = [];
   var dOs = [];
   var kO = {};
