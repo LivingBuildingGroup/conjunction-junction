@@ -560,15 +560,9 @@ const averageValuesByKey = (arrayOfObjects, key) => {
 };
 
 const mergeArraysOfObjectsByKey = (arr1, arr2, options) => {
-  if(!Array.isArray(arr1)){
-    return [];
-  }
-  if(!Array.isArray(arr2)){
-    return arr1;
-  } 
-  if(!isObjectLiteral(options)){
-    return [];
-  }
+  if(!Array.isArray(arr1))      return [];
+  if(!Array.isArray(arr2))      return arr1;
+  if(!isObjectLiteral(options)) return [];
   const { key1, key2, prefix } = options;
   if(key1 === undefined || key2 === undefined || prefix === undefined){
     return [];

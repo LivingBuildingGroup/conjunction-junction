@@ -592,15 +592,9 @@ var averageValuesByKey = function averageValuesByKey(arrayOfObjects, key) {
 };
 
 var mergeArraysOfObjectsByKey = function mergeArraysOfObjectsByKey(arr1, arr2, options) {
-  if (!Array.isArray(arr1)) {
-    return [];
-  }
-  if (!Array.isArray(arr2)) {
-    return arr1;
-  }
-  if (!isObjectLiteral(options)) {
-    return [];
-  }
+  if (!Array.isArray(arr1)) return [];
+  if (!Array.isArray(arr2)) return arr1;
+  if (!isObjectLiteral(options)) return [];
   var key1 = options.key1,
       key2 = options.key2,
       prefix = options.prefix;
