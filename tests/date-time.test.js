@@ -663,6 +663,17 @@ describe('conjunction-junction date-time', () => {
     const result = convertTimestampToString(date1StringDtzDef);
     expect(result).to.equal(date1StringDtzDef);
   });
+  it('convertTimestampToString numeric', () => {
+    // THIS IGNORES TIMEZONE
+    // just converts time stamp to numbers
+    // if you want this in Zulu, convert it to zulu first
+    // date 1 = 2018-05-17 13:01:00 -0400
+    console.log('date1   ',date1);
+    const expectedResult = '20180517130100';
+    const result = convertTimestampToString(date1, 'numeric');
+    expect(result).to.equal(expectedResult);
+  });
+
   // add to above: strings with dates only, no time
 
   it('convertLocalStringTimestampToZuluStringTimestamp date', () => {

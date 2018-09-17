@@ -44,7 +44,9 @@ const {
   removeAllItemsFromArray,
   addAllItemsToArray,
   getPositionToInterpolate,
-  interpolateArrayValues,} = require('../index');
+  interpolateArrayValues,
+  printDate
+} = require('../index');
 
 const {
   nonObjects,
@@ -54,9 +56,13 @@ const {
   nonStringNonNumbers,
   nonCompoundArrays,
   date0, 
-  date1, }   = require('./helper-data');
-process.env.DB_MODE = 'test';
-
+  date1,
+  date2,
+  date3,
+  hour0, 
+  hour1, 
+  hour2, 
+  hour3 }   = require('./helper-data');
 
 describe('conjunction-junction lib', () => { 
 
@@ -1656,8 +1662,173 @@ describe('conjunction-junction lib', () => {
     expect(result).to.deep.equal(expectedResult);
   });
 
-  it('filterSequentialItems',()=>{
-
+  it('filterSequentialItems all ok 1 minute',()=>{
+    const options = {
+      key : 'timestamp_cr6', 
+      increment: 1, 
+      tolerance: 0, 
+      timestampUnits: 'minutes', 
+      // extraLoggingKey: 
+    };
+    const arr = [
+      {
+        id: 1,
+        timestamp_cr6: date0,
+      },
+      {
+        id: 2,
+        timestamp_cr6: date1,
+      },
+      {
+        id: 3,
+        timestamp_cr6: date2,
+      },
+    ];
+    const expectedResult = {
+      array: [
+        {
+          id: 1,
+          timestamp_cr6: date0,
+        },
+        {
+          id: 2,
+          timestamp_cr6: date1,
+        },
+        {
+          id: 3,
+          timestamp_cr6: date2,
+        },
+      ],
+      index: 2,
+      stop: undefined,
+      message: 'ok',
+    };
+    const result = filterSequentialItems(arr, options);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('filterSequentialItems part ok 1 minute',()=>{
+    const options = {
+      key : 'timestamp_cr6', 
+      increment: 1, 
+      tolerance: 0, 
+      timestampUnits: 'minutes', 
+      // extraLoggingKey: 
+    };
+    const arr = [
+      {
+        id: 0,
+        timestamp_cr6: date0,
+      },
+      {
+        id: 1,
+        timestamp_cr6: date1,
+      },
+      {
+        id: 2,
+        timestamp_cr6: date3,
+      },
+    ];
+    const expectedResult = {
+      array: [
+        {
+          id: 0,
+          timestamp_cr6: date0,
+        },
+        {
+          id: 1,
+          timestamp_cr6: date1,
+        },
+      ],
+      index: 1,
+      stop: 2,
+      message: `in filterSequentialItems() at record 2 exceeded range of 1 (id: 2, delta: -2, absolute: 2, key: timestamp_cr6, value at 2: ${printDate(date3)}, value at last sequential index #1/id: 1: ${printDate(date1)})`,
+    };
+    const result = filterSequentialItems(arr, options);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('filterSequentialItems all ok 60 minute',()=>{
+    const options = {
+      key : 'timestamp_cr6', 
+      increment: 60, 
+      tolerance: 0, 
+      timestampUnits: 'minutes', 
+      // extraLoggingKey: 
+    };
+    const arr = [
+      {
+        id: 1,
+        timestamp_cr6: hour0,
+      },
+      {
+        id: 2,
+        timestamp_cr6: hour1,
+      },
+      {
+        id: 3,
+        timestamp_cr6: hour2,
+      },
+    ];
+    const expectedResult = {
+      array: [
+        {
+          id: 1,
+          timestamp_cr6: hour0,
+        },
+        {
+          id: 2,
+          timestamp_cr6: hour1,
+        },
+        {
+          id: 3,
+          timestamp_cr6: hour2,
+        },
+      ],
+      index: 2,
+      stop: undefined,
+      message: 'ok',
+    };
+    const result = filterSequentialItems(arr, options);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('filterSequentialItems part ok 60 minute',()=>{
+    const options = {
+      key : 'timestamp_cr6', 
+      increment: 60, 
+      tolerance: 0, 
+      timestampUnits: 'minutes', 
+      // extraLoggingKey: 
+    };
+    const arr = [
+      {
+        id: 0,
+        timestamp_cr6: hour0,
+      },
+      {
+        id: 1,
+        timestamp_cr6: hour1,
+      },
+      {
+        id: 2,
+        timestamp_cr6: hour3,
+      },
+    ];
+    const expectedResult = {
+      array: [
+        {
+          id: 0,
+          timestamp_cr6: hour0,
+        },
+        {
+          id: 1,
+          timestamp_cr6: hour1,
+        },
+      ],
+      index: 1,
+      stop: 2,
+      message: `in filterSequentialItems() at record 2 exceeded range of 60 (id: 2, delta: -120, absolute: 120, key: timestamp_cr6, value at 2: ${printDate(hour3)}, value at last sequential index #1/id: 1: ${printDate(hour1)})`,
+    };
+    const result = filterSequentialItems(arr, options);
+    expect(result).to.deep.equal(expectedResult);
   });
 
   it('totalAndAverageArrays fails nicely on non-compound array', () => {

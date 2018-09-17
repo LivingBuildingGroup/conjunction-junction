@@ -251,6 +251,7 @@ var convertTimestampToString = function convertTimestampToString(timestamp, opti
     if (option === 'time') return hours0 + ':' + minutes0 + ':' + seconds0;
     if (option === 'd t noz') return year + '-' + month0 + '-' + date0 + ' ' + hours0 + ':' + minutes0 + ':' + seconds0;
     if (option === 'd t z') return year + '-' + month0 + '-' + date0 + ' ' + hours0 + ':' + minutes0 + ':' + seconds0 + ' ' + offsetFormattedNoColon;
+    if (option === 'numeric') return '' + year + month0 + date0 + hours0 + minutes0 + seconds0;
     return year + '-' + month0 + '-' + date0 + timeSymbol + hours0 + ':' + minutes0 + ':' + seconds0 + offsetFormatted;
   };
 

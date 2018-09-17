@@ -477,9 +477,9 @@ const subArrayByKey = (array, groupBy) => {
       arrayOfKeys: [],
     };
   }
-  const dGs  = [];
-  const dOs  = [];
-  const kO = {};
+  const dGs = [];
+  const dOs = [];
+  const kO  = {};
   array.forEach(item=>{
     const index = dGs.findIndex(v=>v===item[groupBy]);
     if(index >= 0){
@@ -632,10 +632,10 @@ const filterSequentialItems = (arr, options) => {
             const absDelta = Math.abs(delta);
             if(absDelta > range){
               stop = i;
-              message = `at record ${i} exceeded range of ${range} (${id}: ${o[id]}, delta: ${delta}, absolute: ${absDelta}, key: ${key}, value at ${i}: ${o[key]}, value at last sequential index #${index}/${id}: ${arr[index][id]}: ${arr[index][key]})`;
+              message = `in filterSequentialItems() at record ${i} exceeded range of ${range} (${id}: ${o[id]}, delta: ${delta}, absolute: ${absDelta}, key: ${key}, value at ${i}: ${printDate(o[key])}, value at last sequential index #${index}/${id}: ${arr[index][id]}: ${printDate(arr[index][key])})`;
             } else if (absDelta === 0){
               stop = i;
-              message = `at record ${i} no sequentiality detected (${id}: ${o[id]}, delta: ${delta}, absolute: ${absDelta}), key: ${key}, value at ${i}: ${o[key]}, value at last sequential index #${index}/${id}: ${arr[index][id]}: ${arr[index][key]}`;
+              message = `at record ${i} no sequentiality detected (${id}: ${o[id]}, delta: ${delta}, absolute: ${absDelta}), key: ${key}, value at ${i}: ${printDate(o[key])}, value at last sequential index #${index}/${id}: ${arr[index][id]}: ${printDate(arr[index][key])}`;
             } else {
               message = 'ok';
               index = i; // success!
