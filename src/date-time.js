@@ -643,6 +643,10 @@ const createTimestampLabel = (ts, option={format: 'm d h'}) => {
       return `${dows[dow]} ${day} ${hour}${meridien}`;
     } else if (option === 'dow d h m'){
       return `${dows[dow]} ${day} ${hour}:${min}${meridien}`;
+    } else if (option === 'dow d h'){
+      return `${dows[dow]} ${day} ${hour}${meridien}`;
+    } else if (option === 'dow h'){
+      return `${dows[dow]} ${hour}${meridien}`;
     } else {
       return '?';
     }
