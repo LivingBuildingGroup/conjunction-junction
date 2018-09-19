@@ -72,6 +72,23 @@ const getDaysOfMonth = month => {
   return monthDays;
 };
 
+const getNameOfMonth = monthAsNumber => {
+  // improve by accepting options (string format, 1 index or 0 index), type checking, etc.
+  // leave original as default
+  if(monthAsNumber ===  1) return 'Jan';
+  if(monthAsNumber ===  2) return 'Feb';
+  if(monthAsNumber ===  3) return 'Mar';
+  if(monthAsNumber ===  4) return 'Apr';
+  if(monthAsNumber ===  5) return 'May';
+  if(monthAsNumber ===  6) return 'Jun';
+  if(monthAsNumber ===  7) return 'Jul';
+  if(monthAsNumber ===  8) return 'Aug';
+  if(monthAsNumber ===  9) return 'Sep';
+  if(monthAsNumber === 10) return 'Oct';
+  if(monthAsNumber === 11) return 'Nov';
+  if(monthAsNumber === 12) return 'Dec';
+};
+
 // @@@@@@@@@@@@@ STRING HELPERS @@@@@@@@@@@@
 
 const formatOffsetAsString = (offsetMins, useColon=true) => {
@@ -637,15 +654,15 @@ const createTimestampLabel = (ts, option={format: 'm d h'}) => {
       return `${month}/${day}`;
     } else if(o.format === 'm d h'){
       return `${month}/${day} ${hour}${meridien}`;
-    } else if (option === 'm d h m') {
+    } else if (o.format === 'm d h m') {
       return `${month}/${day} ${hour}:${min}${meridien}`;
-    } else if (option === 'dow d h'){
+    } else if (o.format === 'dow d h'){
       return `${dows[dow]} ${day} ${hour}${meridien}`;
-    } else if (option === 'dow d h m'){
+    } else if (o.format === 'dow d h m'){
       return `${dows[dow]} ${day} ${hour}:${min}${meridien}`;
-    } else if (option === 'dow d h'){
+    } else if (o.format === 'dow d h'){
       return `${dows[dow]} ${day} ${hour}${meridien}`;
-    } else if (option === 'dow h'){
+    } else if (o.format === 'dow h'){
       return `${dows[dow]} ${hour}${meridien}`;
     } else {
       return '?';
@@ -661,6 +678,7 @@ module.exports = {
   getTheTimezoneOffset,
   isDaylightSavings,
   getDaysOfMonth,
+  getNameOfMonth,
   formatOffsetAsString,
   leadingZero,
   removeSpacesFromString,
