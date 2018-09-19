@@ -616,11 +616,26 @@ const createTimestampLabel = (ts, option={format: 'm d h'}) => {
     const dow   = ts.getDay();
     const h     = ts.getHours();
     const min   = ts.getMinutes();
-    const hour  = o.hour === 24 ? h :
-      h > 12 ? h-12 : h ;
-    const meridien = o.hour === 24 ? '' :
-      h >= 12 ? 'PM' : 'AM' ;
-    if(o.format === 'm d h'){
+    const hour  = 
+      h === 0  && min === 0 ? 
+        'midnight' :
+        h === 12 && min === 0 ? 
+          'noon' :
+          o.hour === 24 ? 
+            h :
+            h > 12 ? 
+              h - 12 : 
+              h ;
+    const meridien = 
+      typeof hour === 'string' ? // midnight or noon
+      '' :
+        o.hour === 24 ? 
+          '' :
+          h >= 12 ? 'PM' : 
+            'AM' ;
+    if(o.format === 'm d'){
+      return `${month}/${day}`;
+    } else if(o.format === 'm d h'){
       return `${month}/${day} ${hour}${meridien}`;
     } else if (option === 'm d h m') {
       return `${month}/${day} ${hour}:${min}${meridien}`;

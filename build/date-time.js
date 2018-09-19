@@ -554,9 +554,12 @@ var createTimestampLabel = function createTimestampLabel(ts) {
     var dow = ts.getDay();
     var h = ts.getHours();
     var min = ts.getMinutes();
-    var hour = o.hour === 24 ? h : h > 12 ? h - 12 : h;
-    var meridien = o.hour === 24 ? '' : h >= 12 ? 'PM' : 'AM';
-    if (o.format === 'm d h') {
+    var hour = h === 0 && min === 0 ? 'midnight' : h === 12 && min === 0 ? 'noon' : o.hour === 24 ? h : h > 12 ? h - 12 : h;
+    var meridien = typeof hour === 'string' ? // midnight or noon
+    '' : o.hour === 24 ? '' : h >= 12 ? 'PM' : 'AM';
+    if (o.format === 'm d') {
+      return month + '/' + day;
+    } else if (o.format === 'm d h') {
       return month + '/' + day + ' ' + hour + meridien;
     } else if (option === 'm d h m') {
       return month + '/' + day + ' ' + hour + ':' + min + meridien;
