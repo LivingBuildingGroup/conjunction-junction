@@ -161,14 +161,14 @@ const formatDataForSql = (data, key, option={type:'raw'}) => {
   return data; // if we meet none of the conditions above
 };
 
-const formatObjectForKnex = object => {
+const formatObjectForKnex = (object, option) => {
   // variety for formatting options to convert a JSON to an acceptable format for use with knex
   // NOTE: this keeps arrays intact, and does not convert them to '{1,2,3}' format for use with raw SQL
   // NOTE: this keeps null as null vs. 'null' (string)
-  const option = {type:'knex'};
+  const _option = isObjectLiteral(option) ? option : {type:'knex'};
   const o = {};
   for (let key in object) {
-    o[key] = formatDataForSql (object[key], key, option);
+    o[key] = formatDataForSql (object[key], key, _option);
   }
   return o;
 };

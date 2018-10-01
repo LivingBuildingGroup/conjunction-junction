@@ -175,14 +175,14 @@ var formatDataForSql = function formatDataForSql(data, key) {
   return data; // if we meet none of the conditions above
 };
 
-var formatObjectForKnex = function formatObjectForKnex(object) {
+var formatObjectForKnex = function formatObjectForKnex(object, option) {
   // variety for formatting options to convert a JSON to an acceptable format for use with knex
   // NOTE: this keeps arrays intact, and does not convert them to '{1,2,3}' format for use with raw SQL
   // NOTE: this keeps null as null vs. 'null' (string)
-  var option = { type: 'knex' };
+  var _option = isObjectLiteral(option) ? option : { type: 'knex' };
   var o = {};
   for (var key in object) {
-    o[key] = formatDataForSql(object[key], key, option);
+    o[key] = formatDataForSql(object[key], key, _option);
   }
   return o;
 };
