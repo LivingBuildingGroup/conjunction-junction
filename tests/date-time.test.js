@@ -55,7 +55,8 @@ describe('conjunction-junction date-time', () => {
     expect(result).to.equal(true);
   });
   it('isValidDate convertStringToTimestamp', () => {
-    const date = convertStringToTimestamp('2018-05-18 11:11:11 -0400'); 
+    const date = convertStringToTimestamp('2018-03-27 11:00:00 -0400');
+    // const date = convertStringToTimestamp('2018-05-18 11:11:11 -0400'); 
     const result = isValidDate(date);
     expect(result).to.equal(true);
   });

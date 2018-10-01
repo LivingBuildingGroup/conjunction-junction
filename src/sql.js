@@ -113,6 +113,9 @@ const formatDataForSql = (data, key, option={type:'raw'}) => {
       if(isObjectLiteral(item))    return null; // not returning nested objects
       if(typeof item === 'number') return item;
       if(type === 'raw'){
+        if(item === null || item === undefined){
+          return 'null' ;
+        }
         // for raw SQL, add quotes to strings, which we'll check for as non-timestamps and non-numbers.
         return `"${prefix}${item}${suffix}"`; // arrays of strings should have all strings in double quotes
       }
