@@ -24,6 +24,8 @@ const {
   addTime,
   createTimeframes,
   rangeIsIncluded,
+  printDate,
+  createTimestampLabel,
 } = require('../index');
 const {
   datez, date0,date1,date2,date3,date4,date5,date6,date7,date8,date9,
@@ -652,18 +654,15 @@ describe('conjunction-junction date-time', () => {
     const result = convertTimestampToString(date1, 'd t z');
     expect(result).to.equal(date1String_d_t_z);
   });
-  it('convertTimestampToString default = print', () => {
+  it('convertTimestampToString default dtz', () => {
     // 2018-05-17T13:01:00-0400
-    const expectedResult = 'Thursday, May 17, 2018, 1:01 PM';
     const result = convertTimestampToString(date1);
-    expect(result).to.equal(expectedResult);
+    expect(result).to.equal(date1StringDtzDef);
   });
-  it('convertTimestampToString', () => {
-    const date = new Date(1527039992682);
-    const result = convertTimestampToString(date, 'print');
-    // CHANGE THE 9 TO 8 IN WINTER
-    const expectedResult = 'Tuesday, May 22, 2018, 9:46 PM';
-    expect(result).to.deep.equal(expectedResult);
+  it('convertTimestampToString default dtz', () => {
+    // 2018-05-17T13:01:00-04:00
+    const result = convertTimestampToString(date1StringDtzDef);
+    expect(result).to.equal(date1StringDtzDef);
   });
   it('convertTimestampToString numeric', () => {
     // THIS IGNORES TIMEZONE
@@ -1319,6 +1318,18 @@ describe('conjunction-junction date-time', () => {
       rangeEndIn
     );
     expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('printDate', () => {
+    const date = new Date(1527039992682);
+    const result = printDate(date);
+    // CHANGE THE 9 TO 8 IN WINTER
+    const expectedResult = 'Tuesday, May 22, 2018, 9:46 PM';
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('createTimestampLabel', ()=>{
+
   });
 
 });

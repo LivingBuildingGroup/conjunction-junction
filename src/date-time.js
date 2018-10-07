@@ -253,6 +253,86 @@ const convertStringToTimestamp = rawString => {
   return {} ;
 };
 
+const _convertTimestampToStringInner = (ts, option) => {
+  const f = 
+    typeof option === 'string' ?
+      option :
+      !isObjectLiteral(option) ? 
+        'print' :
+        option.format ?
+          option.format : 
+          'print' ;
+  const o = isObjectLiteral(option) ? option : {} ;
+  const dateOptions = Object.assign({},
+    {
+      weekday: 'long', 
+      year:    'numeric', 
+      month:   'long', 
+      day:     'numeric', 
+      hour:    'numeric', 
+      minute:  'numeric',
+      timeZone,
+    },
+    o 
+  );
+  const offset          = getTheTimezoneOffset(ts); // returns signed minutes
+  const offsetFormatted = formatOffsetAsString(offset); // pass in signed min, returns signed string
+  const offsetFormattedNoColon = formatOffsetAsString(offset, false); // pass in signed minutes, returns signed string
+  const timeZone =
+    offset === -240 ? 'America/New_York' :
+      offset === -300 ? 'America/New_York' :
+        'UTC' ;
+  const dows       = ['Su','M','Tu','W','Th','F','Sa'];
+  const y          = ts.getFullYear();
+  const m          = ts.getMonth() + 1; // months are 0-index in date objects, but not in string
+  const m0         = leadingZero(m);
+  const d          = ts.getDate();
+  const dow        = ts.getDay();
+  const d0         = leadingZero(d);
+  const timeSymbol = 'T';
+  const h          = ts.getHours();
+  const h0         = leadingZero(h);
+  const min        = ts.getMinutes();
+  const min0       = leadingZero(min);
+  const seconds    = ts.getSeconds();
+  const seconds0   = leadingZero(seconds);
+  const hour  = 
+    h === 0  && min === 0 ? 
+      'midnight' :
+      h === 12 && min === 0 ? 
+        'noon' :
+        o.hour === 24 ? 
+          h :
+          h > 12 ? 
+            h - 12 : 
+            h ;
+  const meridien = 
+    typeof hour === 'string' ? // midnight or noon
+    '' :
+      o.hour === 24 ? 
+        '' :
+        h >= 12 ? 'PM' : 
+          'AM' ;
+  if(f === 'date')        return `${y}-${m0}-${d0}`;
+  if(f === 'yyyy-mm-dd')  return `${y}-${m0}-${d0}`;
+  if(f === 'd t noz')     return `${y}-${m0}-${d0} ${h0}:${min0}:${seconds0}`;
+  if(f === 'd t z')       return `${y}-${m0}-${d0} ${h0}:${min0}:${seconds0} ${offsetFormattedNoColon}`;
+  if(f === 'numeric')     return `${y}${m0}${d0}${h0}${min0}${seconds0}`;
+  if(f === 'time')        return `${h0}:${min0}:${seconds0}`;
+  if(f === 'm d')         return `${m}/${d}`;
+  if(f === 'm d h')       return `${m}/${d} ${hour}${meridien}`;
+  if(f === 'm d h m')     return `${m}/${d} ${hour}:${min}${meridien}`;
+  if(f === 'dow m d')     return `${dows[dow]} ${m}/${d}`;
+  if(f === 'dow d h')     return `${dows[dow]} ${d} ${hour}${meridien}`;
+  if(f === 'dow d h m')   return `${dows[dow]} ${d} ${hour}:${min}${meridien}`;
+  if(f === 'dow d h')     return `${dows[dow]} ${d} ${hour}${meridien}`;
+  if(f === 'dow h')       return `${dows[dow]} ${hour}${meridien}`;
+  if(f === 'full')        return `${y}-${m0}-${d0}${timeSymbol}${h0}:${min0}:${seconds0}${offsetFormatted}`;
+  // this is if f === 'print', which is also default
+  if (ts instanceof Date) return ts.toLocaleDateString('en',dateOptions);
+  return '';
+};
+
 const convertTimestampToString = (timestamp, option) => {
   // input: JS Date object (i.e. timestamp) (correctly formatted, i.e. time zone is local, and time is time in local time zone)
   // output: string in TIMESTAMP WITH TIME ZONE format (zone relative to Zulu)
@@ -260,41 +340,90 @@ const convertTimestampToString = (timestamp, option) => {
   // WHY USE?  Be in full control of the string. Don't send timestamps to the database, and let the database decide how to convert. Convert here, and avoid time zone conversion problems.
   // option is optional. 'date' = date, 'time' = time; anything else = full timestamp.
   
-  const convertTimestampToStringInner = (timestamp, option) => {
-    const year     = timestamp.getFullYear();
-    const month    = timestamp.getMonth() + 1; // months are 0-index in date objects, but not in string
-    const month0   = leadingZero(month);
-    const date     = timestamp.getDate();
-    const date0    = leadingZero(date);
-    const timeSymbol = 'T';
-    const hours    = timestamp.getHours();
-    const hours0   = leadingZero(hours);
-    const minutes  = timestamp.getMinutes();
-    const minutes0 = leadingZero(minutes);
-    const seconds  = timestamp.getSeconds();
-    const seconds0 = leadingZero(seconds);
-    const offset   = getTheTimezoneOffset(timestamp); // returns signed minutes
-    const offsetFormatted = formatOffsetAsString(offset); // pass in signed minutes, returns signed string
-    const offsetFormattedNoColon = formatOffsetAsString(offset, false); // pass in signed minutes, returns signed string
-    if(option === 'date')    return `${year}-${month0}-${date0}`;
-    if(option === 'time')    return `${hours0}:${minutes0}:${seconds0}`;
-    if(option === 'd t noz') return `${year}-${month0}-${date0} ${hours0}:${minutes0}:${seconds0}`;
-    if(option === 'd t z')   return `${year}-${month0}-${date0} ${hours0}:${minutes0}:${seconds0} ${offsetFormattedNoColon}`;
-    if(option === 'numeric') return `${year}${month0}${date0}${hours0}${minutes0}${seconds0}`;
-    return                          `${year}-${month0}-${date0}${timeSymbol}${hours0}:${minutes0}:${seconds0}${offsetFormatted}`;
-  };
-  
   if (isValidDate(timestamp)) {
-    return convertTimestampToStringInner(timestamp, option);
+    return _convertTimestampToStringInner(timestamp, option);
   } else if(typeof timestamp === 'string') {
     const date = convertStringToTimestamp(timestamp);
     if(isValidDate(date)){
-      return convertTimestampToStringInner(date, option);
+      return _convertTimestampToStringInner(date, option);
     } else {
       return '';
     }
   }
   return '' ;
+};
+
+const printDate = (date, options) => {
+  console.warn('printDate IS DEPRECATED, USE convertTimestampToString');
+  const offset = getTheTimezoneOffset();
+  const timeZone =
+    offset === -240 ? 'America/New_York' :
+      offset === -300 ? 'America/New_York' :
+        'UTC' ;
+  if(isObjectLiteral(options)){
+    if(options.hasOwnProperty('format')){
+      return createTimestampLabel(date, options);
+    }
+  }
+  const dateOptions = isObjectLiteral(options) ? options :
+    {
+      weekday: 'long', 
+      year:    'numeric', 
+      month:   'long', 
+      day:     'numeric', 
+      hour:    'numeric', 
+      minute:  'numeric',
+      timeZone,
+    };
+  // input: timestamp or date; we should be handling all in Zulu time, so assume that.  Not tested with other time.
+  // output: string to display timestamp to user; NOT formatting for data handling.
+  if (date instanceof Date) {
+    return date.toLocaleDateString('en',dateOptions);
+  }
+  return '';
+};
+
+const createTimestampLabel = (ts, option={format: 'm d h'}) => {
+  console.warn('createTimestampLabel IS DEPRECATED, USE convertTimestampToString');
+  const o = isObjectLiteral(option) ? option : {} ;
+  const dows = ['Su','M','Tu','W','Th','F','Sa'];
+  if(isValidDate(ts)){
+    const year  = ts.getFullYear();
+    const month = ts.getMonth() + 1;
+    const day   = ts.getDate();
+    const dow   = ts.getDay();
+    const h     = ts.getHours();
+    const min   = ts.getMinutes();
+    const hour  = 
+      h === 0  && min === 0 ? 
+        'midnight' :
+        h === 12 && min === 0 ? 
+          'noon' :
+          o.hour === 24 ? 
+            h :
+            h > 12 ? 
+              h - 12 : 
+              h ;
+    const meridien = 
+      typeof hour === 'string' ? // midnight or noon
+      '' :
+        o.hour === 24 ? 
+          '' :
+          h >= 12 ? 'PM' : 
+            'AM' ;
+    if (o.format === 'm d')        return `${month}/${day}`;
+    if (o.format === 'm d h')      return `${month}/${day} ${hour}${meridien}`;
+    if (o.format === 'm d h m')    return `${month}/${day} ${hour}:${min}${meridien}`;
+    if (o.format === 'dow m d')    return `${dows[dow]} ${month}/${day}`;
+    if (o.format === 'dow d h')    return `${dows[dow]} ${day} ${hour}${meridien}`;
+    if (o.format === 'dow d h m')  return `${dows[dow]} ${day} ${hour}:${min}${meridien}`;
+    if (o.format === 'dow d h')    return `${dows[dow]} ${day} ${hour}${meridien}`;
+    if (o.format === 'dow h')      return `${dows[dow]} ${hour}${meridien}`;
+    if (o.format === 'yyyy-mm-dd') return `${year}-${leadingZero(month)}${leadingZero(day)}`;
+    return '?';
+  } else {
+    return '??';
+  }
 };
 
 // @@@@@@@@@@@@@ ZONE CONVERSIONS @@@@@@@@@@@@@
@@ -600,87 +729,6 @@ const rangeIsIncluded = (eventStartIn, eventEndIn, rangeStartIn, rangeEndIn) => 
 
 // @@@@@@@@@@@@@@@@ DISPLAY @@@@@@@@@@@@@@@
 
-const printDate = (date, options) => {
-  const offset = getTheTimezoneOffset();
-  const timeZone =
-    offset === -240 ? 'America/New_York' :
-      offset === -300 ? 'America/New_York' :
-        'UTC' ;
-  if(isObjectLiteral(options)){
-    if(options.hasOwnProperty('format')){
-      return createTimestampLabel(date, options);
-    }
-  }
-  const dateOptions = isObjectLiteral(options) ? options :
-    {
-      weekday: 'long', 
-      year:    'numeric', 
-      month:   'long', 
-      day:     'numeric', 
-      hour:    'numeric', 
-      minute:  'numeric',
-      timeZone,
-    };
-  // input: timestamp or date; we should be handling all in Zulu time, so assume that.  Not tested with other time.
-  // output: string to display timestamp to user; NOT formatting for data handling.
-  if (date instanceof Date) {
-    return date.toLocaleDateString('en',dateOptions);
-  }
-  return '';
-};
-
-const createTimestampLabel = (ts, option={format: 'm d h'}) => {
-  const o = isObjectLiteral(option) ? option : {} ;
-  const dows = ['Su','M','Tu','W','Th','F','Sa'];
-  if(isValidDate(ts)){
-    const year  = ts.getFullYear();
-    const month = ts.getMonth() + 1;
-    const day   = ts.getDate();
-    const dow   = ts.getDay();
-    const h     = ts.getHours();
-    const min   = ts.getMinutes();
-    const hour  = 
-      h === 0  && min === 0 ? 
-        'midnight' :
-        h === 12 && min === 0 ? 
-          'noon' :
-          o.hour === 24 ? 
-            h :
-            h > 12 ? 
-              h - 12 : 
-              h ;
-    const meridien = 
-      typeof hour === 'string' ? // midnight or noon
-      '' :
-        o.hour === 24 ? 
-          '' :
-          h >= 12 ? 'PM' : 
-            'AM' ;
-    if(o.format === 'm d'){
-      return `${month}/${day}`;
-    } else if(o.format === 'm d h'){
-      return `${month}/${day} ${hour}${meridien}`;
-    } else if (o.format === 'm d h m') {
-      return `${month}/${day} ${hour}:${min}${meridien}`;
-    } else if (o.format === 'dow m d'){
-      return `${dows[dow]} ${month}/${day}`;
-    } else if (o.format === 'dow d h'){
-      return `${dows[dow]} ${day} ${hour}${meridien}`;
-    } else if (o.format === 'dow d h m'){
-      return `${dows[dow]} ${day} ${hour}:${min}${meridien}`;
-    } else if (o.format === 'dow d h'){
-      return `${dows[dow]} ${day} ${hour}${meridien}`;
-    } else if (o.format === 'dow h'){
-      return `${dows[dow]} ${hour}${meridien}`;
-    } else if (o.format === 'yyyy-mm-dd'){
-      return `${year}-${leadingZero(month)}${leadingZero(day)}`;
-    } else {
-      return '?';
-    }
-  } else {
-    return '??';
-  }
-};
 
 module.exports = {
   isValidDate,

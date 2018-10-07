@@ -241,6 +241,59 @@ var convertStringToTimestamp = function convertStringToTimestamp(rawString) {
   return {};
 };
 
+var _convertTimestampToStringInner = function _convertTimestampToStringInner(ts, option) {
+  var f = typeof option === 'string' ? option : !isObjectLiteral(option) ? 'print' : option.format ? option.format : 'print';
+  var o = isObjectLiteral(option) ? option : {};
+  var dateOptions = Object.assign({}, {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    timeZone: timeZone
+  }, o);
+  var offset = getTheTimezoneOffset(ts); // returns signed minutes
+  var offsetFormatted = formatOffsetAsString(offset); // pass in signed min, returns signed string
+  var offsetFormattedNoColon = formatOffsetAsString(offset, false); // pass in signed minutes, returns signed string
+  var timeZone = offset === -240 ? 'America/New_York' : offset === -300 ? 'America/New_York' : 'UTC';
+  var dows = ['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'];
+  var y = ts.getFullYear();
+  var m = ts.getMonth() + 1; // months are 0-index in date objects, but not in string
+  var m0 = leadingZero(m);
+  var d = ts.getDate();
+  var dow = ts.getDay();
+  var d0 = leadingZero(d);
+  var timeSymbol = 'T';
+  var h = ts.getHours();
+  var h0 = leadingZero(h);
+  var min = ts.getMinutes();
+  var min0 = leadingZero(min);
+  var seconds = ts.getSeconds();
+  var seconds0 = leadingZero(seconds);
+  var hour = h === 0 && min === 0 ? 'midnight' : h === 12 && min === 0 ? 'noon' : o.hour === 24 ? h : h > 12 ? h - 12 : h;
+  var meridien = typeof hour === 'string' ? // midnight or noon
+  '' : o.hour === 24 ? '' : h >= 12 ? 'PM' : 'AM';
+  if (f === 'date') return y + '-' + m0 + '-' + d0;
+  if (f === 'yyyy-mm-dd') return y + '-' + m0 + '-' + d0;
+  if (f === 'd t noz') return y + '-' + m0 + '-' + d0 + ' ' + h0 + ':' + min0 + ':' + seconds0;
+  if (f === 'd t z') return y + '-' + m0 + '-' + d0 + ' ' + h0 + ':' + min0 + ':' + seconds0 + ' ' + offsetFormattedNoColon;
+  if (f === 'numeric') return '' + y + m0 + d0 + h0 + min0 + seconds0;
+  if (f === 'time') return h0 + ':' + min0 + ':' + seconds0;
+  if (f === 'm d') return m + '/' + d;
+  if (f === 'm d h') return m + '/' + d + ' ' + hour + meridien;
+  if (f === 'm d h m') return m + '/' + d + ' ' + hour + ':' + min + meridien;
+  if (f === 'dow m d') return dows[dow] + ' ' + m + '/' + d;
+  if (f === 'dow d h') return dows[dow] + ' ' + d + ' ' + hour + meridien;
+  if (f === 'dow d h m') return dows[dow] + ' ' + d + ' ' + hour + ':' + min + meridien;
+  if (f === 'dow d h') return dows[dow] + ' ' + d + ' ' + hour + meridien;
+  if (f === 'dow h') return dows[dow] + ' ' + hour + meridien;
+  if (f === 'full') return y + '-' + m0 + '-' + d0 + timeSymbol + h0 + ':' + min0 + ':' + seconds0 + offsetFormatted;
+  // this is if f === 'print', which is also default
+  if (ts instanceof Date) return ts.toLocaleDateString('en', dateOptions);
+  return '';
+};
+
 var convertTimestampToString = function convertTimestampToString(timestamp, option) {
   // input: JS Date object (i.e. timestamp) (correctly formatted, i.e. time zone is local, and time is time in local time zone)
   // output: string in TIMESTAMP WITH TIME ZONE format (zone relative to Zulu)
@@ -248,41 +301,74 @@ var convertTimestampToString = function convertTimestampToString(timestamp, opti
   // WHY USE?  Be in full control of the string. Don't send timestamps to the database, and let the database decide how to convert. Convert here, and avoid time zone conversion problems.
   // option is optional. 'date' = date, 'time' = time; anything else = full timestamp.
 
-  var convertTimestampToStringInner = function convertTimestampToStringInner(timestamp, option) {
-    var year = timestamp.getFullYear();
-    var month = timestamp.getMonth() + 1; // months are 0-index in date objects, but not in string
-    var month0 = leadingZero(month);
-    var date = timestamp.getDate();
-    var date0 = leadingZero(date);
-    var timeSymbol = 'T';
-    var hours = timestamp.getHours();
-    var hours0 = leadingZero(hours);
-    var minutes = timestamp.getMinutes();
-    var minutes0 = leadingZero(minutes);
-    var seconds = timestamp.getSeconds();
-    var seconds0 = leadingZero(seconds);
-    var offset = getTheTimezoneOffset(timestamp); // returns signed minutes
-    var offsetFormatted = formatOffsetAsString(offset); // pass in signed minutes, returns signed string
-    var offsetFormattedNoColon = formatOffsetAsString(offset, false); // pass in signed minutes, returns signed string
-    if (option === 'date') return year + '-' + month0 + '-' + date0;
-    if (option === 'time') return hours0 + ':' + minutes0 + ':' + seconds0;
-    if (option === 'd t noz') return year + '-' + month0 + '-' + date0 + ' ' + hours0 + ':' + minutes0 + ':' + seconds0;
-    if (option === 'd t z') return year + '-' + month0 + '-' + date0 + ' ' + hours0 + ':' + minutes0 + ':' + seconds0 + ' ' + offsetFormattedNoColon;
-    if (option === 'numeric') return '' + year + month0 + date0 + hours0 + minutes0 + seconds0;
-    return year + '-' + month0 + '-' + date0 + timeSymbol + hours0 + ':' + minutes0 + ':' + seconds0 + offsetFormatted;
-  };
-
   if (isValidDate(timestamp)) {
-    return convertTimestampToStringInner(timestamp, option);
+    return _convertTimestampToStringInner(timestamp, option);
   } else if (typeof timestamp === 'string') {
     var date = convertStringToTimestamp(timestamp);
     if (isValidDate(date)) {
-      return convertTimestampToStringInner(date, option);
+      return _convertTimestampToStringInner(date, option);
     } else {
       return '';
     }
   }
   return '';
+};
+
+var printDate = function printDate(date, options) {
+  console.warn('printDate IS DEPRECATED, USE convertTimestampToString');
+  var offset = getTheTimezoneOffset();
+  var timeZone = offset === -240 ? 'America/New_York' : offset === -300 ? 'America/New_York' : 'UTC';
+  if (isObjectLiteral(options)) {
+    if (options.hasOwnProperty('format')) {
+      return createTimestampLabel(date, options);
+    }
+  }
+  var dateOptions = isObjectLiteral(options) ? options : {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    timeZone: timeZone
+  };
+  // input: timestamp or date; we should be handling all in Zulu time, so assume that.  Not tested with other time.
+  // output: string to display timestamp to user; NOT formatting for data handling.
+  if (date instanceof Date) {
+    return date.toLocaleDateString('en', dateOptions);
+  }
+  return '';
+};
+
+var createTimestampLabel = function createTimestampLabel(ts) {
+  var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { format: 'm d h' };
+
+  console.warn('createTimestampLabel IS DEPRECATED, USE convertTimestampToString');
+  var o = isObjectLiteral(option) ? option : {};
+  var dows = ['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'];
+  if (isValidDate(ts)) {
+    var year = ts.getFullYear();
+    var month = ts.getMonth() + 1;
+    var day = ts.getDate();
+    var dow = ts.getDay();
+    var h = ts.getHours();
+    var min = ts.getMinutes();
+    var hour = h === 0 && min === 0 ? 'midnight' : h === 12 && min === 0 ? 'noon' : o.hour === 24 ? h : h > 12 ? h - 12 : h;
+    var meridien = typeof hour === 'string' ? // midnight or noon
+    '' : o.hour === 24 ? '' : h >= 12 ? 'PM' : 'AM';
+    if (o.format === 'm d') return month + '/' + day;
+    if (o.format === 'm d h') return month + '/' + day + ' ' + hour + meridien;
+    if (o.format === 'm d h m') return month + '/' + day + ' ' + hour + ':' + min + meridien;
+    if (o.format === 'dow m d') return dows[dow] + ' ' + month + '/' + day;
+    if (o.format === 'dow d h') return dows[dow] + ' ' + day + ' ' + hour + meridien;
+    if (o.format === 'dow d h m') return dows[dow] + ' ' + day + ' ' + hour + ':' + min + meridien;
+    if (o.format === 'dow d h') return dows[dow] + ' ' + day + ' ' + hour + meridien;
+    if (o.format === 'dow h') return dows[dow] + ' ' + hour + meridien;
+    if (o.format === 'yyyy-mm-dd') return year + '-' + leadingZero(month) + leadingZero(day);
+    return '?';
+  } else {
+    return '??';
+  }
 };
 
 // @@@@@@@@@@@@@ ZONE CONVERSIONS @@@@@@@@@@@@@
@@ -540,71 +626,6 @@ var rangeIsIncluded = function rangeIsIncluded(eventStartIn, eventEndIn, rangeSt
 
 // @@@@@@@@@@@@@@@@ DISPLAY @@@@@@@@@@@@@@@
 
-var printDate = function printDate(date, options) {
-  var offset = getTheTimezoneOffset();
-  var timeZone = offset === -240 ? 'America/New_York' : offset === -300 ? 'America/New_York' : 'UTC';
-  if (isObjectLiteral(options)) {
-    if (options.hasOwnProperty('format')) {
-      return createTimestampLabel(date, options);
-    }
-  }
-  var dateOptions = isObjectLiteral(options) ? options : {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    timeZone: timeZone
-  };
-  // input: timestamp or date; we should be handling all in Zulu time, so assume that.  Not tested with other time.
-  // output: string to display timestamp to user; NOT formatting for data handling.
-  if (date instanceof Date) {
-    return date.toLocaleDateString('en', dateOptions);
-  }
-  return '';
-};
-
-var createTimestampLabel = function createTimestampLabel(ts) {
-  var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { format: 'm d h' };
-
-  var o = isObjectLiteral(option) ? option : {};
-  var dows = ['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'];
-  if (isValidDate(ts)) {
-    var year = ts.getFullYear();
-    var month = ts.getMonth() + 1;
-    var day = ts.getDate();
-    var dow = ts.getDay();
-    var h = ts.getHours();
-    var min = ts.getMinutes();
-    var hour = h === 0 && min === 0 ? 'midnight' : h === 12 && min === 0 ? 'noon' : o.hour === 24 ? h : h > 12 ? h - 12 : h;
-    var meridien = typeof hour === 'string' ? // midnight or noon
-    '' : o.hour === 24 ? '' : h >= 12 ? 'PM' : 'AM';
-    if (o.format === 'm d') {
-      return month + '/' + day;
-    } else if (o.format === 'm d h') {
-      return month + '/' + day + ' ' + hour + meridien;
-    } else if (o.format === 'm d h m') {
-      return month + '/' + day + ' ' + hour + ':' + min + meridien;
-    } else if (o.format === 'dow m d') {
-      return dows[dow] + ' ' + month + '/' + day;
-    } else if (o.format === 'dow d h') {
-      return dows[dow] + ' ' + day + ' ' + hour + meridien;
-    } else if (o.format === 'dow d h m') {
-      return dows[dow] + ' ' + day + ' ' + hour + ':' + min + meridien;
-    } else if (o.format === 'dow d h') {
-      return dows[dow] + ' ' + day + ' ' + hour + meridien;
-    } else if (o.format === 'dow h') {
-      return dows[dow] + ' ' + hour + meridien;
-    } else if (o.format === 'yyyy-mm-dd') {
-      return year + '-' + leadingZero(month) + leadingZero(day);
-    } else {
-      return '?';
-    }
-  } else {
-    return '??';
-  }
-};
 
 module.exports = {
   isValidDate: isValidDate,
