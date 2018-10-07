@@ -543,6 +543,11 @@ var rangeIsIncluded = function rangeIsIncluded(eventStartIn, eventEndIn, rangeSt
 var printDate = function printDate(date, options) {
   var offset = getTheTimezoneOffset();
   var timeZone = offset === -240 ? 'America/New_York' : offset === -300 ? 'America/New_York' : 'UTC';
+  if (isObjectLiteral(options)) {
+    if (options.hasOwnProperty('format')) {
+      return createTimestampLabel(date, options);
+    }
+  }
   var dateOptions = isObjectLiteral(options) ? options : {
     weekday: 'long',
     year: 'numeric',
@@ -566,6 +571,7 @@ var createTimestampLabel = function createTimestampLabel(ts) {
   var o = isObjectLiteral(option) ? option : {};
   var dows = ['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'];
   if (isValidDate(ts)) {
+    var year = ts.getFullYear();
     var month = ts.getMonth() + 1;
     var day = ts.getDate();
     var dow = ts.getDay();
@@ -590,6 +596,8 @@ var createTimestampLabel = function createTimestampLabel(ts) {
       return dows[dow] + ' ' + day + ' ' + hour + meridien;
     } else if (o.format === 'dow h') {
       return dows[dow] + ' ' + hour + meridien;
+    } else if (o.format === 'yyyy-mm-dd') {
+      return year + '-' + leadingZero(month) + leadingZero(day);
     } else {
       return '?';
     }

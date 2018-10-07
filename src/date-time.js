@@ -606,6 +606,11 @@ const printDate = (date, options) => {
     offset === -240 ? 'America/New_York' :
       offset === -300 ? 'America/New_York' :
         'UTC' ;
+  if(isObjectLiteral(options)){
+    if(options.hasOwnProperty('format')){
+      return createTimestampLabel(date, options);
+    }
+  }
   const dateOptions = isObjectLiteral(options) ? options :
     {
       weekday: 'long', 
@@ -628,6 +633,7 @@ const createTimestampLabel = (ts, option={format: 'm d h'}) => {
   const o = isObjectLiteral(option) ? option : {} ;
   const dows = ['Su','M','Tu','W','Th','F','Sa'];
   if(isValidDate(ts)){
+    const year  = ts.getFullYear();
     const month = ts.getMonth() + 1;
     const day   = ts.getDate();
     const dow   = ts.getDay();
@@ -666,6 +672,8 @@ const createTimestampLabel = (ts, option={format: 'm d h'}) => {
       return `${dows[dow]} ${day} ${hour}${meridien}`;
     } else if (o.format === 'dow h'){
       return `${dows[dow]} ${hour}${meridien}`;
+    } else if (o.format === 'yyyy-mm-dd'){
+      return `${year}-${leadingZero(month)}${leadingZero(day)}`;
     } else {
       return '?';
     }
