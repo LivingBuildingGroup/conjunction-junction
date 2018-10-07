@@ -112,7 +112,7 @@ const calcVwc = (volume, water) => {
 
 // @@@@@@@@@@ TEMPERATURE @@@@@@@@@
 
-const celsius2kelvin = celsius => {
+const celsiusToKelvin = celsius => {
   /*
     Convert temperature in degrees Celsius to degrees Kelvin.
 
@@ -123,7 +123,7 @@ const celsius2kelvin = celsius => {
   return celsius + 273.15;
 };
 
-const kelvin2celsius =kelvin => {
+const kelvinToCelsius =kelvin => {
   /*
     Convert temperature in degrees Kelvin to degrees Celsius.
 
@@ -137,7 +137,7 @@ const kelvin2celsius =kelvin => {
 // @@@@@@@@@@ ANGLES @@@@@@@@@
 
 
-const deg2rad = degrees => {
+const degToRad = degrees => {
   /*
     Convert angular degrees to radians
 
@@ -148,7 +148,7 @@ const deg2rad = degrees => {
   return degrees * (Math.PI / 180.0);
 };
 
-const rad2deg = radians => {
+const radToDeg = radians => {
   /*
     Convert radians to angular degrees
 
@@ -157,6 +157,49 @@ const rad2deg = radians => {
     :rtype: float
     */
   return radians * (180.0 / Math.PI);
+};
+
+// @@@@@@@@@@ SPEED @@@@@@@@@
+
+const msToKph = ms => {
+  /*
+   * Convert meters per second to kilometers per hour
+   */
+  return ms * 3.6;
+};
+
+const msToMph = ms => {
+  /*
+   * Convert meters per second to miles per hour
+   */
+  return ms * 2.23694;
+};
+
+const mphToKph = mph => {
+  /*
+   * Convert miles per hour to kilometers per hour
+   */
+  return mph * 1.60934;
+};
+
+const kphToMph = kph => {
+  /*
+   * Convert kilometres per hour to miles per hour
+   */
+  return kph * 0.621371;
+};
+
+// @@@@@@@@@@ SOLAR IRRADIATION @@@@@@@@@
+
+const solarKwM2DayToUvProxy = kwM2 => {
+  /*
+   * VERY ROUGH estimate of UV Index
+   * UV index scale is 0 (no UV) to mid-teens, or about 12 in most of the US outside the SW
+   * Solar kW/M2/day is approximately 1 kW/M2/hour when very sunny, or about 8 kW/M2/day on a sunny day
+   * Since these are directly proportionate, a close - BUT NOT SCIENTIFIC calculation is that 0 kW = 0 UVI, and 8 kW/M2/day = 12 UVI
+   * So use a multiplier of 1.5.
+   */
+  return kwM2 * 1.5;
 };
 
 module.exports = {
@@ -169,8 +212,13 @@ module.exports = {
   galsToLbs,
   lbsToGals,
   calcVwc,
-  celsius2kelvin,
-  kelvin2celsius,
-  deg2rad,
-  rad2deg,
+  celsiusToKelvin,
+  kelvinToCelsius,
+  degToRad,
+  radToDeg,
+  msToKph,
+  msToMph,
+  mphToKph,
+  kphToMph,
+  solarKwM2DayToUvProxy,
 };

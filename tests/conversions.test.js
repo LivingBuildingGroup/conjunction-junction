@@ -11,11 +11,16 @@ const {
   galsToLbs,
   lbsToGals,
   calcVwc,
-  celsius2kelvin,
-  kelvin2celsius,
-  deg2rad,
-  rad2deg,
-  precisionRound             } = require('../index');
+  celsiusToKelvin,
+  kelvinToCelsius,
+  degToRad,
+  radToDeg,
+  precisionRound,
+  msToKph,
+  msToMph,
+  mphToKph,
+  kphToMph,
+  solarKwM2DayToUvProxy,             } = require('../index');
 const {
   numbers, 
   nonNumbers, 
@@ -338,62 +343,62 @@ describe('conjunction-junction conversions', () => { // mocha has built-in promi
   });
 
 
-  it('celsius2kelvin', () => {
+  it('celsiusToKelvin', () => {
     const expectedResult = 273.15;
-    const result = celsius2kelvin(0);
+    const result = celsiusToKelvin(0);
     expect(result).to.equal(expectedResult);
   });
 
-  it('kelvin2celsius', () => {
+  it('kelvinToCelsius', () => {
     const expectedResult = 0;
-    const result = kelvin2celsius(273.15);
+    const result = kelvinToCelsius(273.15);
     expect(result).to.equal(expectedResult);
   });
 
-  it('deg2rad 0', () => {
+  it('degToRad 0', () => {
     const expectedResult = 0;
-    const result = deg2rad(0);
+    const result = degToRad(0);
     expect(result).to.equal(expectedResult);
   });
-  it('deg2rad -90', () => {
+  it('degToRad -90', () => {
     const expectedResult = -1.5707963268;
-    const result = deg2rad(-90);
+    const result = degToRad(-90);
     const delta = Math.abs(expectedResult - result);
     expect(delta).to.be.lessThan(0.000000001);
   });
-  it('deg2rad 90', () => {
+  it('degToRad 90', () => {
     const expectedResult = 1.5707963268;
-    const result = deg2rad(90);
+    const result = degToRad(90);
     const delta = Math.abs(expectedResult - result);
     expect(delta).to.be.lessThan(0.000000001);  
   });
-  it('deg2rad 360', () => {
+  it('degToRad 360', () => {
     const expectedResult = 6.2831853072;
-    const result = deg2rad(360);
+    const result = degToRad(360);
     const delta = Math.abs(expectedResult - result);
     expect(delta).to.be.lessThan(0.000000001);
   });
 
-  it('rad2deg', () => {
+  it('radToDeg', () => {
     const expectedResult = 0;
-    const result = rad2deg(0);
+    const result = radToDeg(0);
     expect(result).to.equal(expectedResult);
   });
-  it('rad2deg -90', () => {
+  it('radToDeg -90', () => {
     const expectedResult = -90;
-    const result = rad2deg(-1.5707963268);
+    const result = radToDeg(-1.5707963268);
     const delta = Math.abs(expectedResult - result);
     expect(delta).to.be.lessThan(0.000000001);
   });
-  it('rad2deg 90', () => {
+  it('radToDeg 90', () => {
     const expectedResult = 90;
-    const result = rad2deg(1.5707963268);
+    const result = radToDeg(1.5707963268);
     const delta = Math.abs(expectedResult - result);
     expect(delta).to.be.lessThan(0.000000001);  
   });
-  it('rad2deg 360', () => {
+  it('radToDeg 360', () => {
     const expectedResult = 360;
-    const result = rad2deg(6.2831853072);
+    const result = radToDeg(6.2831853072);
     const delta = Math.abs(expectedResult - result);
     expect(delta).to.be.lessThan(0.00000001); // this doesn't work at e-9
   });

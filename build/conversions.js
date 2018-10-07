@@ -99,7 +99,7 @@ var calcVwc = function calcVwc(volume, water) {
 
 // @@@@@@@@@@ TEMPERATURE @@@@@@@@@
 
-var celsius2kelvin = function celsius2kelvin(celsius) {
+var celsiusToKelvin = function celsiusToKelvin(celsius) {
   /*
     Convert temperature in degrees Celsius to degrees Kelvin.
      :param celsius: Degrees Celsius
@@ -109,7 +109,7 @@ var celsius2kelvin = function celsius2kelvin(celsius) {
   return celsius + 273.15;
 };
 
-var kelvin2celsius = function kelvin2celsius(kelvin) {
+var kelvinToCelsius = function kelvinToCelsius(kelvin) {
   /*
     Convert temperature in degrees Kelvin to degrees Celsius.
      :param kelvin: Degrees Kelvin
@@ -122,7 +122,7 @@ var kelvin2celsius = function kelvin2celsius(kelvin) {
 // @@@@@@@@@@ ANGLES @@@@@@@@@
 
 
-var deg2rad = function deg2rad(degrees) {
+var degToRad = function degToRad(degrees) {
   /*
     Convert angular degrees to radians
      :param degrees: Value in degrees to be converted.
@@ -132,7 +132,7 @@ var deg2rad = function deg2rad(degrees) {
   return degrees * (Math.PI / 180.0);
 };
 
-var rad2deg = function rad2deg(radians) {
+var radToDeg = function radToDeg(radians) {
   /*
     Convert radians to angular degrees
      :param radians: Value in radians to be converted.
@@ -140,6 +140,49 @@ var rad2deg = function rad2deg(radians) {
     :rtype: float
     */
   return radians * (180.0 / Math.PI);
+};
+
+// @@@@@@@@@@ SPEED @@@@@@@@@
+
+var msToKph = function msToKph(ms) {
+  /*
+   * Convert meters per second to kilometers per hour
+   */
+  return ms * 3.6;
+};
+
+var msToMph = function msToMph(ms) {
+  /*
+   * Convert meters per second to miles per hour
+   */
+  return ms * 2.23694;
+};
+
+var mphToKph = function mphToKph(mph) {
+  /*
+   * Convert miles per hour to kilometers per hour
+   */
+  return mph * 1.60934;
+};
+
+var kphToMph = function kphToMph(kph) {
+  /*
+   * Convert kilometres per hour to miles per hour
+   */
+  return kph * 0.621371;
+};
+
+// @@@@@@@@@@ SOLAR IRRADIATION @@@@@@@@@
+
+var solarKwM2DayToUvProxy = function solarKwM2DayToUvProxy(kwM2) {
+  /*
+   * VERY ROUGH estimate of UV Index
+   * UV index scale is 0 (no UV) to mid-teens, or about 12 in most of the US outside the SW
+   * Solar kW/M2/day is approximately 1 kW/M2/hour when very sunny, or about 8 kW/M2/day on a sunny day
+   * Since these are directly proportionate, a close - BUT NOT SCIENTIFIC calculation is that 0 kW = 0 UVI, and 8 kW/M2/day = 12 UVI
+   * So use a multiplier of 1.5.
+   */
+  return kwM2 * 1.5;
 };
 
 module.exports = {
@@ -152,8 +195,13 @@ module.exports = {
   galsToLbs: galsToLbs,
   lbsToGals: lbsToGals,
   calcVwc: calcVwc,
-  celsius2kelvin: celsius2kelvin,
-  kelvin2celsius: kelvin2celsius,
-  deg2rad: deg2rad,
-  rad2deg: rad2deg
+  celsiusToKelvin: celsiusToKelvin,
+  kelvinToCelsius: kelvinToCelsius,
+  degToRad: degToRad,
+  radToDeg: radToDeg,
+  msToKph: msToKph,
+  msToMph: msToMph,
+  mphToKph: mphToKph,
+  kphToMph: kphToMph,
+  solarKwM2DayToUvProxy: solarKwM2DayToUvProxy
 };

@@ -667,12 +667,14 @@ var filterSequentialItems = function filterSequentialItems(arr, options) {
           if (o.hasOwnProperty(key)) {
             var delta = key.includes('imestamp') ? dateDelta(o[key], arr[index][key], tsUnits) : o[key] - arr[index][key];
             var absDelta = Math.abs(delta);
+            var stopValue = key.includes('imestamp') ? printDate(o[key]) : o[key];
+            var lastValue = key.includes('imestamp') ? printDate(arr[index][key]) : arr[index][key];
             if (absDelta > range) {
               stop = i;
-              message = 'in filterSequentialItems() at record ' + i + ' exceeded range of ' + range + ' (' + id + ': ' + o[id] + ', delta: ' + delta + ', absolute: ' + absDelta + ', key: ' + key + ', value at ' + i + ': ' + printDate(o[key]) + ', value at last sequential index #' + index + '/' + id + ': ' + arr[index][id] + ': ' + printDate(arr[index][key]) + ')';
+              message = 'in filterSequentialItems() at record ' + i + ' exceeded range of ' + range + ' (' + id + ': ' + o[id] + ', delta: ' + delta + ', absolute: ' + absDelta + ', key: ' + key + ', value at ' + i + ': ' + stopValue + ', value at last sequential index #' + index + '/' + id + ': ' + arr[index][id] + ': ' + lastValue + ')';
             } else if (absDelta === 0) {
               stop = i;
-              message = 'at record ' + i + ' no sequentiality detected (' + id + ': ' + o[id] + ', delta: ' + delta + ', absolute: ' + absDelta + '), key: ' + key + ', value at ' + i + ': ' + printDate(o[key]) + ', value at last sequential index #' + index + '/' + id + ': ' + arr[index][id] + ': ' + printDate(arr[index][key]);
+              message = 'at record ' + i + ' no sequentiality detected (' + id + ': ' + o[id] + ', delta: ' + delta + ', absolute: ' + absDelta + '), key: ' + key + ', value at ' + i + ': ' + stopValue + ', value at last sequential index #' + index + '/' + id + ': ' + arr[index][id] + ': ' + lastValue;
             } else {
               message = 'ok';
               index = i; // success!
