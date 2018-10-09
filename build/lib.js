@@ -6,8 +6,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 var _require = require('./date-time'),
     convertStringToTimestamp = _require.convertStringToTimestamp,
+    convertTimestampToString = _require.convertTimestampToString,
     isValidDate = _require.isValidDate,
-    printDate = _require.printDate,
     dateDelta = _require.dateDelta;
 
 var _require2 = require('./basic'),
@@ -56,7 +56,7 @@ var print = function print(data, options) {
     var timestamp = convertStringToTimestamp(data);
     if (isValidDate(timestamp)) {
       var dateOptions = isObjectLiteral(o.dateOptions) ? o.dateOptions : null;
-      return printDate(timestamp, dateOptions);
+      return convertTimestampToString(timestamp, dateOptions);
     } else if (typeof o.stringLength === 'number') {
       return data.slice(0, o.stringLength);
     }
@@ -69,7 +69,7 @@ var print = function print(data, options) {
     return data;
   }
   if (isValidDate(data)) {
-    return printDate(data);
+    return convertTimestampToString(data);
   }
   if (Array.isArray(data)) {
     if (o.arrays) {
@@ -667,8 +667,8 @@ var filterSequentialItems = function filterSequentialItems(arr, options) {
           if (o.hasOwnProperty(key)) {
             var delta = key.includes('imestamp') ? dateDelta(o[key], arr[index][key], tsUnits) : o[key] - arr[index][key];
             var absDelta = Math.abs(delta);
-            var stopValue = key.includes('imestamp') ? printDate(o[key]) : o[key];
-            var lastValue = key.includes('imestamp') ? printDate(arr[index][key]) : arr[index][key];
+            var stopValue = key.includes('imestamp') ? convertTimestampToString(o[key]) : o[key];
+            var lastValue = key.includes('imestamp') ? convertTimestampToString(arr[index][key]) : arr[index][key];
             if (absDelta > range) {
               stop = i;
               message = 'in filterSequentialItems() at record ' + i + ' exceeded range of ' + range + ' (' + id + ': ' + o[id] + ', delta: ' + delta + ', absolute: ' + absDelta + ', key: ' + key + ', value at ' + i + ': ' + stopValue + ', value at last sequential index #' + index + '/' + id + ': ' + arr[index][id] + ': ' + lastValue + ')';

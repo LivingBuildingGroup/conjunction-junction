@@ -45,7 +45,7 @@ const {
   addAllItemsToArray,
   getPositionToInterpolate,
   interpolateArrayValues,
-  printDate
+  convertTimestampToString
 } = require('../index');
 
 const {
@@ -1741,7 +1741,7 @@ describe('conjunction-junction lib', () => {
       ],
       index: 1,
       stop: 2,
-      message: `in filterSequentialItems() at record 2 exceeded range of 1 (id: 2, delta: -2, absolute: 2, key: timestamp_cr6, value at 2: ${printDate(date3)}, value at last sequential index #1/id: 1: ${printDate(date1)})`,
+      message: `in filterSequentialItems() at record 2 exceeded range of 1 (id: 2, delta: -2, absolute: 2, key: timestamp_cr6, value at 2: ${convertTimestampToString(date3)}, value at last sequential index #1/id: 1: ${convertTimestampToString(date1)})`,
     };
     const result = filterSequentialItems(arr, options);
     expect(result).to.deep.equal(expectedResult);
@@ -1825,7 +1825,7 @@ describe('conjunction-junction lib', () => {
       ],
       index: 1,
       stop: 2,
-      message: `in filterSequentialItems() at record 2 exceeded range of 60 (id: 2, delta: -120, absolute: 120, key: timestamp_cr6, value at 2: ${printDate(hour3)}, value at last sequential index #1/id: 1: ${printDate(hour1)})`,
+      message: `in filterSequentialItems() at record 2 exceeded range of 60 (id: 2, delta: -120, absolute: 120, key: timestamp_cr6, value at 2: ${convertTimestampToString(hour3)}, value at last sequential index #1/id: 1: ${convertTimestampToString(hour1)})`,
     };
     const result = filterSequentialItems(arr, options);
     expect(result).to.deep.equal(expectedResult);

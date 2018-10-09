@@ -1,7 +1,7 @@
 'use strict';
 const { convertStringToTimestamp,
+  convertTimestampToString,
   isValidDate,
-  printDate,
   dateDelta }       = require('./date-time');
 const { isPrimitiveNumber,
   precisionRound,
@@ -52,7 +52,7 @@ const print = (data, options) => {
     if(isValidDate(timestamp)){
       const dateOptions = isObjectLiteral(o.dateOptions) ? 
         o.dateOptions : null ;
-      return printDate(timestamp, dateOptions);
+      return convertTimestampToString(timestamp, dateOptions);
     } else if(typeof o.stringLength === 'number') {
       return data.slice(0, o.stringLength);
     }
@@ -65,7 +65,7 @@ const print = (data, options) => {
     return data;
   }
   if(isValidDate(data)){
-    return printDate(data);
+    return convertTimestampToString(data);
   }
   if(Array.isArray(data)){
     if(o.arrays) {
@@ -630,8 +630,8 @@ const filterSequentialItems = (arr, options) => {
               dateDelta(o[key], arr[index][key], tsUnits) :
               o[key] - arr[index][key];
             const absDelta = Math.abs(delta);
-            const stopValue = key.includes('imestamp') ? printDate(o[key]) : o[key];
-            const lastValue = key.includes('imestamp') ? printDate(arr[index][key]) : arr[index][key];
+            const stopValue = key.includes('imestamp') ? convertTimestampToString(o[key]) : o[key];
+            const lastValue = key.includes('imestamp') ? convertTimestampToString(arr[index][key]) : arr[index][key];
             if(absDelta > range){
               stop = i;
               message = `in filterSequentialItems() at record ${i} exceeded range of ${range} (${id}: ${o[id]}, delta: ${delta}, absolute: ${absDelta}, key: ${key}, value at ${i}: ${stopValue}, value at last sequential index #${index}/${id}: ${arr[index][id]}: ${lastValue})`;
