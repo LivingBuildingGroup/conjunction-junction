@@ -34,6 +34,8 @@ const {
   subArrayByKey,
   totalValuesByKey,
   averageValuesByKey,
+  minValuesByKey,
+  maxValuesByKey,
   mergeArraysOfObjectsByKey,
   filterSequentialItems,
   // arrays

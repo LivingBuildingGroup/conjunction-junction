@@ -559,6 +559,68 @@ const averageValuesByKey = (arrayOfObjects, key) => {
   };
 };
 
+const minValuesByKey = (arrayOfObjects, key) => {
+  // input: array of objects, and a single key (for numeric keys, stringify numbers)
+  // output: lowest value of all matching keys with numeric values
+  // output: array of messages identifying how each index was handled
+  if(!Array.isArray(arrayOfObjects)) return {value: null, message: 'no array of objects'};
+  if(typeof key !== 'string') return {value: null, message: 'key must be a string'};
+  let value;
+  let counter = 0;
+  const messages = arrayOfObjects.map((o,i)=>{
+    if(o[key] === undefined){
+      return `index ${i}: key ${key}: was undefined`;
+    } else {
+      if(!isPrimitiveNumber(o[key])){
+        return `index ${i} key ${key}: was ${o[key]} (not a number)`;
+      } else {
+        counter ++;
+        if(value === undefined) {
+          value = o[key];
+        } else {
+          value = Math.min(value, o[key]);
+        }
+        return `index ${i}: key ${key}: ${o[key]}; current lowest value: ${value}, counter: ${counter}`;
+      }
+    }
+  });
+  return {
+    value,
+    messages,
+  };
+};
+
+const maxValuesByKey = (arrayOfObjects, key) => {
+  // input: array of objects, and a single key (for numeric keys, stringify numbers)
+  // output: highest value of all matching keys with numeric values
+  // output: array of messages identifying how each index was handled
+  if(!Array.isArray(arrayOfObjects)) return {value: null, message: 'no array of objects'};
+  if(typeof key !== 'string') return {value: null, message: 'key must be a string'};
+  let value;
+  let counter = 0;
+  const messages = arrayOfObjects.map((o,i)=>{
+    if(o[key] === undefined){
+      return `index ${i}: key ${key}: was undefined`;
+    } else {
+      if(!isPrimitiveNumber(o[key])){
+        return `index ${i} key ${key}: was ${o[key]} (not a number)`;
+      } else {
+        counter ++;
+        if(value === undefined) {
+          value = o[key];
+        } else {
+          value = Math.max(value, o[key]);
+        }
+        return `index ${i}: key ${key}: ${o[key]}; current highest value: ${value}, counter: ${counter}`;
+      }
+    }
+  });
+  return {
+    value,
+    messages,
+  };
+};
+
 const mergeArraysOfObjectsByKey = (arr1, arr2, options) => {
   if(!Array.isArray(arr1))      return [];
   if(!Array.isArray(arr2))      return arr1;
@@ -869,6 +931,8 @@ module.exports = {
   subArrayByKey,
   totalValuesByKey,
   averageValuesByKey,
+  minValuesByKey,
+  maxValuesByKey,
   mergeArraysOfObjectsByKey,
   filterSequentialItems,
   // arrays
