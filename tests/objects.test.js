@@ -4,19 +4,6 @@ const chai = require('chai');
 const expect = chai.expect;
 
 const { 
-  // types
-  correctInputType, // do not do a test for this yet
-  // numbers (none yet)
-  // mixed types
-  print,
-  numberToLetter,
-  // strings
-  titleCaseWord, 
-  lowerCaseWord,
-  convertScToCc,
-  convertCcToSc,
-  convertCcToSpace,
-  convertScToSpace,
   // object keys
   convertObjectKeyCase, 
   shiftObjectKeysColumn,
@@ -66,97 +53,8 @@ const {
   hour2, 
   hour3 }   = require('./helper-data');
 
-describe('conjunction-junction lib', () => { 
+describe('conjunction-junction objects', () => { 
 
-  it('correctInputType',()=>{
-
-  });
-
-  it('print',()=>{
-
-  });
-  
-  it('numberToLetter',()=>{
-
-  });
-  
-
-  it('titleCaseWord undefined on non-String input', () => { 
-    nonStringPrimitives.forEach(item=>{
-      const titleWord = titleCaseWord(item);
-      expect(titleWord).to.equal(undefined);
-    });
-  });
-  it('titleCaseWord undefined on non-String input', () => { 
-    nonStringPrimitives.forEach(item=>{
-      const titleWord = titleCaseWord(item);
-      expect(titleWord).to.equal(undefined);
-    });
-  });
-  it('titleCaseWord valid on valid input', () => { 
-    lowerStrings.forEach((item, i)=>{
-      const titleWord = titleCaseWord(item);
-      expect(titleWord).to.equal(upperStrings[i]);
-    });
-  });
-  it('titleCaseWord valid camelCase on valid input', () => { 
-    const result = titleCaseWord('snake_case', 'cC');
-    const expectedResult = 'SnakeCase';
-    expect(result).to.equal(expectedResult);
-  });
-
-  it('lowerCaseWord',()=>{
-
-  });
-  
-  it('convertScToCc valid on valid input', () => { 
-    const strings = [
-      'snake_case', 'snake case', 'snakeCase',
-      'SNAKE', 'SnakeCase', 'snake-case',
-      'snake_case-too', 'snake-case_too',
-      3, 'snakeCase2', 'snake2Case', 'snake_2_case',
-      'snake 2 case'
-    ];
-    const expectedResult = [
-      'snakeCase', 'snake case', 'snakeCase',
-      'SNAKE', 'SnakeCase', 'snake-case',
-      'snakeCase-too', 'snake-caseToo',
-      '3', 'snakeCase2', 'snake2Case', 'snake2Case',
-      'snake 2 case'
-    ];
-    strings.forEach((s,i)=>{
-      const result = convertScToCc(s);
-      expect(result).to.equal(expectedResult[i]);
-    });
-  });
-  it('convertScToCc empty string on invalid input', () => { 
-    nonStringNonNumbers.forEach((x,i)=>{
-      const result = convertScToCc(x);
-      expect(result).to.equal('');
-    });
-  });
-
-  it('convertCcToSc converts on valid input', () => { 
-    const words           = ['theWord' ,'123 4 Happy' ,'camelCase', 'snake_case', 'mixed-up_case_Cases' ,'case 3', 'case4'];
-    const expectedResults = ['the_word','123 4 _happy','camel_case','snake_case', 'mixed-up_case__cases','case 3', 'case4'];
-    words.forEach((w,i)=>{
-      const result = convertCcToSc(w);
-      expect(result).to.equal(expectedResults[i]);
-    });
-  });
-  it('convertCcToSc returns number as string', () => { 
-    const result = convertCcToSc(53);
-    expect(result).to.equal('53');
-  });
-  it('convertCcToSc returns empty string on invalid input', () => { 
-    const result = convertCcToSc({x: 3});
-    expect(result).to.equal('');
-  });
-
-  it('convertCcToSpace',()=>{
-
-  });
-  
   it('convertObjectKeyCase empty string on invalid input', () => { 
     const objects = [
       {
@@ -1613,9 +1511,9 @@ describe('conjunction-junction lib', () => {
       },
     ];
     const expectedResult = [];
-    const mergeOptions = {key1: 'timestamp_cr6', key2: 'timestamp_cr6', prefix: 'prefix_'};
-    for(let k in mergeOptions){
-      const mO = Object.assign({}, mergeOptions, {[k]: undefined});
+    const requiredOptionsKeys = {key1: 'timestamp_cr6', key2: 'timestamp_cr6'};
+    for(let k in requiredOptionsKeys){
+      const mO = Object.assign({}, requiredOptionsKeys, {[k]: undefined});
       const result = mergeArraysOfObjectsByKey(o1, o2, mO);
       expect(result).to.deep.equal(expectedResult);
     }

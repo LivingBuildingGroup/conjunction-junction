@@ -1,184 +1,12 @@
 'use strict';
-const { convertStringToTimestamp,
+const { 
   convertTimestampToString,
-  isValidDate,
   dateDelta }       = require('./date-time');
 const { isPrimitiveNumber,
   precisionRound,
   isObjectLiteral } = require('./basic');
-
-// @@@@@@@@@@@@@@@ TYPES @@@@@@@@@@@@@@@@
-
-const correctInputType = (value, key) => {
-  // IMPROVE THIS SO SIGNATURES ARE NOT HARD-CODED !!!!
-  // input, particularly from selectors, may be a string, when it should be an integer
-  // input may come in as a string, even from a "number" input
-  const numberKeysSignatures  = ['number','Lbs','nessIn','Sf','Cf','idSlope'];
-  const integerKeysSignatures = ['integer','idComponent','idProfile','idCassette', 'idStorm','idTest','initialPlantHealth'];
-  let isNumber = false;
-  let isInteger = false;
-  numberKeysSignatures.forEach(sig=>{
-    if(key.includes(sig)) isNumber = true;
-  });
-  integerKeysSignatures.forEach(sig=>{
-    if(key.includes(sig)) isInteger = true;
-  });
-  const theValue = 
-  isNumber  ? parseFloat(value)  :
-    isInteger ? parseInt(value, 10):
-      value ;
-  return theValue;
-};
-
-// @@@@@@@@@@@@@@@ NUMBERS @@@@@@@@@@@@@@@@
-
-
-// @@@@@@@@@@@@@@@ MIXED TYPES @@@@@@@@@@@@@@@@
-
-const print = (data, options) => {
-  const defaultOptions = {
-    round: 4,
-    arrays: true,
-    stringLength: 250,
-    object: ':(',
-  };
-  const o = isObjectLiteral(options) ? options : defaultOptions ;
-  const trueValue     = typeof o.trueValue    === 'string' ? o.trueValue    : 'true' ;
-  const falseValue    = typeof o.falseValue   === 'string' ? o.falseValue   : 'false' ;
-  const undefinedValue= typeof o.undefinedValue==='string' ? o.undefinedValue:'undefined' ;
-  const nullValue     = typeof o.nullValue    === 'string' ? o.nullValue    : 'null' ;
-  if(typeof data === 'string') {
-    const timestamp = convertStringToTimestamp(data);
-    if(isValidDate(timestamp)){
-      const dateOptions = isObjectLiteral(o.dateOptions) ? 
-        o.dateOptions : null ;
-      return convertTimestampToString(timestamp, dateOptions);
-    } else if(typeof o.stringLength === 'number') {
-      return data.slice(0, o.stringLength);
-    }
-    return data;
-  }
-  if(typeof data === 'number') {
-    if(typeof o.round === 'number'){
-      return precisionRound(data, o.round);
-    }
-    return data;
-  }
-  if(isValidDate(data)){
-    return convertTimestampToString(data);
-  }
-  if(Array.isArray(data)){
-    if(o.arrays) {
-      const arrayToString = data.join(', ');
-      if(typeof o.stringLength === 'number') {
-        return arrayToString.slice(0, o.stringLength);
-      }
-      return arrayToString;
-    }
-  }
-  if(isObjectLiteral(data)) {
-    return o.object;
-  }
-  if(typeof data === 'boolean'){
-    if(data) return trueValue;
-    return falseValue;
-  }
-  if(data === undefined) {
-    return undefinedValue;
-  }
-  if(data === null){
-    return nullValue;
-  }
-  return ':(';
-};
-
-const numberToLetter = (num, option) => {
-  // 1-indexed, not 0-indexed, so subtract 1
-  // move to conjunction-junction
-  // make A if neg, Z if over
-  // round number
-  // exercise option for caps or lowercase
-  const letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-  const rawLetter = letters[num-1];
-  return rawLetter;
-};
-
-// @@@@@@@@@@@@@@@ STRINGS @@@@@@@@@@@@@@@@
-
-const titleCaseWord = (word, option) => {
-  // input: string
-  // option: 'cC' if the string is snake_case and you want camelCase (returned as SnakeCase or CamelCase)
-  // output: capitalized string
-  if(typeof word !== 'string') return;
-  const end = word.slice(1,word.length);
-  const endCase = option === 'cC' ? convertScToCc(end) : end ;
-  const front = word.slice(0,1);
-  return `${front.toUpperCase()}${endCase}`;
-};
-
-const lowerCaseWord = word => {
-  if(typeof word !== 'string') return;
-  const end = word.slice(1,word.length);
-  const front = word.slice(0,1);
-  return `${front.toLowerCase()}${end}`;
-};
-
-const convertScToCc = word => {
-  // input: string in snake_case
-  // disregards any other type of formatting, such as spaces and hyphens
-  if(isPrimitiveNumber(word)) return `${word}`;
-  if(typeof word !== 'string') return '';
-  const array = word.split('_');
-  const first = array[0];
-  const others = array.slice(1,array.length);
-  const othersCamel = others.map(word=>titleCaseWord(word));
-  return `${first}${othersCamel.join('')}`;
-};
-
-const convertCcToSc = word => {
-  // input: string in camelCase
-  // disregards any other type of formatting, such as spaces and hyphens
-  if(isPrimitiveNumber(word)) return `${word}`;
-  if(typeof word !== 'string') return '';
-  // const theWord = 'theWord';
-  let newWord = '';
-  const caps  = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-  const lower = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']; 
-  for(let i=0; i<= word.length; i++ ) {
-    const char =
-      caps.includes(word.charAt(i)) ?
-        `_${lower[caps.findIndex(letter=>letter===word.charAt(i))]}`
-        : word.charAt(i);
-    newWord += char;
-  }
-  return newWord;
-};
-
-const convertCcToSpace = word => {
-  // input: string in camelCase
-  // disregards any other type of formatting, such as spaces and hyphens
-  if(isPrimitiveNumber(word)) return `${word}`;
-  if(typeof word !== 'string') return '';
-  // const theWord = 'theWord';
-  let newWord = '';
-  const caps  = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-  const lower = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']; 
-  for(let i=0; i<= word.length; i++ ) {
-    const char =
-      caps.includes(word.charAt(i)) ?
-        ` ${lower[caps.findIndex(letter=>letter===word.charAt(i))]}`
-        : word.charAt(i);
-    newWord += char;
-  }
-  return newWord;
-};
-
-const convertScToSpace = word => {
-  if(typeof word !== 'string') return;
-  const split = word.split('_');
-  return split.join(' ');
-};
-
+const { convertScToCc,
+  convertCcToSc } = require('./primitives');
 // @@@@@@@@@@@@@@@ OBJECT KEYS @@@@@@@@@@@@@@@@
 
 const convertObjectKeyCase = (object, caseOption='cC') => {
@@ -626,9 +454,10 @@ const mergeArraysOfObjectsByKey = (arr1, arr2, options) => {
   if(!Array.isArray(arr2))      return arr1;
   if(!isObjectLiteral(options)) return [];
   const { key1, key2, prefix } = options;
-  if(key1 === undefined || key2 === undefined || prefix === undefined){
+  if(key1 === undefined || key2 === undefined){
     return [];
   }
+  const pre = prefix === undefined ? '' : prefix;
   const combo = arr1.map((obj1,i)=>{ // follow primary list of objects
     const merged = Object.assign({}, obj1);
     // this handles arrays of unmatched length.
@@ -651,7 +480,7 @@ const mergeArraysOfObjectsByKey = (arr1, arr2, options) => {
     }
     for (let key in theMatch){
       if(merged.hasOwnProperty(key)){
-        merged[`${prefix}${key}`] = theMatch[key];
+        merged[`${pre}${key}`] = theMatch[key];
       } else {
         merged[key] = theMatch[key];
       }
@@ -901,19 +730,6 @@ const interpolateArrayValues = (arr, decimal, hi, lo) => {
 };
 
 module.exports = { 
-  // types
-  correctInputType, // do not do a test for this yet
-  // numbers (none yet)
-  // mixed types
-  print,
-  numberToLetter,
-  // strings
-  titleCaseWord, 
-  lowerCaseWord,
-  convertScToCc,
-  convertCcToSc,
-  convertCcToSpace,
-  convertScToSpace,
   // object keys
   convertObjectKeyCase, 
   shiftObjectKeysColumn,

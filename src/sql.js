@@ -8,11 +8,12 @@ const dateTime        = require('./date-time');
 
 const {
   isObjectLiteral }   = require('./basic');
-const { shiftObjectKeysColumn,
-  getKeyArray, 
+const {
   titleCaseWord, 
-  convertScToCc,
-  limitObjectKeys,  } = require('./lib');
+  convertScToCc,  } = require('./primitives');
+const { shiftObjectKeysColumn,
+  getKeyArray,
+  limitObjectKeys,  } = require('./objects');
 
 const formatTimestampForSql = (value, sqlOption={type:'raw'}) => {
   // input: a primitive value or a date that SHOULD be a timestamp

@@ -12,12 +12,14 @@ var dateTime = require('./date-time');
 var _require = require('./basic'),
     isObjectLiteral = _require.isObjectLiteral;
 
-var _require2 = require('./lib'),
-    shiftObjectKeysColumn = _require2.shiftObjectKeysColumn,
-    getKeyArray = _require2.getKeyArray,
+var _require2 = require('./primitives'),
     titleCaseWord = _require2.titleCaseWord,
-    convertScToCc = _require2.convertScToCc,
-    limitObjectKeys = _require2.limitObjectKeys;
+    convertScToCc = _require2.convertScToCc;
+
+var _require3 = require('./objects'),
+    shiftObjectKeysColumn = _require3.shiftObjectKeysColumn,
+    getKeyArray = _require3.getKeyArray,
+    limitObjectKeys = _require3.limitObjectKeys;
 
 var formatTimestampForSql = function formatTimestampForSql(value) {
   var sqlOption = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { type: 'raw' };
