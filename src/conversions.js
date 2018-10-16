@@ -134,8 +134,31 @@ const kelvinToCelsius =kelvin => {
   return kelvin - 273.15;
 };
 
-// @@@@@@@@@@ ANGLES @@@@@@@@@
+// @@@@@@@@@@ SLOPE @@@@@@@@@
 
+const pctToDeg = (pct, range=90) => {
+  /*
+    Convert percent slope to degrees
+    :param pct: Value in percent to be converted. Percent is rise over run, in same units, e.g. 2% = 2 units of rise to 100 units of run, such as 2 inches rise per 100 inches run
+    :param range: portion of circle to consider; e.g. for slope from horizontal we might consider only 90 degrees, whereas 0 is flat, and 90 is vertical
+    :return: Value in degrees
+    :rtype: float
+    */
+  return 100 * range * pct / 100;
+};
+
+const degToPct = (deg, range=90) => {
+  /*
+    Convert percent slope to degrees
+    :param pct: Value in percent to be converted. Percent is rise over run, in same units, e.g. 2% = 2 units of rise to 100 units of run, such as 2 inches rise per 100 inches run
+    :param range: portion of circle to consider; e.g. for slope from horizontal we might consider only 90 degrees, whereas 0 is flat, and 90 is vertical
+    :return: Value in degrees
+    :rtype: float
+    */
+  return range === 0 ? 0 : 100 * (deg / range) / 100 ;
+};
+
+// @@@@@@@@@@ ANGLES @@@@@@@@@
 
 const degToRad = degrees => {
   /*
@@ -214,6 +237,8 @@ module.exports = {
   calcVwc,
   celsiusToKelvin,
   kelvinToCelsius,
+  pctToDeg,
+  degToPct,
   degToRad,
   radToDeg,
   msToKph,

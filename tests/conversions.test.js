@@ -13,6 +13,8 @@ const {
   calcVwc,
   celsiusToKelvin,
   kelvinToCelsius,
+  pctToDeg,
+  degToPct,
   degToRad,
   radToDeg,
   precisionRound,
@@ -352,6 +354,48 @@ describe('conjunction-junction conversions', () => { // mocha has built-in promi
   it('kelvinToCelsius', () => {
     const expectedResult = 0;
     const result = kelvinToCelsius(273.15);
+    expect(result).to.equal(expectedResult);
+  });
+
+  it('pctToDeg 0', () => {
+    const expectedResult = 0;
+    const result = pctToDeg(0);
+    expect(result).to.equal(expectedResult);
+  });
+  it('pctToDeg 50% = 45 deg default', () => {
+    const expectedResult = 45;
+    const result = pctToDeg(0.5); // 50%
+    expect(result).to.equal(expectedResult);
+  });
+  it('pctToDeg 50% = 45 deg explicit 90 range', () => {
+    const expectedResult = 45;
+    const result = pctToDeg(0.5, 90); // 50%
+    expect(result).to.equal(expectedResult);
+  });
+  it('pctToDeg 100% = 90 deg', () => {
+    const expectedResult = 90;
+    const result = pctToDeg(1.0); // 100%
+    expect(result).to.equal(expectedResult);
+  });
+
+  it('degToPct 0', () => {
+    const expectedResult = 0;
+    const result = degToPct(0);
+    expect(result).to.equal(expectedResult);
+  });
+  it('degToPct 45 deg = 50% default', () => {
+    const expectedResult = 0.5;
+    const result = degToPct(45); // 50%
+    expect(result).to.equal(expectedResult);
+  });
+  it('degToPct 45 deg = 50% explicit 90 range', () => {
+    const expectedResult = 0.5;
+    const result = degToPct(45, 90); // 50%
+    expect(result).to.equal(expectedResult);
+  });
+  it('degToPct 90 deg = 100%', () => {
+    const expectedResult = 1;
+    const result = degToPct(90); // 100%
     expect(result).to.equal(expectedResult);
   });
 
