@@ -16,9 +16,17 @@ const isValidDate = date => {
 // @@@@@@@@@@@@@ GET DATA FROM TS @@@@@@@@@@@@
 
 const calcDayOfYearFromTimestamp = timestamp => {
-  const tsYear = timestamp.getFullYear();
+  const ts = isValidDate(timestamp) ?
+    timestamp :
+    isValidDate(convertStringToTimestamp(timestamp)) ?
+      convertStringToTimestamp(timestamp) :
+      null;
+  if(!ts){
+    return -1;
+  }
+  const tsYear = ts.getFullYear();
   const jan1 = new Date(tsYear,0,0,0,0,0); // Dec 31 at midnight = Jan 1 0:00:00
-  const daysAfterJan1 = dateDelta(jan1, timestamp, 'days');
+  const daysAfterJan1 = dateDelta(jan1, ts, 'days');
   return daysAfterJan1;
 };
 

@@ -18,9 +18,13 @@ var isValidDate = function isValidDate(date) {
 // @@@@@@@@@@@@@ GET DATA FROM TS @@@@@@@@@@@@
 
 var calcDayOfYearFromTimestamp = function calcDayOfYearFromTimestamp(timestamp) {
-  var tsYear = timestamp.getFullYear();
+  var ts = isValidDate(timestamp) ? timestamp : isValidDate(convertStringToTimestamp(timestamp)) ? convertStringToTimestamp(timestamp) : null;
+  if (!ts) {
+    return -1;
+  }
+  var tsYear = ts.getFullYear();
   var jan1 = new Date(tsYear, 0, 0, 0, 0, 0); // Dec 31 at midnight = Jan 1 0:00:00
-  var daysAfterJan1 = dateDelta(jan1, timestamp, 'days');
+  var daysAfterJan1 = dateDelta(jan1, ts, 'days');
   return daysAfterJan1;
 };
 

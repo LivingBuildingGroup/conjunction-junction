@@ -37,6 +37,17 @@ const inchesToGals = (inches, squareFeet) => {
   return ciToGals(cubicInches);
 }; 
 
+const mmToLM2 = mm => {
+  // 1 M2 = 1,000,000 square millimeters
+  // 1 mm thick over 1 M2 = 1,000,000 cubic millimeters
+  // 1,000,000 cubic mm = 1 L
+  return mm * 1000000;
+};
+
+const lM2ToMm = L => {
+  return L / 1000000;
+};
+
 const galsToCi = gallons => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
@@ -212,6 +223,13 @@ const kphToMph = kph => {
   return kph * 0.621371;
 };
 
+const kphToMs = kph => {
+  /*
+   * Convert kilometres per hour to meters per second
+   */
+  return kph * 0.277778;
+};
+
 // @@@@@@@@@@ SOLAR IRRADIATION @@@@@@@@@
 
 const solarKwM2DayToUvProxy = kwM2 => {
@@ -234,6 +252,8 @@ module.exports = {
   galsToCf,
   galsToLbs,
   lbsToGals,
+  lM2ToMm,
+  mmToLM2,
   calcVwc,
   celsiusToKelvin,
   kelvinToCelsius,
@@ -242,6 +262,7 @@ module.exports = {
   degToRad,
   radToDeg,
   msToKph,
+  kphToMs,
   msToMph,
   mphToKph,
   kphToMph,

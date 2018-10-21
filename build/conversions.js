@@ -38,6 +38,17 @@ var inchesToGals = function inchesToGals(inches, squareFeet) {
   return ciToGals(cubicInches);
 };
 
+var mmToLM2 = function mmToLM2(mm) {
+  // 1 M2 = 1,000,000 square millimeters
+  // 1 mm thick over 1 M2 = 1,000,000 cubic millimeters
+  // 1,000,000 cubic mm = 1 L
+  return mm * 1000000;
+};
+
+var lM2ToMm = function lM2ToMm(L) {
+  return L / 1000000;
+};
+
 var galsToCi = function galsToCi(gallons) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
@@ -199,6 +210,13 @@ var kphToMph = function kphToMph(kph) {
   return kph * 0.621371;
 };
 
+var kphToMs = function kphToMs(kph) {
+  /*
+   * Convert kilometres per hour to meters per second
+   */
+  return kph * 0.277778;
+};
+
 // @@@@@@@@@@ SOLAR IRRADIATION @@@@@@@@@
 
 var solarKwM2DayToUvProxy = function solarKwM2DayToUvProxy(kwM2) {
@@ -221,6 +239,8 @@ module.exports = {
   galsToCf: galsToCf,
   galsToLbs: galsToLbs,
   lbsToGals: lbsToGals,
+  lM2ToMm: lM2ToMm,
+  mmToLM2: mmToLM2,
   calcVwc: calcVwc,
   celsiusToKelvin: celsiusToKelvin,
   kelvinToCelsius: kelvinToCelsius,
@@ -229,6 +249,7 @@ module.exports = {
   degToRad: degToRad,
   radToDeg: radToDeg,
   msToKph: msToKph,
+  kphToMs: kphToMs,
   msToMph: msToMph,
   mphToKph: mphToKph,
   kphToMph: kphToMph,
