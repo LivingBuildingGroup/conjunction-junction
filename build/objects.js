@@ -532,18 +532,20 @@ var filterSequentialItems = function filterSequentialItems(arr, options) {
       increment = options.increment,
       tolerance = options.tolerance,
       timestampUnits = options.timestampUnits,
-      extraLoggingKey = options.extraLoggingKey;
+      extraLoggingKey = options.extraLoggingKey,
+      keySignature = options.keySignature;
 
   if (typeof key !== 'string') return Object.assign({}, returnOnError, { message: 'key to check for sequentiality is not a string' });
   if (!isPrimitiveNumber(increment)) return Object.assign({}, returnOnError, { message: 'increment to check for sequentiality is not a number' });
   if (!isPrimitiveNumber(tolerance)) return Object.assign({}, returnOnError, { message: 'tolerance to check for sequentiality is not a number' });
   // validated
   var id = typeof extraLoggingKey === 'string' ? extraLoggingKey : 'id';
+  var ks = typeof keySignature === 'string' ? keySignature : 'imestamp';
   var index = void 0,
       stop = void 0,
       message = void 0;
   var range = increment + tolerance;
-  var tsUnits = key.includes('imestamp') && typeof timestampUnits === 'string' ? timestampUnits : key.includes('imestamp') ? 'minutes' : null;
+  var tsUnits = key.includes(ks) && typeof timestampUnits === 'string' ? timestampUnits : key.includes(ks) ? 'minutes' : null;
   arr.forEach(function (o, i) {
     if (i === 0) {
       index = 0;
@@ -551,10 +553,10 @@ var filterSequentialItems = function filterSequentialItems(arr, options) {
       if (!stop) {
         if (isObjectLiteral(o)) {
           if (o.hasOwnProperty(key)) {
-            var delta = key.includes('imestamp') ? dateDelta(o[key], arr[index][key], tsUnits) : o[key] - arr[index][key];
+            var delta = key.includes(ks) ? dateDelta(o[key], arr[index][key], tsUnits) : o[key] - arr[index][key];
             var absDelta = Math.abs(delta);
-            var stopValue = key.includes('imestamp') ? convertTimestampToString(o[key]) : o[key];
-            var lastValue = key.includes('imestamp') ? convertTimestampToString(arr[index][key]) : arr[index][key];
+            var stopValue = key.includes(ks) ? convertTimestampToString(o[key]) : o[key];
+            var lastValue = key.includes(ks) ? convertTimestampToString(arr[index][key]) : arr[index][key];
             if (absDelta > range) {
               stop = i;
               message = 'in filterSequentialItems() at record ' + i + ' exceeded range of ' + range + ' (' + id + ': ' + o[id] + ', delta: ' + delta + ', absolute: ' + absDelta + ', key: ' + key + ', value at ' + i + ': ' + stopValue + ', value at last sequential index #' + index + '/' + id + ': ' + arr[index][id] + ': ' + lastValue + ')';

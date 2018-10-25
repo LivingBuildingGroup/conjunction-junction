@@ -83,6 +83,54 @@ const lbsToGals = lbs => {
   return precisionRound(lbs / 8.34, 4);
 };
 
+const ccToL = cc => {
+  if(!isPrimitiveNumber(cc)) return;
+  return precisionRound(cc * 0.001, 4);
+};
+
+const lToCc = L => {
+  if(!isPrimitiveNumber(L)) return;
+  return precisionRound(L * 1000, 4);
+};
+
+const ccToCf = cc => {
+  if(!isPrimitiveNumber(cc)) return;
+  return precisionRound(cc * 0.0000353147, 4);
+};
+
+const lToCf = L => {
+  if(!isPrimitiveNumber(L)) return;
+  return precisionRound(L * 0.0353147, 4);
+};
+
+const ccToM3 = cc => {
+  if(!isPrimitiveNumber(cc)) return;
+  return precisionRound(cc * 1000000, 4);
+};
+
+const m3ToCc = m3 => {
+  if(!isPrimitiveNumber(m3)) return;
+  return precisionRound(m3 / 1000000, 4);
+};
+
+const m3ToCf = m3 => {
+  if(!isPrimitiveNumber(m3)) return;
+  return precisionRound(m3 * 35.3147, 4);
+};
+
+const _convertToCf = (units, qty) => {
+  const cf = 
+  units === 'cf' ? qty :
+    units === 'ci' ? ciToCf(qty) :
+      units === 'gals' ? ciToCf(galsToCi(qty)) :
+        units === 'lbs'  ? ciToCf(galsToCi(lbsToGals(qty))) :
+          units === 'cc' ? ccToCf(qty) :
+            units === 'l' ? lToCf(qty) :
+              units === 'm3' ? m3ToCf(qty) :
+                null ;
+  return cf;
+};
+
 const calcVwc = (volume, water) => {
   /* input: {
     volume: {
@@ -100,20 +148,14 @@ const calcVwc = (volume, water) => {
     typeof volume.units === 'string' ?
       volume.units.toLowerCase() :
       null ;
-  const volumeCF =
-    volumeUnits === 'cf' ? volume.qty :
-      volumeUnits === 'ci' ? ciToCf(volume.qty) :
-        null ;
   const waterUnits = 
   typeof water.units === 'string' ?
     water.units.toLowerCase() :
     null ;
-  const waterCF = 
-    waterUnits === 'cf'   ? water.qty :
-      waterUnits === 'ci'   ? ciToCf(water.qty) :
-        waterUnits === 'gals' ? ciToCf(galsToCi(water.qty)) :
-          waterUnits === 'lbs'  ? ciToCf(galsToCi(lbsToGals(water.qty))) :
-            null;
+  const volumeCF = _convertToCf(volumeUnits, volume.qty);
+  const waterCF  = _convertToCf(waterUnits , water.qty);
+
+  null;
   if(!isPrimitiveNumber(volumeCF)) return;
   if(!isPrimitiveNumber(waterCF))  return;
   if(volumeCF === 0) return; // return undefined vs 0, b/c we cannot calculate 0 CF (0 would not be an accurate result)
@@ -254,7 +296,12 @@ module.exports = {
   lbsToGals,
   lM2ToMm,
   mmToLM2,
+  _convertToCf,
   calcVwc,
+  ccToL,
+  ccToM3,
+  m3ToCc,
+  lToCc,
   celsiusToKelvin,
   kelvinToCelsius,
   pctToDeg,

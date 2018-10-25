@@ -497,17 +497,18 @@ const filterSequentialItems = (arr, options) => {
   const returnOnError = { array: [], index: 0, stop: 0 };
   if(!Array.isArray(arr))           return Object.assign({}, returnOnError, { message: 'array to check for sequentiality is not an array'});
   if(!isObjectLiteral(options))     return Object.assign({}, returnOnError, { message: 'options for array sequentiality is not an object'});
-  const {key, increment, tolerance, timestampUnits, extraLoggingKey} = options;
+  const {key, increment, tolerance, timestampUnits, extraLoggingKey, keySignature} = options;
   if(typeof key !== 'string')       return Object.assign({}, returnOnError, { message: 'key to check for sequentiality is not a string'});
   if(!isPrimitiveNumber(increment)) return Object.assign({}, returnOnError, { message: 'increment to check for sequentiality is not a number'});
   if(!isPrimitiveNumber(tolerance)) return Object.assign({}, returnOnError, { message: 'tolerance to check for sequentiality is not a number'});
   // validated
   const id = typeof extraLoggingKey === 'string' ? extraLoggingKey : 'id' ;
+  const ks = typeof keySignature    === 'string' ? keySignature    : 'imestamp' ;
   let index, stop, message;
   const range = increment + tolerance;
-  const tsUnits = key.includes('imestamp') && typeof timestampUnits === 'string' ?
+  const tsUnits = key.includes(ks) && typeof timestampUnits === 'string' ?
     timestampUnits :
-    key.includes('imestamp') ?
+    key.includes(ks) ?
       'minutes' :
       null; 
   arr.forEach((o,i)=>{
@@ -517,12 +518,12 @@ const filterSequentialItems = (arr, options) => {
       if(!stop){
         if(isObjectLiteral(o)){
           if(o.hasOwnProperty(key)){
-            const delta = key.includes('imestamp') ?
+            const delta = key.includes(ks) ?
               dateDelta(o[key], arr[index][key], tsUnits) :
               o[key] - arr[index][key];
             const absDelta = Math.abs(delta);
-            const stopValue = key.includes('imestamp') ? convertTimestampToString(o[key]) : o[key];
-            const lastValue = key.includes('imestamp') ? convertTimestampToString(arr[index][key]) : arr[index][key];
+            const stopValue = key.includes(ks) ? convertTimestampToString(o[key]) : o[key];
+            const lastValue = key.includes(ks) ? convertTimestampToString(arr[index][key]) : arr[index][key];
             if(absDelta > range){
               stop = i;
               message = `in filterSequentialItems() at record ${i} exceeded range of ${range} (${id}: ${o[id]}, delta: ${delta}, absolute: ${absDelta}, key: ${key}, value at ${i}: ${stopValue}, value at last sequential index #${index}/${id}: ${arr[index][id]}: ${lastValue})`;
