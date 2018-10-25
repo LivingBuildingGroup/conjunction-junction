@@ -139,18 +139,16 @@ var calcVwc = function calcVwc(volume, water) {
   if (!isObjectLiteral(volume) || !isObjectLiteral(water)) return;
   var volumeUnits = typeof volume.units === 'string' ? volume.units.toLowerCase() : null;
   var waterUnits = typeof water.units === 'string' ? water.units.toLowerCase() : null;
-  console.log('volumeUnits', volumeUnits, 'waterUnits', waterUnits);
+
   var volumeCF = _convertToCf(volumeUnits, volume.qty);
   var waterCF = _convertToCf(waterUnits, water.qty);
-  console.log('volumeCF', volumeCF, 'waterCF', waterCF);
+
   if (!isPrimitiveNumber(volumeCF)) return;
   if (!isPrimitiveNumber(waterCF)) return;
-  console.log('ok');
+
   if (volumeCF === 0) return; // return undefined vs 0, b/c we cannot calculate 0 CF (0 would not be an accurate result)
-  console.log('ok2', waterCF / volumeCF);
-  console.log(precisionRound(waterCF / volumeCF, 4));
+
   var vwc = precisionRound(waterCF / volumeCF, 4);
-  console.log('vwc', vwc);
   return vwc;
 };
 
