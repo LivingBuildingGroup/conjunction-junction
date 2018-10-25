@@ -12,6 +12,7 @@ const {
   lbsToGals,
   lM2ToMm,
   mmToLM2,
+  _convertToCf,
   calcVwc,
   celsiusToKelvin,
   kelvinToCelsius,
@@ -192,6 +193,47 @@ describe('conjunction-junction conversions', () => { // mocha has built-in promi
     expect(gals).to.equal(expectedResult);
   });
 
+  it('_convertToCf cf', () => { 
+    const units = 'cf';
+    const cf = _convertToCf(units, 1);
+    expect(cf).to.equal(1);
+  });
+  it('_convertToCf ci', () => { 
+    const units = 'ci';
+    const cf = _convertToCf(units, 40000);
+    expect(cf).to.equal(23.1481);
+  });
+  it('_convertToCf gals', () => { 
+    const units = 'gals';
+    const cf = _convertToCf(units, 10);
+    expect(cf).to.equal(1.3368);
+  });
+  it('_convertToCf lbs', () => { 
+    const units = 'lbs';
+    const cf = _convertToCf(units, 834);
+    expect(cf).to.equal(13.3681);
+  });
+  it('_convertToCf cc', () => { 
+    const units = 'cc';
+    const cf = _convertToCf(units, 50000);
+    expect(cf).to.equal(1.7657);
+  });
+  it('_convertToCf l', () => { 
+    const units = 'l';
+    const cf = _convertToCf(units, 100);
+    expect(cf).to.equal(3.5315);
+  });
+  it('_convertToCf m3', () => { 
+    const units = 'm3';
+    const cf = _convertToCf(units, 10);
+    expect(cf).to.equal(353.147);
+  });
+  it('_convertToCf anything else', () => { 
+    const units = '??';
+    const cf = _convertToCf(units, 1);
+    expect(cf).to.equal(null);
+  });
+
   it('calcVwc correct on v cf w cf', () => { 
     const volume = {
       units: 'CF',
@@ -345,6 +387,19 @@ describe('conjunction-junction conversions', () => { // mocha has built-in promi
     };
     const result = calcVwc(volume, water);
     expect(result).to.equal(undefined);
+  });
+  it('calcVwc vol cc water L', () => { 
+    const vol = {
+      units: 'cc',
+      qty: 40000,
+    };
+    const wat = {
+      units: 'L',
+      qty: 0.6,
+    };
+    const result = calcVwc(vol, wat);
+    const expectedResult = 0.015; // 40,000cc = 40 L, 0.6L / 40L = 0.015
+    expect(result).to.equal(expectedResult);
   });
 
 

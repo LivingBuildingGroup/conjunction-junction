@@ -152,13 +152,15 @@ const calcVwc = (volume, water) => {
   typeof water.units === 'string' ?
     water.units.toLowerCase() :
     null ;
+
   const volumeCF = _convertToCf(volumeUnits, volume.qty);
   const waterCF  = _convertToCf(waterUnits , water.qty);
 
-  null;
   if(!isPrimitiveNumber(volumeCF)) return;
   if(!isPrimitiveNumber(waterCF))  return;
+
   if(volumeCF === 0) return; // return undefined vs 0, b/c we cannot calculate 0 CF (0 would not be an accurate result)
+
   const vwc = precisionRound(waterCF/volumeCF, 4);
   return vwc;
 };
