@@ -260,6 +260,7 @@ var parseValuesObj2Levels = function parseValuesObj2Levels(query, object, search
 // @@@@@@@@@@@@@@@ OBJECTS & ARRAYS @@@@@@@@@@@@@@@@
 
 var roundAllValues = function roundAllValues(value, roundingKey, key) {
+  // roundingKey e.g. { height: 1, width: 3, area: 2} = round height to 1 decimal place, round width to 3 decimal places, etc.
   if (isPrimitiveNumber(value)) {
     if (isPrimitiveNumber(roundingKey[key])) {
       return precisionRound(value, roundingKey[key]);

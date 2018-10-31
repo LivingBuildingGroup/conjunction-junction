@@ -38,17 +38,6 @@ var inchesToGals = function inchesToGals(inches, squareFeet) {
   return ciToGals(cubicInches);
 };
 
-var mmToLM2 = function mmToLM2(mm) {
-  // 1 M2 = 1,000,000 square millimeters
-  // 1 mm thick over 1 M2 = 1,000,000 cubic millimeters
-  // 1,000,000 cubic mm = 1 L
-  return mm * 1000000;
-};
-
-var lM2ToMm = function lM2ToMm(L) {
-  return L / 1000000;
-};
-
 var galsToCi = function galsToCi(gallons) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
@@ -139,6 +128,15 @@ var calcVwc = function calcVwc(volume, water) {
   if (!isObjectLiteral(volume) || !isObjectLiteral(water)) return;
   var volumeUnits = typeof volume.units === 'string' ? volume.units.toLowerCase() : null;
   var waterUnits = typeof water.units === 'string' ? water.units.toLowerCase() : null;
+  console.log('v', volumeUnits, 'w', waterUnits);
+  if (volumeUnits === waterUnits) {
+    console.log('match');
+    return precisionRound(water.qty / volume.qty);
+  }
+  if (volumeUnits === 'cc' && waterUnits === 'l') {
+    console.log('metric', 'water.qty', water.qty, '/ v:', volume.qty);
+    return precisionRound(water.qty / (volume.qty / 1000));
+  }
 
   var volumeCF = _convertToCf(volumeUnits, volume.qty);
   var waterCF = _convertToCf(waterUnits, water.qty);
@@ -162,6 +160,26 @@ var celsiusToKelvin = function celsiusToKelvin(celsius) {
     :rtype: float
     */
   return celsius + 273.15;
+};
+
+var celsiusToF = function celsiusToF(celsius) {
+  /*
+    Convert temperature in degrees Celsius to degrees Kelvin.
+     :param celsius: Degrees Celsius
+    :return: Degrees Fahrenheit
+    :rtype: float
+    */
+  return celsius * 1.8 + 32;
+};
+
+var fToCelsius = function fToCelsius(f) {
+  /*
+    Convert temperature in degrees Celsius to degrees Kelvin.
+     :param celsius: Degrees Celsius
+    :return: Degrees Fahrenheit
+    :rtype: float
+    */
+  return (f - 32) / 1.8;
 };
 
 var kelvinToCelsius = function kelvinToCelsius(kelvin) {
@@ -283,8 +301,6 @@ module.exports = {
   galsToCf: galsToCf,
   galsToLbs: galsToLbs,
   lbsToGals: lbsToGals,
-  lM2ToMm: lM2ToMm,
-  mmToLM2: mmToLM2,
   _convertToCf: _convertToCf,
   calcVwc: calcVwc,
   ccToL: ccToL,
@@ -292,6 +308,8 @@ module.exports = {
   m3ToCc: m3ToCc,
   lToCc: lToCc,
   celsiusToKelvin: celsiusToKelvin,
+  celsiusToF: celsiusToF,
+  fToCelsius: fToCelsius,
   kelvinToCelsius: kelvinToCelsius,
   pctToDeg: pctToDeg,
   degToPct: degToPct,

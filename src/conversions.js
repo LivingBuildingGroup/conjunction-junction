@@ -37,17 +37,6 @@ const inchesToGals = (inches, squareFeet) => {
   return ciToGals(cubicInches);
 }; 
 
-const mmToLM2 = mm => {
-  // 1 M2 = 1,000,000 square millimeters
-  // 1 mm thick over 1 M2 = 1,000,000 cubic millimeters
-  // 1,000,000 cubic mm = 1 L
-  return mm * 1000000;
-};
-
-const lM2ToMm = L => {
-  return L / 1000000;
-};
-
 const galsToCi = gallons => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
@@ -152,6 +141,15 @@ const calcVwc = (volume, water) => {
   typeof water.units === 'string' ?
     water.units.toLowerCase() :
     null ;
+console.log('v',volumeUnits,'w',waterUnits)
+  if(volumeUnits === waterUnits){
+    console.log('match')
+    return precisionRound(water.qty/(volume.qty));
+  }
+  if(volumeUnits === 'cc' && waterUnits === 'l'){
+    console.log('metric', 'water.qty', water.qty,'/ v:', volume.qty)
+    return precisionRound(water.qty/(volume.qty/1000));
+  }
 
   const volumeCF = _convertToCf(volumeUnits, volume.qty);
   const waterCF  = _convertToCf(waterUnits , water.qty);
@@ -177,6 +175,29 @@ const celsiusToKelvin = celsius => {
     */
   return celsius + 273.15;
 };
+
+const celsiusToF = celsius => {
+  /*
+    Convert temperature in degrees Celsius to degrees Kelvin.
+
+    :param celsius: Degrees Celsius
+    :return: Degrees Fahrenheit
+    :rtype: float
+    */
+  return (celsius * 1.8 ) + 32;
+};
+
+const fToCelsius = f => {
+  /*
+    Convert temperature in degrees Celsius to degrees Kelvin.
+
+    :param celsius: Degrees Celsius
+    :return: Degrees Fahrenheit
+    :rtype: float
+    */
+  return (f - 32) / 1.8;
+};
+
 
 const kelvinToCelsius =kelvin => {
   /*
@@ -296,8 +317,6 @@ module.exports = {
   galsToCf,
   galsToLbs,
   lbsToGals,
-  lM2ToMm,
-  mmToLM2,
   _convertToCf,
   calcVwc,
   ccToL,
@@ -305,6 +324,8 @@ module.exports = {
   m3ToCc,
   lToCc,
   celsiusToKelvin,
+  celsiusToF,
+  fToCelsius,
   kelvinToCelsius,
   pctToDeg,
   degToPct,

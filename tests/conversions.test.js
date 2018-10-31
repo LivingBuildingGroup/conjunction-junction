@@ -38,7 +38,7 @@ const {
   upperStrings         } = require('./helper-data');
 
 
-describe('conjunction-junction conversions', () => { // mocha has built-in promise handling in before, after, beforeEach, afterEach, and it
+describe.only('conjunction-junction conversions', () => { // mocha has built-in promise handling in before, after, beforeEach, afterEach, and it
 
   it('ciToCf undefined if no params', () => { 
     const result = ciToCf();
@@ -388,17 +388,17 @@ describe('conjunction-junction conversions', () => { // mocha has built-in promi
     const result = calcVwc(volume, water);
     expect(result).to.equal(undefined);
   });
-  it('calcVwc vol cc water L', () => { 
+  it.only('calcVwc vol cc water L', () => { 
     const vol = {
       units: 'cc',
-      qty: 40000,
+      qty: 40000, // e.g. 4cm thick over 1M2
     };
     const wat = {
       units: 'L',
-      qty: 0.6,
+      qty: 3,
     };
     const result = calcVwc(vol, wat);
-    const expectedResult = 0.015; // 40,000cc = 40 L, 0.6L / 40L = 0.015
+    const expectedResult = 0.075; // 40,000cc = 40 L, 3L / 40L = 0.075
     expect(result).to.equal(expectedResult);
   });
 
