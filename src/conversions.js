@@ -141,13 +141,10 @@ const calcVwc = (volume, water) => {
   typeof water.units === 'string' ?
     water.units.toLowerCase() :
     null ;
-console.log('v',volumeUnits,'w',waterUnits)
   if(volumeUnits === waterUnits){
-    console.log('match')
     return precisionRound(water.qty/(volume.qty));
   }
   if(volumeUnits === 'cc' && waterUnits === 'l'){
-    console.log('metric', 'water.qty', water.qty,'/ v:', volume.qty)
     return precisionRound(water.qty/(volume.qty/1000));
   }
 

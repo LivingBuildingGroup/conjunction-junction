@@ -978,13 +978,31 @@ describe('conjunction-junction date-time', () => {
     const result = addTime(timestamp, 2, option);
     expect(result).to.deep.equal(expectedResult);
   });
-  it('addTime days', () => {
+  it('addTime subtract 2 days', () => {
     // May 22 2016 23:56:32
     const timestamp = new Date(1463975192682);
     const option = 'days';
     // May 20 2016 23:46:32
     const expectedResult = new Date(1463802392682);
     const result = addTime(timestamp, -2, option);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('addTime add 5 days', () => {
+    // January 1, 2017
+    const timestamp = new Date(2017,0,1,0,0,0);
+    const option = 'days';
+    // 5 days later is Feburary 14, 2017
+    const expectedResult = new Date(2017,0,5,0,0,0);
+    const result = addTime(timestamp, 5, option);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('addTime add 45 days', () => {
+    // January 1, 2017
+    const timestamp = new Date(2017,0,1,0,0,0);
+    const option = 'days';
+    // 45 days later is Feburary 14, 2017
+    const expectedResult = new Date(2017,1,14,0,0,0);
+    const result = addTime(timestamp, 45, option);
     expect(result).to.deep.equal(expectedResult);
   });
   it('addTime months', () => {
