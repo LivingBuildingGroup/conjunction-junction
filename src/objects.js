@@ -344,13 +344,13 @@ const totalValuesByKey = (arrayOfObjects, key) => {
   let value = 0;
   const messages = arrayOfObjects.map((o,i)=>{
     if(o[key] === undefined){
-      return `index ${i}: key ${key}: was undefined`;
+      return `index ${i} key ${key}: was undefined`;
     } else {
       if(!isPrimitiveNumber(o[key])){
         return `index ${i} key ${key}: was ${o[key]} (not a number)`;
       } else {
         value += o[key];
-        return `index ${i}: key ${key}: ${o[key]} added; new cum. value: ${value}`;
+        return `index ${i} key ${key}: ${o[key]} added >>> new cum. value: ${value}`;
       }
     }
   });
@@ -370,14 +370,14 @@ const averageValuesByKey = (arrayOfObjects, key) => {
   let counter = 0;
   const messages = arrayOfObjects.map((o,i)=>{
     if(o[key] === undefined){
-      return `index ${i}: key ${key}: was undefined`;
+      return `index ${i} key ${key}: was undefined`;
     } else {
       if(!isPrimitiveNumber(o[key])){
         return `index ${i} key ${key}: was ${o[key]} (not a number)`;
       } else {
         counter ++;
         value += o[key];
-        return `index ${i}: key ${key}: ${o[key]} added; new cum. value: ${value}, counter: ${counter}`;
+        return `index ${i} key ${key}: ${o[key]} added >>> new cum. value: ${value}, counter: ${counter}`;
       }
     }
   });
@@ -429,7 +429,7 @@ const maxValuesByKey = (arrayOfObjects, key) => {
   let counter = 0;
   const messages = arrayOfObjects.map((o,i)=>{
     if(o[key] === undefined){
-      return `index ${i}: key ${key}: was undefined`;
+      return `index ${i} key ${key}: was undefined`;
     } else {
       if(!isPrimitiveNumber(o[key])){
         return `index ${i} key ${key}: was ${o[key]} (not a number)`;
@@ -440,7 +440,7 @@ const maxValuesByKey = (arrayOfObjects, key) => {
         } else {
           value = Math.max(value, o[key]);
         }
-        return `index ${i}: key ${key}: ${o[key]}; current highest value: ${value}, counter: ${counter}`;
+        return `index ${i} key ${key}: ${o[key]} >>> current highest value: ${value}, counter: ${counter}`;
       }
     }
   });
@@ -627,11 +627,9 @@ const immutableArrayInsert = (index, array, itemToUpdate) => {
   // input: itemToUpdate: what to put into the array: can be any data type
   // output: new array with item added (prepended, appended, replaced, based on index)
   // invalid index defaults to prepend
-  if(!Array.isArray(array)) return [];
-  if(itemToUpdate  === undefined) return array;
-  if (index === null || index === undefined || isNaN(index)) {
-    return [itemToUpdate, ...array];
-  }
+  if(!Array.isArray(array))      return [];
+  if(itemToUpdate === undefined) return array;
+  if (!isPrimitiveNumber(index)) return [itemToUpdate, ...array];
   if (index <= 0){
     const remainder = array.slice(1,array.length);
     const newArray = [itemToUpdate, ...remainder];
