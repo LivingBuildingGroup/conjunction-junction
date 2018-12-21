@@ -398,7 +398,7 @@ const minValuesByKey = (arrayOfObjects, key) => {
   let counter = 0;
   const messages = arrayOfObjects.map((o,i)=>{
     if(o[key] === undefined){
-      return `index ${i}: key ${key}: was undefined`;
+      return `index ${i} key ${key}: was undefined`;
     } else {
       if(!isPrimitiveNumber(o[key])){
         return `index ${i} key ${key}: was ${o[key]} (not a number)`;
@@ -409,7 +409,7 @@ const minValuesByKey = (arrayOfObjects, key) => {
         } else {
           value = Math.min(value, o[key]);
         }
-        return `index ${i}: key ${key}: ${o[key]}; current lowest value: ${value}, counter: ${counter}`;
+        return `index ${i} key ${key}: ${o[key]} >>> current lowest value: ${value}, counter: ${counter}`;
       }
     }
   });

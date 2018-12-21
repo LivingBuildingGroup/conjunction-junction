@@ -371,13 +371,13 @@ var totalValuesByKey = function totalValuesByKey(arrayOfObjects, key) {
   var value = 0;
   var messages = arrayOfObjects.map(function (o, i) {
     if (o[key] === undefined) {
-      return 'index ' + i + ': key ' + key + ': was undefined';
+      return 'index ' + i + ' key ' + key + ': was undefined';
     } else {
       if (!isPrimitiveNumber(o[key])) {
         return 'index ' + i + ' key ' + key + ': was ' + o[key] + ' (not a number)';
       } else {
         value += o[key];
-        return 'index ' + i + ': key ' + key + ': ' + o[key] + ' added; new cum. value: ' + value;
+        return 'index ' + i + ' key ' + key + ': ' + o[key] + ' added >>> new cum. value: ' + value;
       }
     }
   });
@@ -397,14 +397,14 @@ var averageValuesByKey = function averageValuesByKey(arrayOfObjects, key) {
   var counter = 0;
   var messages = arrayOfObjects.map(function (o, i) {
     if (o[key] === undefined) {
-      return 'index ' + i + ': key ' + key + ': was undefined';
+      return 'index ' + i + ' key ' + key + ': was undefined';
     } else {
       if (!isPrimitiveNumber(o[key])) {
         return 'index ' + i + ' key ' + key + ': was ' + o[key] + ' (not a number)';
       } else {
         counter++;
         value += o[key];
-        return 'index ' + i + ': key ' + key + ': ' + o[key] + ' added; new cum. value: ' + value + ', counter: ' + counter;
+        return 'index ' + i + ' key ' + key + ': ' + o[key] + ' added >>> new cum. value: ' + value + ', counter: ' + counter;
       }
     }
   });
@@ -425,7 +425,7 @@ var minValuesByKey = function minValuesByKey(arrayOfObjects, key) {
   var counter = 0;
   var messages = arrayOfObjects.map(function (o, i) {
     if (o[key] === undefined) {
-      return 'index ' + i + ': key ' + key + ': was undefined';
+      return 'index ' + i + ' key ' + key + ': was undefined';
     } else {
       if (!isPrimitiveNumber(o[key])) {
         return 'index ' + i + ' key ' + key + ': was ' + o[key] + ' (not a number)';
@@ -436,7 +436,7 @@ var minValuesByKey = function minValuesByKey(arrayOfObjects, key) {
         } else {
           value = Math.min(value, o[key]);
         }
-        return 'index ' + i + ': key ' + key + ': ' + o[key] + '; current lowest value: ' + value + ', counter: ' + counter;
+        return 'index ' + i + ' key ' + key + ': ' + o[key] + ' >>> current lowest value: ' + value + ', counter: ' + counter;
       }
     }
   });
@@ -456,7 +456,7 @@ var maxValuesByKey = function maxValuesByKey(arrayOfObjects, key) {
   var counter = 0;
   var messages = arrayOfObjects.map(function (o, i) {
     if (o[key] === undefined) {
-      return 'index ' + i + ': key ' + key + ': was undefined';
+      return 'index ' + i + ' key ' + key + ': was undefined';
     } else {
       if (!isPrimitiveNumber(o[key])) {
         return 'index ' + i + ' key ' + key + ': was ' + o[key] + ' (not a number)';
@@ -467,7 +467,7 @@ var maxValuesByKey = function maxValuesByKey(arrayOfObjects, key) {
         } else {
           value = Math.max(value, o[key]);
         }
-        return 'index ' + i + ': key ' + key + ': ' + o[key] + '; current highest value: ' + value + ', counter: ' + counter;
+        return 'index ' + i + ' key ' + key + ': ' + o[key] + ' >>> current highest value: ' + value + ', counter: ' + counter;
       }
     }
   });
@@ -663,9 +663,7 @@ var immutableArrayInsert = function immutableArrayInsert(index, array, itemToUpd
   // invalid index defaults to prepend
   if (!Array.isArray(array)) return [];
   if (itemToUpdate === undefined) return array;
-  if (index === null || index === undefined || isNaN(index)) {
-    return [itemToUpdate].concat(_toConsumableArray(array));
-  }
+  if (!isPrimitiveNumber(index)) return [itemToUpdate].concat(_toConsumableArray(array));
   if (index <= 0) {
     var remainder = array.slice(1, array.length);
     var _newArray3 = [itemToUpdate].concat(_toConsumableArray(remainder));
