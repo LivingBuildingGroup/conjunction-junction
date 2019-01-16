@@ -288,6 +288,7 @@ var _convertTimestampToStringInner = function _convertTimestampToStringInner(ts,
   if (f === 'time') return h0 + ':' + min0 + ':' + seconds0;
   if (f === 'm d') return m + '/' + d;
   if (f === 'm d y') return m + '/' + d + '/' + y;
+  if (f === 'M d') return M + ' ' + d;
   if (f === 'M d y') return M + ' ' + d + ', ' + y;
   if (f === 'm d h') return m + '/' + d + ' ' + hour + meridien;
   if (f === 'm d h m') return m + '/' + d + ' ' + hour + ':' + min + meridien;
