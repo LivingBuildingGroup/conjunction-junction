@@ -37,6 +37,19 @@ var convertObjectKeyCase = function convertObjectKeyCase(object) {
 };
 
 var shiftObjectKeysColumn = function shiftObjectKeysColumn(object, keys, key, position1, position2) {
+  /* change this 
+     send in a flattened object with all keys (server will have this loaded; front end has in state)
+     look up the new key in that object as O(1)
+     const newObj = {};
+     for(let k in o){
+       if(refObj.hasOwnProperty[oldK] && refObj[oldK].hasOwnProperty(newCase)){
+         const newK = refObj[oldK][newCase];
+         newObj[newK] = object[oldK];
+       }
+         newObj[oldK] = object[oldK];
+        }
+     }
+  */
   // object: object with keys, 
   // keys: all keys
   // key: to look up in keys, 
@@ -83,6 +96,18 @@ var shiftObjectKeysColumn = function shiftObjectKeysColumn(object, keys, key, po
 };
 
 var shiftArrayKeysColumn = function shiftArrayKeysColumn(array, keys, key, position1, position2) {
+  /* change this 
+     send in a flattened object with all keys (server will have this loaded; front end has in state)
+     look up the new key in that object as O(1)
+     const newArr = array.map(oldK=>{
+       if(refObj.hasOwnProperty(oldK)){
+       return refObj[oldK][newCase];
+       } else {
+         return undefined;
+       }
+     });
+     return newArr;
+  */
   if (!Array.isArray(array)) return [];
   if (!isObjectLiteral(keys)) return [];
   if (typeof key !== 'string') return array;
@@ -136,6 +161,13 @@ var getKeyArray = function getKeyArray(input) {
       return array[position1];
     });
   }
+  /* new version of list
+    const list = [];
+    for(let field in keys[table]){
+      list.push(field);
+    }
+    return list;
+  */
   if (column2 === 'match') {
     // returns a filtered list of keys (use position 1 if position 2 is an exact match to match)
     var newArray = [];
@@ -144,6 +176,9 @@ var getKeyArray = function getKeyArray(input) {
     });
     return newArray;
   }
+  /* DO NOT THINK WE ARE USING THIS
+    new version ?
+  */
   if (column2 === 'filter') {
     // returns a filtered list of keys (use position 1 if position 2 is truthy)
     var _newArray = [];
@@ -152,6 +187,18 @@ var getKeyArray = function getKeyArray(input) {
     });
     return _newArray;
   }
+  /* new version
+    change position2 to filterField, e.g. position2 might be "fix" or "post"
+    change position1 to returnField, e.g. "snake" or "camel" or anything else.
+    const list = [];
+    for(let field in keys[table]){
+      const thisOne = keys[table][field];
+      if(thisOne[filterField]){
+        list.push(thisOne[returnField]);
+      }
+    }
+    return list;
+  */
   if (column2 === 'reverse filter') {
     // returns a filtered list of keys (use position 1 if position 2 is falsey)
     var _newArray2 = [];
@@ -160,6 +207,7 @@ var getKeyArray = function getKeyArray(input) {
     });
     return _newArray2;
   }
+  /* eliminate the above */
   if (column2 === 'field') {
     // returns a list of keys AS other keys
     return keys[key].map(function (array) {
@@ -167,6 +215,20 @@ var getKeyArray = function getKeyArray(input) {
       return array[position1] + ' as ' + array[position2];
     });
   }
+  /* new version
+    change position1 to lookupField, e.g. "snake"
+    change position1 to returnField, e.g. "camel"
+    const list = [];
+    for(let field in keys[table]){
+      const thisOne = keys[table][field];
+      if(thisOne[lookupField]===thisOne[returnField]) {
+        list.push(thisOne[lookupField]);
+      } else {
+        list.push(`${thisOne[lookupField]} as ${thisOne[returnField]}`);
+      }
+    }
+    return list;
+  */
   if (column2 === 'object list') {
     // similar to above, but returns an object with the key as position 1, and value as the value of position 2 
     var newObject = {};
@@ -174,7 +236,7 @@ var getKeyArray = function getKeyArray(input) {
       if (array[position2] instanceof Object) newObject[array[position1]] = array[position2];
     });
     return newObject;
-  }
+  } // eliminate the above
   return [];
 };
 

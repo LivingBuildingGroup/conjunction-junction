@@ -6,6 +6,22 @@ const { isPrimitiveNumber,
   isObjectLiteral, 
   precisionRound } = require('./basic');
 
+// @@@@@@@@@@ DISTANCE @@@@@@@@@
+
+const mmToInches = mm => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(mm)) return;
+  return precisionRound(mm  * 0.0393701, 4);
+};
+
+const inchesToMm = inches => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(inches)) return;
+  return precisionRound(inches * 25.4, 4);
+};
+
 // @@@@@@@@@@ VOLUME @@@@@@@@@
 
 const ciToCf = ci => {
@@ -306,6 +322,8 @@ const solarKwM2DayToUvProxy = kwM2 => {
 };
 
 module.exports = {
+  mmToInches,
+  inchesToMm,
   ciToCf,
   galsToInches,
   inchesToGals,

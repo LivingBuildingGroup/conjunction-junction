@@ -464,6 +464,12 @@ const dropZoneFromTimestamp = (timestamp, option = -1) => {
 
 // @@@@@@@@@@@@@ INTEGER/OBJECT CONVERTERS @@@@@@@@@@@@@
 
+const convertDoyToDate = (doy, year) => {
+  const date = new Date(year, 0);
+  date.setDate(doy);
+  return date;
+};
+
 const convertTimestampToIntegers = timestamp => {
   if(!isValidDate(timestamp)) return {};
   const dateTimeObject = {
@@ -754,6 +760,7 @@ module.exports = {
   convertTimestampToString,
   convertLocalStringTimestampToZuluStringTimestamp,
   dropZoneFromTimestamp,
+  convertDoyToDate,
   convertTimestampToIntegers,
   convertIntegersToTimestamp,
   totalMinsHoursDays,

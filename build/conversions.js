@@ -7,6 +7,22 @@ var _require = require('./basic'),
     isObjectLiteral = _require.isObjectLiteral,
     precisionRound = _require.precisionRound;
 
+// @@@@@@@@@@ DISTANCE @@@@@@@@@
+
+var mmToInches = function mmToInches(mm) {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if (!isPrimitiveNumber(mm)) return;
+  return precisionRound(mm * 0.0393701, 4);
+};
+
+var inchesToMm = function inchesToMm(inches) {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if (!isPrimitiveNumber(inches)) return;
+  return precisionRound(inches * 25.4, 4);
+};
+
 // @@@@@@@@@@ VOLUME @@@@@@@@@
 
 var ciToCf = function ciToCf(ci) {
@@ -290,6 +306,8 @@ var solarKwM2DayToUvProxy = function solarKwM2DayToUvProxy(kwM2) {
 };
 
 module.exports = {
+  mmToInches: mmToInches,
+  inchesToMm: inchesToMm,
   ciToCf: ciToCf,
   galsToInches: galsToInches,
   inchesToGals: inchesToGals,

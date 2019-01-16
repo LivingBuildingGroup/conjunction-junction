@@ -27,6 +27,19 @@ const convertObjectKeyCase = (object, caseOption='cC') => {
 };
 
 const shiftObjectKeysColumn = (object, keys, key, position1, position2) => {
+  /* change this 
+     send in a flattened object with all keys (server will have this loaded; front end has in state)
+     look up the new key in that object as O(1)
+     const newObj = {};
+     for(let k in o){
+       if(refObj.hasOwnProperty[oldK] && refObj[oldK].hasOwnProperty(newCase)){
+         const newK = refObj[oldK][newCase];
+         newObj[newK] = object[oldK];
+       }
+         newObj[oldK] = object[oldK];
+        }
+     }
+  */
   // object: object with keys, 
   // keys: all keys
   // key: to look up in keys, 
@@ -75,6 +88,18 @@ const shiftObjectKeysColumn = (object, keys, key, position1, position2) => {
 };
 
 const shiftArrayKeysColumn = (array, keys, key, position1, position2) => {
+  /* change this 
+     send in a flattened object with all keys (server will have this loaded; front end has in state)
+     look up the new key in that object as O(1)
+     const newArr = array.map(oldK=>{
+       if(refObj.hasOwnProperty(oldK)){
+       return refObj[oldK][newCase];
+       } else {
+         return undefined;
+       }
+     });
+     return newArr;
+  */
   if(!Array.isArray(array))        return [];
   if(!isObjectLiteral(keys))       return [];
   if(typeof key !== 'string')      return array;
@@ -121,6 +146,13 @@ const getKeyArray = input => {
   if(column2 === 'list') { // returns a list of keys in this column
     return keys[key].map(array=>array[position1]);
   }
+  /* new version of list
+    const list = [];
+    for(let field in keys[table]){
+      list.push(field);
+    }
+    return list;
+  */
   if(column2 === 'match') { // returns a filtered list of keys (use position 1 if position 2 is an exact match to match)
     let newArray = [];
     keys[key].forEach(array=>{
@@ -128,6 +160,9 @@ const getKeyArray = input => {
     });
     return newArray;
   }
+  /* DO NOT THINK WE ARE USING THIS
+    new version ?
+  */
   if(column2 === 'filter') { // returns a filtered list of keys (use position 1 if position 2 is truthy)
     let newArray = [];
     keys[key].forEach(array=>{
@@ -135,6 +170,18 @@ const getKeyArray = input => {
     });
     return newArray;
   }
+  /* new version
+    change position2 to filterField, e.g. position2 might be "fix" or "post"
+    change position1 to returnField, e.g. "snake" or "camel" or anything else.
+    const list = [];
+    for(let field in keys[table]){
+      const thisOne = keys[table][field];
+      if(thisOne[filterField]){
+        list.push(thisOne[returnField]);
+      }
+    }
+    return list;
+  */
   if(column2 === 'reverse filter') { // returns a filtered list of keys (use position 1 if position 2 is falsey)
     let newArray = [];
     keys[key].forEach(array=>{
@@ -142,19 +189,34 @@ const getKeyArray = input => {
     });
     return newArray;
   }
+  /* eliminate the above */
   if(column2 === 'field') { // returns a list of keys AS other keys
     return keys[key].map(array=>{
       if(array[position1]===array[position2]) return array[position1];
       return `${array[position1]} as ${array[position2]}`;
     });
   }
+  /* new version
+    change position1 to lookupField, e.g. "snake"
+    change position1 to returnField, e.g. "camel"
+    const list = [];
+    for(let field in keys[table]){
+      const thisOne = keys[table][field];
+      if(thisOne[lookupField]===thisOne[returnField]) {
+        list.push(thisOne[lookupField]);
+      } else {
+        list.push(`${thisOne[lookupField]} as ${thisOne[returnField]}`);
+      }
+    }
+    return list;
+  */
   if(column2 === 'object list') { // similar to above, but returns an object with the key as position 1, and value as the value of position 2 
     let newObject = {};
     keys[key].forEach(array=>{
       if(array[position2] instanceof Object) newObject[array[position1]] = array[position2];
     });
     return newObject;
-  }
+  } // eliminate the above
   return [];
 };
 
