@@ -265,6 +265,7 @@ var _convertTimestampToStringInner = function _convertTimestampToStringInner(ts,
   var y = ts.getFullYear();
   var m = ts.getMonth() + 1; // months are 0-index in date objects, but not in string
   var m0 = leadingZero(m);
+  var M = getNameOfMonth(m);
   var d = ts.getDate();
   var dow = ts.getDay();
   var d0 = leadingZero(d);
@@ -286,6 +287,8 @@ var _convertTimestampToStringInner = function _convertTimestampToStringInner(ts,
   if (f === 'numeric') return '' + y + m0 + d0 + h0 + min0 + seconds0;
   if (f === 'time') return h0 + ':' + min0 + ':' + seconds0;
   if (f === 'm d') return m + '/' + d;
+  if (f === 'm d y') return m + '/' + d + '/' + y;
+  if (f === 'M d y') return M + ' ' + d + ', ' + y;
   if (f === 'm d h') return m + '/' + d + ' ' + hour + meridien;
   if (f === 'm d h m') return m + '/' + d + ' ' + hour + ':' + min + meridien;
   if (f === 'dow m d') return dows[dow] + ' ' + m + '/' + d;

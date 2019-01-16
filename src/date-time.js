@@ -294,6 +294,7 @@ const _convertTimestampToStringInner = (ts, option) => {
   const y          = ts.getFullYear();
   const m          = ts.getMonth() + 1; // months are 0-index in date objects, but not in string
   const m0         = leadingZero(m);
+  const M          = getNameOfMonth(m);
   const d          = ts.getDate();
   const dow        = ts.getDay();
   const d0         = leadingZero(d);
@@ -329,6 +330,8 @@ const _convertTimestampToStringInner = (ts, option) => {
   if(f === 'numeric')     return `${y}${m0}${d0}${h0}${min0}${seconds0}`;
   if(f === 'time')        return `${h0}:${min0}:${seconds0}`;
   if(f === 'm d')         return `${m}/${d}`;
+  if(f === 'm d y')       return `${m}/${d}/${y}`;
+  if(f === 'M d y')       return `${M} ${d}, ${y}`;
   if(f === 'm d h')       return `${m}/${d} ${hour}${meridien}`;
   if(f === 'm d h m')     return `${m}/${d} ${hour}:${min}${meridien}`;
   if(f === 'dow m d')     return `${dows[dow]} ${m}/${d}`;
