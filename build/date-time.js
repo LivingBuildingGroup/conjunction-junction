@@ -257,6 +257,12 @@ var _convertTimestampToStringInner = function _convertTimestampToStringInner(ts,
     minute: 'numeric',
     timeZone: timeZone
   }, o);
+  var dateOptionsNoTime = {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  };
   var offset = getTheTimezoneOffset(ts); // returns signed minutes
   var offsetFormatted = formatOffsetAsString(offset); // pass in signed min, returns signed string
   var offsetFormattedNoColon = formatOffsetAsString(offset, false); // pass in signed minutes, returns signed string
@@ -298,6 +304,7 @@ var _convertTimestampToStringInner = function _convertTimestampToStringInner(ts,
   if (f === 'dow d h') return dows[dow] + ' ' + d + ' ' + hour + meridien;
   if (f === 'dow h') return dows[dow] + ' ' + hour + meridien;
   if (f === 'full') return y + '-' + m0 + '-' + d0 + timeSymbol + h0 + ':' + min0 + ':' + seconds0 + offsetFormatted;
+  if (f === 'print-no-time') return ts.toLocaleDateString('en', dateOptionsNoTime);
   // this is if f === 'print', which is also default
   if (ts instanceof Date) return ts.toLocaleDateString('en', dateOptions);
   return '';
