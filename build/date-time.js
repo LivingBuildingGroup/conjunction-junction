@@ -520,7 +520,7 @@ var dateDelta = function dateDelta(date1st, date2nd) {
   // Calculate the difference in milliseconds
   var differenceMs = date2Ms - date1Ms;
   // Convert back to days and return
-  var delta = option === 'seconds' ? Math.round(differenceMs / oneSec) : option === 'minutes' ? Math.round(differenceMs / oneMin) : option === 'hours' ? Math.round(differenceMs / oneHr) : option === 'days' ? Math.round(differenceMs / oneDay) : option === 'months' ? Math.round(differenceMs / oneMo) : option === 'years' ? Math.round(differenceMs / oneYr) : null;
+  var delta = option === 'ms' ? differenceMs : option === 'seconds' ? Math.round(differenceMs / oneSec) : option === 'minutes' ? Math.round(differenceMs / oneMin) : option === 'hours' ? Math.round(differenceMs / oneHr) : option === 'days' ? Math.round(differenceMs / oneDay) : option === 'months' ? Math.round(differenceMs / oneMo) : option === 'years' ? Math.round(differenceMs / oneYr) : null;
   return delta;
 };
 

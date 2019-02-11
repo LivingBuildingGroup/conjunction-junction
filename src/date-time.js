@@ -323,7 +323,7 @@ const _convertTimestampToStringInner = (ts, option) => {
             h ;
   const meridien = 
     typeof hour === 'string' ? // midnight or noon
-    '' :
+      '' :
       o.hour === 24 ? 
         '' :
         h >= 12 ? 'PM' : 
@@ -426,7 +426,7 @@ const createTimestampLabel = (ts, option={format: 'm d h'}) => {
               h ;
     const meridien = 
       typeof hour === 'string' ? // midnight or noon
-      '' :
+        '' :
         o.hour === 24 ? 
           '' :
           h >= 12 ? 'PM' : 
@@ -592,13 +592,14 @@ const dateDelta = (date1st, date2nd, option='minutes') => {
   const differenceMs = date2Ms - date1Ms;
   // Convert back to days and return
   const delta = 
-    option === 'seconds' ? Math.round(differenceMs/oneSec) :
-      option === 'minutes' ? Math.round(differenceMs/oneMin) :
-        option === 'hours'   ? Math.round(differenceMs/oneHr ) :
-          option === 'days'    ? Math.round(differenceMs/oneDay) :
-            option === 'months'  ? Math.round(differenceMs/oneMo ) :
-              option === 'years'   ? Math.round(differenceMs/oneYr ) :
-                null ;
+    option === 'ms' ? differenceMs :
+      option === 'seconds' ? Math.round(differenceMs/oneSec) :
+        option === 'minutes' ? Math.round(differenceMs/oneMin) :
+          option === 'hours'   ? Math.round(differenceMs/oneHr ) :
+            option === 'days'    ? Math.round(differenceMs/oneDay) :
+              option === 'months'  ? Math.round(differenceMs/oneMo ) :
+                option === 'years'   ? Math.round(differenceMs/oneYr ) :
+                  null ;
   return delta; 
 };
 
