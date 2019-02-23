@@ -9,12 +9,10 @@ const { isPrimitiveNumber,
 
 // @@@@@@@@@@@@@@@ TYPES @@@@@@@@@@@@@@@@
 
-const correctInputType = (value, key) => {
-  // IMPROVE THIS SO SIGNATURES ARE NOT HARD-CODED !!!!
-  // input, particularly from selectors, may be a string, when it should be an integer
-  // input may come in as a string, even from a "number" input
-  const numberKeysSignatures  = ['number','Lbs','nessIn','Sf','Cf','idSlope'];
-  const integerKeysSignatures = ['integer','idComponent','idProfile','idCassette', 'idStorm','idTest','initialPlantHealth'];
+const correctInputType = (value, key='', options={}) => {
+  // Get data from input field and convert to a specified type
+  const numberKeysSignatures  = Array.isArray(options.numberSignatures) ? options.numberSignatures   : ['number','Lbs','nessIn','Sf','Cf','idSlope'];
+  const integerKeysSignatures = Array.isArray(options.integerSignatures) ? options.integerSignatures : ['integer','idComponent','idProfile','idCassette', 'idStorm','idTest','initialPlantHealth'];
   let isNumber = false;
   let isInteger = false;
   numberKeysSignatures.forEach(sig=>{
