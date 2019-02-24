@@ -6,6 +6,7 @@ const { isPrimitiveNumber,
   precisionRound,
   isObjectLiteral } = require('./basic');
 const { convertScToCc,
+  titleCaseWord,
   convertCcToSc } = require('./primitives');
 // @@@@@@@@@@@@@@@ OBJECT KEYS @@@@@@@@@@@@@@@@
 
@@ -22,6 +23,17 @@ const convertObjectKeyCase = (object, caseOption='cC') => {
       const newKey = convertCcToSc(key);
       newObject[newKey] = object[key];
     }
+  }
+  return newObject;
+};
+
+const prefixObjectKeys = (object, prefix) => {
+  if(!isObjectLiteral(object) || typeof prefix !== 'string') {
+    return {} ;
+  }
+  const newObject = {};
+  for(let key in object){
+    newObject[`${prefix}${titleCaseWord(key)}`] = object[key];
   }
   return newObject;
 };
@@ -794,6 +806,7 @@ const interpolateArrayValues = (arr, decimal, hi, lo) => {
 module.exports = { 
   // object keys
   convertObjectKeyCase, 
+  prefixObjectKeys,
   shiftObjectKeysColumn,
   shiftArrayKeysColumn,
   getKeyArray, 

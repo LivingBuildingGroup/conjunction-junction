@@ -17,9 +17,7 @@ var correctInputType = function correctInputType(value) {
   var key = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-  // IMPROVE THIS SO SIGNATURES ARE NOT HARD-CODED !!!!
-  // input, particularly from selectors, may be a string, when it should be an integer
-  // input may come in as a string, even from a "number" input
+  // Get data from input field and convert to a specified type
   var numberKeysSignatures = Array.isArray(options.numberSignatures) ? options.numberSignatures : ['number', 'Lbs', 'nessIn', 'Sf', 'Cf', 'idSlope'];
   var integerKeysSignatures = Array.isArray(options.integerSignatures) ? options.integerSignatures : ['integer', 'idComponent', 'idProfile', 'idCassette', 'idStorm', 'idTest', 'initialPlantHealth'];
   var isNumber = false;

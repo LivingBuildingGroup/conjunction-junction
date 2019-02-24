@@ -15,6 +15,7 @@ var _require2 = require('./basic'),
 
 var _require3 = require('./primitives'),
     convertScToCc = _require3.convertScToCc,
+    titleCaseWord = _require3.titleCaseWord,
     convertCcToSc = _require3.convertCcToSc;
 // @@@@@@@@@@@@@@@ OBJECT KEYS @@@@@@@@@@@@@@@@
 
@@ -32,6 +33,17 @@ var convertObjectKeyCase = function convertObjectKeyCase(object) {
       var _newKey = convertCcToSc(key);
       newObject[_newKey] = object[key];
     }
+  }
+  return newObject;
+};
+
+var prefixObjectKeys = function prefixObjectKeys(object, prefix) {
+  if (!isObjectLiteral(object) || typeof prefix !== 'string') {
+    return {};
+  }
+  var newObject = {};
+  for (var key in object) {
+    newObject['' + prefix + titleCaseWord(key)] = object[key];
   }
   return newObject;
 };
@@ -827,6 +839,7 @@ var interpolateArrayValues = function interpolateArrayValues(arr, decimal, hi, l
 module.exports = {
   // object keys
   convertObjectKeyCase: convertObjectKeyCase,
+  prefixObjectKeys: prefixObjectKeys,
   shiftObjectKeysColumn: shiftObjectKeysColumn,
   shiftArrayKeysColumn: shiftArrayKeysColumn,
   getKeyArray: getKeyArray,
