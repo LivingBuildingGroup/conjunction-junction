@@ -338,7 +338,7 @@ describe('conjunction-junction db', ()=> {
       lastName: 'garner',
       badKey:   'delete this one'
     };
-    const table = 'users';
+    const tableName = 'users';
     const option = {
       keysColumnStart: 1,
       keysColumnEnd:   0,
@@ -356,7 +356,7 @@ describe('conjunction-junction db', ()=> {
         ['last_name' , 'lastName' , true    , true ],
       ],
     };
-    const result = formatReqBodyForKnex(body, keys, table, option);
+    const result = formatReqBodyForKnex(body, keys, tableName, option);
     expect(result).to.deep.equal(expectedResult);
   });
   it('formatReqBodyForKnex same column', ()=> { 
@@ -366,7 +366,7 @@ describe('conjunction-junction db', ()=> {
       last_name: 'garner',
       bad_key:   'delete this one'
     };
-    const table = 'users';
+    const tableName = 'users';
     const option = {
       keysColumnStart: 0,
       keysColumnEnd:   0,
@@ -384,7 +384,7 @@ describe('conjunction-junction db', ()=> {
         ['last_name' , 'lastName' , true    , true ],
       ],
     };
-    const result = formatReqBodyForKnex(body, keys, table, option);
+    const result = formatReqBodyForKnex(body, keys, tableName, option);
     expect(result).to.deep.equal(expectedResult);
   });
 
@@ -396,11 +396,11 @@ describe('conjunction-junction db', ()=> {
       'password',
       'first_name'
     ];
-    const common = [
+    const commonSc = [
       'id',
       'timestamp_created'
     ];
-    const table = 'users';
+    const tableName = 'users';
     const options = {
       parent: true,
       alwaysPrefix: true,
@@ -413,7 +413,7 @@ describe('conjunction-junction db', ()=> {
       'password as usersPassword',
       'first_name as usersFirstName',
     ];
-    const result = prefixCommonKeys(table, keys, common, options);
+    const result = prefixCommonKeys(tableName, keys, commonSc, options);
     expect(result).to.deep.equal(expectedResult);
   });
   it('prefixCommonKeys child, always, cC', ()=> { 
@@ -424,11 +424,11 @@ describe('conjunction-junction db', ()=> {
       'password',
       'first_name'
     ];
-    const common = [
+    const commonSc = [
       'id',
       'timestamp_created'
     ];
-    const table = 'users';
+    const tableName = 'users';
     const options = {
       alwaysPrefix: true,
       case: 'cC',
@@ -440,7 +440,7 @@ describe('conjunction-junction db', ()=> {
       'password as usersPassword',
       'first_name as usersFirstName',
     ];
-    const result = prefixCommonKeys(table, keys, common, options);
+    const result = prefixCommonKeys(tableName, keys, commonSc, options);
     expect(result).to.deep.equal(expectedResult);
   });
   it('prefixCommonKeys child, not always, cC', ()=> { 
@@ -451,22 +451,22 @@ describe('conjunction-junction db', ()=> {
       'password',
       'first_name'
     ];
-    const common = [
+    const commonSc = [
       'id',
       'timestamp_created'
     ];
-    const table = 'users';
+    const tableName = 'users';
     const options = {
       case: 'cC',
     };
-    const expectedResult = [ // child = always table. as ~
+    const expectedResult = [ // child = always tableName. as ~
       'users.id as usersId',
       'users.timestamp_created as usersTimestampCreated',
       'username',
       'password',
       'first_name as firstName',
     ];
-    const result = prefixCommonKeys(table, keys, common, options);
+    const result = prefixCommonKeys(tableName, keys, commonSc, options);
     expect(result).to.deep.equal(expectedResult);
   });
   it('prefixCommonKeys child, not always, Sc', ()=> { 
@@ -477,19 +477,19 @@ describe('conjunction-junction db', ()=> {
       'password',
       'first_name'
     ];
-    const common = [
+    const commonSc = [
       'id',
       'timestamp_created'
     ];
-    const table = 'users';
-    const expectedResult = [ // child = always table. as ~
+    const tableName = 'users';
+    const expectedResult = [ // child = always tableName. as ~
       'users.id as users_id',
       'users.timestamp_created as users_timestamp_created',
       'username',
       'password',
       'first_name',
     ];
-    const result = prefixCommonKeys(table, keys, common);
+    const result = prefixCommonKeys(tableName, keys, commonSc);
     expect(result).to.deep.equal(expectedResult);
   });
   it('prefixCommonKeys child, always, Sc', ()=> { 
@@ -500,32 +500,32 @@ describe('conjunction-junction db', ()=> {
       'password',
       'first_name'
     ];
-    const common = [
+    const commonSc = [
       'id',
       'timestamp_created'
     ];
     const options = {
       alwaysPrefix: true,
     };
-    const table = 'users';
-    const expectedResult = [ // child = always table. as ~
+    const tableName = 'users';
+    const expectedResult = [ // child = always tableName. as ~
       'users.id as users_id',
       'users.timestamp_created as users_timestamp_created',
       'username as users_username',
       'password as users_password',
       'first_name as users_first_name',
     ];
-    const result = prefixCommonKeys(table, keys, common, options);
+    const result = prefixCommonKeys(tableName, keys, commonSc, options);
     expect(result).to.deep.equal(expectedResult);
   });
   it('prefixCommonKeys same on valid input with default or given option 1', () => { 
-    const table = 'table';
+    const tableName = 'table';
     const keys = [
       'id', 
       'id_user', 
       'slope_pct'
     ];
-    const common = [
+    const commonSc = [
       'id', 
       'id_user'
     ];
@@ -534,24 +534,24 @@ describe('conjunction-junction db', ()=> {
       'table.id_user as table_id_user', 
       'slope_pct'
     ];
-    const prefixedKeys = prefixCommonKeys(table, keys, common);
+    const prefixedKeys = prefixCommonKeys(tableName, keys, commonSc);
     expect(prefixedKeys).to.deep.equal(expectedResult);
     const options = {
       case: 'Sc', 
       parent: false,
       alwaysPrefix: false,
     };
-    const prefixedKeys1 = prefixCommonKeys(table, keys, common, options);
+    const prefixedKeys1 = prefixCommonKeys(tableName, keys, commonSc, options);
     expect(prefixedKeys1).to.deep.equal(expectedResult);
   });
   it('prefixCommonKeys same on valid input with default or given option 1', () => { 
-    const table = 'table';
+    const tableName = 'table';
     const keys = [
       'id', 
       'id_user', 
       'slope_pct'
     ];
-    const common = [
+    const commonSc = [
       'id', 
       'id_user'
     ];
@@ -565,17 +565,17 @@ describe('conjunction-junction db', ()=> {
       parent: false,
       alwaysPrefix: false,
     };
-    const prefixedKeys = prefixCommonKeys(table, keys, common, options);
+    const prefixedKeys = prefixCommonKeys(tableName, keys, commonSc, options);
     expect(prefixedKeys).to.deep.equal(expectedResult);
   });
   it('prefixCommonKeys prefixes parent input but not output', () => { 
-    const table = 'table';
+    const tableName = 'table';
     const keys = [
       'id', 
       'id_user', 
       'slope_pct'
     ];
-    const common = [
+    const commonSc = [
       'id', 
       'id_user'
     ];
@@ -585,17 +585,17 @@ describe('conjunction-junction db', ()=> {
       'slope_pct'
     ];
     const options = {case: 'Sc', parent: true};
-    const prefixedKeys1 = prefixCommonKeys(table, keys, common, options);
+    const prefixedKeys1 = prefixCommonKeys(tableName, keys, commonSc, options);
     expect(prefixedKeys1).to.deep.equal(expectedResult);
   });
   it('prefixCommonKeys prefixes parent input and output if always', () => { 
-    const table = 'table';
+    const tableName = 'table';
     const keys = [
       'id', 
       'id_user', 
       'slope_pct'
     ];
-    const common = [
+    const commonSc = [
       'id', 
       'id_user'
     ];
@@ -609,17 +609,17 @@ describe('conjunction-junction db', ()=> {
       parent: true,
       alwaysPrefix: true
     };
-    const prefixedKeys1 = prefixCommonKeys(table, keys, common, options);
+    const prefixedKeys1 = prefixCommonKeys(tableName, keys, commonSc, options);
     expect(prefixedKeys1).to.deep.equal(expectedResult);
   });
   it('prefixCommonKeys prefixes common if child', () => { 
-    const table = 'table';
+    const tableName = 'table';
     const keys = [
       'id', 
       'id_user', 
       'slope_pct'
     ];
-    const common = [
+    const commonSc = [
       'id', 
       'id_user'
     ];
@@ -633,17 +633,17 @@ describe('conjunction-junction db', ()=> {
       parent: false,
       alwaysPrefix: false,
     };
-    const prefixedKeys1 = prefixCommonKeys(table, keys, common, options);
+    const prefixedKeys1 = prefixCommonKeys(tableName, keys, commonSc, options);
     expect(prefixedKeys1).to.deep.equal(expectedResult);
   });
   it('prefixCommonKeys prefixes all if child and always', () => { 
-    const table = 'table';
+    const tableName = 'table';
     const keys = [
       'id', 
       'id_user', 
       'slope_pct'
     ];
-    const common = [
+    const commonSc = [
       'id', 
       'id_user'
     ];
@@ -657,12 +657,12 @@ describe('conjunction-junction db', ()=> {
       parent: false,
       alwaysPrefix: true,
     };
-    const prefixedKeys1 = prefixCommonKeys(table, keys, common, options);
+    const prefixedKeys1 = prefixCommonKeys(tableName, keys, commonSc, options);
     expect(prefixedKeys1).to.deep.equal(expectedResult);
   });
 
   it('createSqlFetchTableKeys joinTo 000, keyLoc 000', ()=> { 
-    const tables = ['profiles', 'cassettes', 'tests'];
+    const tableNames = ['profiles', 'cassettes', 'tests'];
     const keysToFetch = [
       'profiles.id as id',
       'cassettes.id as cassettesId',
@@ -675,19 +675,19 @@ describe('conjunction-junction db', ()=> {
     const keyLocsArray = [0,0,0];
     const expectedResult = {
       fetch: 'profiles.id as id, cassettes.id as cassettesId, tests.id as testsId, mediaCfSf, wtAstmDry',
-      table: 'profiles',
+      tableName: 'profiles',
       // first 0 in joinToing says cassettes joins to 0 of tables (profiles); the 1 in joinToing says join tests to cassettes (not profiles); the 1 in keyLocping says the foreign key is in tests, not cassettes
       join: 'left join cassettes on profiles.id_cassette = cassettes.id left join tests on profiles.id_test = tests.id',
     };
-    const result1 = createSqlFetchTableKeys({tables, keysToFetch, matchingKey, joinTosArray, keyLocsArray});
-    const result2 = createSqlFetchTableKeys({tables, keysToFetch, matchingKey, joinTosArray});
-    const result3 = createSqlFetchTableKeys({tables, keysToFetch, matchingKey});
+    const result1 = createSqlFetchTableKeys({tableNames, keysToFetch, matchingKey, joinTosArray, keyLocsArray});
+    const result2 = createSqlFetchTableKeys({tableNames, keysToFetch, matchingKey, joinTosArray});
+    const result3 = createSqlFetchTableKeys({tableNames, keysToFetch, matchingKey});
     expect(result1).to.deep.equal(expectedResult);
     expect(result2).to.deep.equal(expectedResult);
     expect(result3).to.deep.equal(expectedResult);
   });
   it('createSqlFetchTableKeys joinTo 001, keyLoc 002', ()=> { 
-    const tables = ['profiles', 'cassettes', 'tests'];
+    const tableNames = ['profiles', 'cassettes', 'tests'];
     const keysToFetch = [
       'profiles.id as id',
       'cassettes.id as cassettesId',
@@ -700,15 +700,15 @@ describe('conjunction-junction db', ()=> {
     const keyLocsArray = [0,0,2];
     const expectedResult = {
       fetch: 'profiles.id as id, cassettes.id as cassettesId, tests.id as testsId, mediaCfSf, wtAstmDry',
-      table: 'profiles',
+      tableName: 'profiles',
       // first 0 in joinToing says cassettes joins to 0 of tables (profiles); the 1 in joinToing says join tests to cassettes (not profiles); the 1 in keyLocping says the foreign key is in tests, not cassettes
       join: 'left join cassettes on profiles.id_cassette = cassettes.id left join tests on cassettes.id = tests.id_cassette',
     };
-    const result = createSqlFetchTableKeys({tables, keysToFetch, matchingKey, joinTosArray, keyLocsArray});
+    const result = createSqlFetchTableKeys({tableNames, keysToFetch, matchingKey, joinTosArray, keyLocsArray});
     expect(result).to.deep.equal(expectedResult);
   });
   it('createSqlFetchTableKeys joinTo 000, keyLoc 002', ()=> { 
-    const tables = ['profiles', 'cassettes', 'tests'];
+    const tableNames = ['profiles', 'cassettes', 'tests'];
     const keysToFetch = [
       'profiles.id as id',
       'cassettes.id as cassettesId',
@@ -721,15 +721,15 @@ describe('conjunction-junction db', ()=> {
     const keyLocsArray = [0,0,2];
     const expectedResult = {
       fetch: 'profiles.id as id, cassettes.id as cassettesId, tests.id as testsId, mediaCfSf, wtAstmDry',
-      table: 'profiles',
+      tableName: 'profiles',
       // first 0 in joinToing says cassettes joins to 0 of tables (profiles); the 1 in joinToing says join tests to cassettes (not profiles); the 1 in keyLocping says the foreign key is in tests, not cassettes
       join: 'left join cassettes on profiles.id_cassette = cassettes.id left join tests on profiles.id = tests.id_profile',
     };
-    const result = createSqlFetchTableKeys({tables, keysToFetch, matchingKey, joinTosArray, keyLocsArray});
+    const result = createSqlFetchTableKeys({tableNames, keysToFetch, matchingKey, joinTosArray, keyLocsArray});
     expect(result).to.deep.equal(expectedResult);
   });
   it('createSqlFetchTableKeys joinTo 001, keyLoc 002', ()=> { 
-    const tables = ['profiles', 'cassettes', 'tests'];
+    const tableNames = ['profiles', 'cassettes', 'tests'];
     const keysToFetch = [
       'profiles.id as id',
       'cassettes.id as cassettesId',
@@ -742,15 +742,15 @@ describe('conjunction-junction db', ()=> {
     const keyLocsArray = [0,0,2];
     const expectedResult = {
       fetch: 'profiles.id as id, cassettes.id as cassettesId, tests.id as testsId, mediaCfSf, wtAstmDry',
-      table: 'profiles',
+      tableName: 'profiles',
       // first 0 in joinToing says cassettes joins to 0 of tables (profiles); the 1 in joinToing says join tests to cassettes (not profiles); the 1 in keyLocping says the foreign key is in tests, not cassettes
       join: 'left join cassettes on profiles.id_cassette = cassettes.id left join tests on cassettes.id = tests.id_cassette',
     };
-    const result = createSqlFetchTableKeys({tables, keysToFetch, matchingKey, joinTosArray, keyLocsArray});
+    const result = createSqlFetchTableKeys({tableNames, keysToFetch, matchingKey, joinTosArray, keyLocsArray});
     expect(result).to.deep.equal(expectedResult);
   });
   it('createSqlFetchTableKeys joinTo 001, keyLoc 002 table not ending in s', ()=> { 
-    const tables = ['profiles', 'weatherLoFreq', 'tests'];
+    const tableNames = ['profiles', 'weatherLoFreq', 'tests'];
     const keysToFetch = [
       'profiles.id as id',
       'cassettes.id as cassettesId',
@@ -763,15 +763,15 @@ describe('conjunction-junction db', ()=> {
     const keyLocsArray = [0,0,2];
     const expectedResult = {
       fetch: 'profiles.id as id, cassettes.id as cassettesId, tests.id as testsId, mediaCfSf, wtAstmDry',
-      table: 'profiles',
+      tableName: 'profiles',
       // first 0 in joinToing says cassettes joins to 0 of tables (profiles); the 1 in joinToing says join tests to cassettes (not profiles); the 1 in keyLocping says the foreign key is in tests, not cassettes
       join: 'left join weatherLoFreq on profiles.id_weatherLoFreq = weatherLoFreq.id left join tests on weatherLoFreq.id = tests.id_weatherLoFreq',
     };
-    const result = createSqlFetchTableKeys({tables, keysToFetch, matchingKey, joinTosArray, keyLocsArray});
+    const result = createSqlFetchTableKeys({tableNames, keysToFetch, matchingKey, joinTosArray, keyLocsArray});
     expect(result).to.deep.equal(expectedResult);
   });
   it('createSqlFetchTableKeys undefined on invalid table', ()=> { 
-    const tables = 'tables';
+    const tableNames = 'tables';
     const keysToFetch = [
       'profiles.id as id',
       'cassettes.id as cassettesId',
@@ -782,20 +782,20 @@ describe('conjunction-junction db', ()=> {
     const matchingKey  = 'id';
     const joinTosArray = [0,0,1];
     const keyLocsArray = [0,0,1];
-    const result = createSqlFetchTableKeys({tables, keysToFetch, matchingKey, joinTosArray, keyLocsArray});
+    const result = createSqlFetchTableKeys({tableNames, keysToFetch, matchingKey, joinTosArray, keyLocsArray});
     expect(result).to.deep.equal(undefined);
   });
   it('createSqlFetchTableKeys undefined on no key array', ()=> { 
-    const tables = ['profiles', 'cassettes', 'tests'];
+    const tableNames = ['profiles', 'cassettes', 'tests'];
     const keysToFetch  = 'not an array';
     const matchingKey  = 'id';
     const joinTosArray = [0,0,1];
     const keyLocsArray = [0,0,1];
-    const result = createSqlFetchTableKeys({tables, keysToFetch, matchingKey, joinTosArray, keyLocsArray});
+    const result = createSqlFetchTableKeys({tableNames, keysToFetch, matchingKey, joinTosArray, keyLocsArray});
     expect(result).to.deep.equal(undefined);
   });
   it('createSqlFetchTableKeys undefined on match key not a string', ()=> { 
-    const tables = ['profiles', 'cassettes', 'tests'];
+    const tableNames = ['profiles', 'cassettes', 'tests'];
     const keysToFetch = [
       'profiles.id as id',
       'cassettes.id as cassettesId',
@@ -806,7 +806,7 @@ describe('conjunction-junction db', ()=> {
     const matchingKey  = 3; // not a string
     const joinTosArray = [0,0,1];
     const keyLocsArray = [0,0,1];
-    const result = createSqlFetchTableKeys({tables, keysToFetch, matchingKey, joinTosArray, keyLocsArray});
+    const result = createSqlFetchTableKeys({tableNames, keysToFetch, matchingKey, joinTosArray, keyLocsArray});
     expect(result).to.deep.equal(undefined);
   });
 

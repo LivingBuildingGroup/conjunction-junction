@@ -304,6 +304,7 @@ var _convertTimestampToStringInner = function _convertTimestampToStringInner(ts,
   if (f === 'dow d h') return dows[dow] + ' ' + d + ' ' + hour + meridien;
   if (f === 'dow h') return dows[dow] + ' ' + hour + meridien;
   if (f === 'full') return y + '-' + m0 + '-' + d0 + timeSymbol + h0 + ':' + min0 + ':' + seconds0 + offsetFormatted;
+  if (f === 'zulu') return ts.toUTCString();
   if (f === 'print-no-time') return ts.toLocaleDateString('en', dateOptionsNoTime);
   // this is if f === 'print', which is also default
   if (ts instanceof Date) return ts.toLocaleDateString('en', dateOptions);
@@ -598,7 +599,7 @@ var rangeIsIncluded = function rangeIsIncluded(eventStartIn, eventEndIn, rangeSt
   var eventEnd = eventEndIn instanceof Date ? eventEndIn : typeof eventEndIn === 'string' ? convertStringToTimestamp(eventEndIn) : null;
   var rangeStart = rangeStartIn instanceof Date ? rangeStartIn : typeof rangeStartIn === 'string' ? convertStringToTimestamp(rangeStartIn) : null;
   var rangeEnd = rangeEndIn instanceof Date ? rangeEndIn : typeof rangeEndIn === 'string' ? convertStringToTimestamp(rangeEndIn) : rangeStart;
-  if (!(eventStart instanceof Date) || !(eventEnd instanceof Date) || !(rangeStart instanceof Date) || !(rangeEnd instanceof Date)) return {
+  if (!isValidDate(eventStart) || !isValidDate(eventEnd) || !isValidDate(rangeStart) || !isValidDate(rangeEnd)) return {
     desc: 'error: at least one date is invalid',
     code: 11
   };

@@ -49,6 +49,7 @@ var prefixObjectKeys = function prefixObjectKeys(object, prefix) {
 };
 
 var shiftObjectKeysColumn = function shiftObjectKeysColumn(object, keys, key, position1, position2) {
+  console.error('shiftObjectKeysColumn is deprecated!');
   /* change this 
      send in a flattened object with all keys (server will have this loaded; front end has in state)
      look up the new key in that object as O(1)
@@ -108,6 +109,7 @@ var shiftObjectKeysColumn = function shiftObjectKeysColumn(object, keys, key, po
 };
 
 var shiftArrayKeysColumn = function shiftArrayKeysColumn(array, keys, key, position1, position2) {
+  console.error('shiftArrayKeysColumn is deprecated!');
   /* change this 
      send in a flattened object with all keys (server will have this loaded; front end has in state)
      look up the new key in that object as O(1)

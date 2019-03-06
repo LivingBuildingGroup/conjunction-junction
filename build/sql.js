@@ -193,6 +193,7 @@ var formatObjectForKnex = function formatObjectForKnex(object, option) {
 };
 
 var formatReqBodyForKnex = function formatReqBodyForKnex(body, keys, table, option) {
+  console.error('formatReqBodyForKnex is deprecated! Change to formatPutBodyForKnex');
   // input: body = req.body, expect to be sent in camelCase
   // keys: all keys
   // table: db table, corresponds with keys
@@ -217,18 +218,18 @@ var formatReqBodyForKnex = function formatReqBodyForKnex(body, keys, table, opti
   return objectLimited;
 };
 
-var prefixCommonKeys = function prefixCommonKeys(table, keys, common) {
+var prefixCommonKeys = function prefixCommonKeys(tableName, keys, common) {
   var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
   // options = {parent: boolean, alwaysPrefix: boolean, case: 'cC' || 'Sc'}
   // input: keys e.g. ['id', 'id_user as idUser', 'slope_pct as slopePct'] <<< 2 words max! ('as' is join)
   // input: common e.g. ['id', 'id_user']
   // input: option = 1 only if common, 2 = prefix regardless
-  if (typeof table !== 'string') return;
+  if (typeof tableName !== 'string') return;
   if (!Array.isArray(keys)) return;
   if (!Array.isArray(common)) return;
   // parent (only 1 per join) as true gets this format:
-  // tests.id as id (identify table.field, but return unprefixed field)
+  // tests.id as id (identify tableName.field, but return unprefixed field)
   // parent as false (i.e. child) gets this format:
   // profiles.id as profiles_id (i.e. since id is common, it is prefixed for the children)
   var p = options.parent === true ? true : false;
@@ -245,27 +246,27 @@ var prefixCommonKeys = function prefixCommonKeys(table, keys, common) {
         if (!p) {
           // common and child
           if (c === 'cC') {
-            return table + '.' + key + ' as ' + table + titleCaseWord(key, 'cC');
+            return tableName + '.' + key + ' as ' + tableName + titleCaseWord(key, 'cC');
           } else {
-            return table + '.' + key + ' as ' + table + '_' + key;
+            return tableName + '.' + key + ' as ' + tableName + '_' + key;
           }
         } else if (a) {
           // common and parent and always
           if (c === 'cC') {
-            return table + '.' + key + ' as ' + table + titleCaseWord(key, 'cC');
+            return tableName + '.' + key + ' as ' + tableName + titleCaseWord(key, 'cC');
           } else {
-            return table + '.' + key + ' as ' + table + '_' + key;
+            return tableName + '.' + key + ' as ' + tableName + '_' + key;
           }
         } else {
           // common and parent
-          return table + '.' + key + ' as ' + key;
+          return tableName + '.' + key + ' as ' + key;
         }
       } else {
         // ALWAYS, BUT NOT COMMON, but always prefix column
         if (c === 'cC') {
-          return key + ' as ' + table + titleCaseWord(key, 'cC');
+          return key + ' as ' + tableName + titleCaseWord(key, 'cC');
         } else {
-          return key + ' as ' + table + '_' + key;
+          return key + ' as ' + tableName + '_' + key;
         }
       }
     } else {
@@ -281,13 +282,13 @@ var prefixCommonKeys = function prefixCommonKeys(table, keys, common) {
 };
 
 var createSqlFetchTableKeys = function createSqlFetchTableKeys(input) {
-  var tables = input.tables,
+  var tableNames = input.tableNames,
       keysToFetch = input.keysToFetch,
       matchingKey = input.matchingKey,
       joinTosArray = input.joinTosArray,
       keyLocsArray = input.keyLocsArray,
       joinTypesArray = input.joinTypesArray;
-  // input: array of tables: e.g. ['baseTables', 'optionalJoinTables', 'optionalJoinTables'] << tables always plural
+  // input: array of tableNames: e.g. ['baseTables', 'optionalJoinTables', 'optionalJoinTables'] << tables always plural
   // input: keysToFetch: e.g. ['key1', 'key2', 'key3', 'key4', 'etc']
   // input: matchingKey: 'id' to be used as 'baseTables.id_optionalJoinTable = optionalJoinTables.id' <<< foreign key always singular
   // input: joinTosArray: e.g. [0,0,0,1] means: join indices 1 & 2 to index 0; join index 3 to index 1;
@@ -296,28 +297,29 @@ var createSqlFetchTableKeys = function createSqlFetchTableKeys(input) {
   // Alternate of [0,0,1], e.g., says in the 3rd instance, the child contains foreign keys for the parent.
   // output: fetch (keys), join statement; join with 'from' for a get; use separately in other statements;
 
-  if (!Array.isArray(tables)) return;
+  if (!Array.isArray(tableNames)) return;
   if (!Array.isArray(keysToFetch)) return;
+  var tn = tableNames;
   if (typeof matchingKey !== 'string') return;
-  var joinTos = !Array.isArray(joinTosArray) ? tables.map(function () {
+  var joinTos = !Array.isArray(joinTosArray) ? tn.map(function () {
     return 0;
-  }) : joinTosArray.length !== tables.length ? tables.map(function () {
+  }) : joinTosArray.length !== tn.length ? tn.map(function () {
     return 0;
   }) : joinTosArray;
-  var keyLocs = !Array.isArray(keyLocsArray) ? tables.map(function () {
+  var keyLocs = !Array.isArray(keyLocsArray) ? tn.map(function () {
     return 0;
-  }) : keyLocsArray.length !== tables.length ? tables.map(function () {
+  }) : keyLocsArray.length !== tn.length ? tn.map(function () {
     return 0;
   }) : keyLocsArray;
-  var joinTypes = !Array.isArray(joinTypesArray) ? tables.map(function () {
+  var joinTypes = !Array.isArray(joinTypesArray) ? tn.map(function () {
     return 'left';
-  }) : joinTypesArray.length !== tables.length ? tables.map(function () {
+  }) : joinTypesArray.length !== tn.length ? tn.map(function () {
     return 'left';
   }) : joinTypesArray;
 
-  var joinStatementArray = tables.map(function (joinTo, i) {
-    var joinFrom = tables[joinTos[i]];
-    var keyLoc = tables[keyLocs[i]];
+  var joinStatementArray = tn.map(function (joinTo, i) {
+    var joinFrom = tn[joinTos[i]];
+    var keyLoc = tn[keyLocs[i]];
     var joinDir = joinFrom === keyLoc ? 'down' : 'up';
     var joinToTail = joinTo.charAt(joinTo.length - 1) === 's' ? joinTo.slice(0, joinTo.length - 1) : joinTo;
     var joinFromTail = joinFrom.charAt(joinFrom.length - 1) === 's' ? joinFrom.slice(0, joinFrom.length - 1) : joinFrom;
@@ -331,7 +333,7 @@ var createSqlFetchTableKeys = function createSqlFetchTableKeys(input) {
   });
 
   var fetch = '' + keysToFetch.join(', ');
-  var table = '' + tables[0];
+  var table = '' + tn[0];
   var joinWithoutSelf = joinStatementArray.slice(1, joinStatementArray.length);
   var join = '' + joinWithoutSelf.join(' ');
   return { fetch: fetch, table: table, join: join };

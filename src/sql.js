@@ -11,7 +11,8 @@ const {
 const {
   titleCaseWord, 
   convertScToCc,  } = require('./primitives');
-const { shiftObjectKeysColumn,
+const { 
+  shiftObjectKeysColumn,
   getKeyArray,
   limitObjectKeys,  } = require('./objects');
 
@@ -178,6 +179,7 @@ const formatObjectForKnex = (object, option) => {
 };
 
 const formatReqBodyForKnex = (body, keys, table, option) => {
+  console.error('formatReqBodyForKnex is deprecated! Change to formatPutBodyForKnex');
   // input: body = req.body, expect to be sent in camelCase
   // keys: all keys
   // table: db table, corresponds with keys
@@ -201,16 +203,16 @@ const formatReqBodyForKnex = (body, keys, table, option) => {
   return objectLimited;
 };
 
-const prefixCommonKeys = (table, keys, common, options={}) => {
+const prefixCommonKeys = (tableName, keys, common, options={}) => {
   // options = {parent: boolean, alwaysPrefix: boolean, case: 'cC' || 'Sc'}
   // input: keys e.g. ['id', 'id_user as idUser', 'slope_pct as slopePct'] <<< 2 words max! ('as' is join)
   // input: common e.g. ['id', 'id_user']
   // input: option = 1 only if common, 2 = prefix regardless
-  if(typeof table !== 'string') return;
+  if(typeof tableName !== 'string') return;
   if(!Array.isArray(keys))      return;
   if(!Array.isArray(common))    return;
   // parent (only 1 per join) as true gets this format:
-  // tests.id as id (identify table.field, but return unprefixed field)
+  // tests.id as id (identify tableName.field, but return unprefixed field)
   // parent as false (i.e. child) gets this format:
   // profiles.id as profiles_id (i.e. since id is common, it is prefixed for the children)
   const p = options.parent === true ? true : false ;
@@ -224,24 +226,24 @@ const prefixCommonKeys = (table, keys, common, options={}) => {
       if(common.includes(key)){    // COMMON: table gets dot prefix
         if(!p) {                   // common and child
           if(c==='cC'){
-            return `${table}.${key} as ${table}${titleCaseWord(key, 'cC')}`;
+            return `${tableName}.${key} as ${tableName}${titleCaseWord(key, 'cC')}`;
           } else {
-            return `${table}.${key} as ${table}_${key}`; 
+            return `${tableName}.${key} as ${tableName}_${key}`; 
           }
         } else if(a) {             // common and parent and always
           if(c==='cC'){
-            return `${table}.${key} as ${table}${titleCaseWord(key, 'cC')}`;
+            return `${tableName}.${key} as ${tableName}${titleCaseWord(key, 'cC')}`;
           } else {
-            return `${table}.${key} as ${table}_${key}`; 
+            return `${tableName}.${key} as ${tableName}_${key}`; 
           }
         } else {                   // common and parent
-          return   `${table}.${key} as ${key}`;
+          return   `${tableName}.${key} as ${key}`;
         }
       } else {                     // ALWAYS, BUT NOT COMMON, but always prefix column
         if(c==='cC'){
-          return `${key} as ${table}${titleCaseWord(key, 'cC')}`;
+          return `${key} as ${tableName}${titleCaseWord(key, 'cC')}`;
         } else {
-          return `${key} as ${table}_${key}`; 
+          return `${key} as ${tableName}_${key}`; 
         }
       }
     } else {                       // not common, not always
@@ -256,8 +258,8 @@ const prefixCommonKeys = (table, keys, common, options={}) => {
 };
 
 const createSqlFetchTableKeys = input => {
-  const { tables, keysToFetch, matchingKey, joinTosArray, keyLocsArray, joinTypesArray } = input;
-  // input: array of tables: e.g. ['baseTables', 'optionalJoinTables', 'optionalJoinTables'] << tables always plural
+  const { tableNames, keysToFetch, matchingKey, joinTosArray, keyLocsArray, joinTypesArray } = input;
+  // input: array of tableNames: e.g. ['baseTables', 'optionalJoinTables', 'optionalJoinTables'] << tables always plural
   // input: keysToFetch: e.g. ['key1', 'key2', 'key3', 'key4', 'etc']
   // input: matchingKey: 'id' to be used as 'baseTables.id_optionalJoinTable = optionalJoinTables.id' <<< foreign key always singular
   // input: joinTosArray: e.g. [0,0,0,1] means: join indices 1 & 2 to index 0; join index 3 to index 1;
@@ -265,25 +267,26 @@ const createSqlFetchTableKeys = input => {
   // input: joinTypeArray: LATER... allow switching between left (default), inner, right...
   // Alternate of [0,0,1], e.g., says in the 3rd instance, the child contains foreign keys for the parent.
   // output: fetch (keys), join statement; join with 'from' for a get; use separately in other statements;
-  if(!Array.isArray(tables))          return;
+  if(!Array.isArray(tableNames))      return;
   if(!Array.isArray(keysToFetch))     return;
+  const tn = tableNames;
   if(typeof matchingKey !== 'string') return;
   const joinTos =
-    !Array.isArray(joinTosArray)               ? tables.map(()=>0) :
-      joinTosArray.length   !== tables.length  ? tables.map(()=>0) :
+    !Array.isArray(joinTosArray)           ? tn.map(()=>0) :
+      joinTosArray.length   !== tn.length  ? tn.map(()=>0) :
         joinTosArray;
   const keyLocs =
-    !Array.isArray(keyLocsArray)               ? tables.map(()=>0) :
-      keyLocsArray.length   !== tables.length  ? tables.map(()=>0) :
+    !Array.isArray(keyLocsArray)           ? tn.map(()=>0) :
+      keyLocsArray.length   !== tn.length  ? tn.map(()=>0) :
         keyLocsArray;
   const joinTypes = 
-    !Array.isArray(joinTypesArray)             ? tables.map(()=>'left') :
-      joinTypesArray.length !== tables.length  ? tables.map(()=>'left') :
+    !Array.isArray(joinTypesArray)        ? tn.map(()=>'left') :
+      joinTypesArray.length !== tn.length ? tn.map(()=>'left') :
         joinTypesArray;
 
-  const joinStatementArray = tables.map((joinTo, i)=>{
-    const joinFrom     = tables[joinTos[i]]; 
-    const keyLoc       = tables[keyLocs[i]];
+  const joinStatementArray = tn.map((joinTo, i)=>{
+    const joinFrom     = tn[joinTos[i]]; 
+    const keyLoc       = tn[keyLocs[i]];
     const joinDir      = joinFrom === keyLoc ? 'down' : 'up' ;
     const joinToTail   = joinTo.charAt(joinTo.length-1)     === 's' ? joinTo.slice(  0,joinTo.length-1)   : joinTo   ;
     const joinFromTail = joinFrom.charAt(joinFrom.length-1) === 's' ? joinFrom.slice(0,joinFrom.length-1) : joinFrom ;
@@ -298,7 +301,7 @@ const createSqlFetchTableKeys = input => {
   });
 
   const fetch = `${keysToFetch.join(', ')}`;
-  const table = `${tables[0]}`;
+  const table = `${tn[0]}`;
   const joinWithoutSelf = joinStatementArray.slice(1,joinStatementArray.length);
   const join =  `${joinWithoutSelf.join(' ')}`;
   return { fetch, table, join };
