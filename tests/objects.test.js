@@ -24,6 +24,7 @@ const {
   minValuesByKey,
   maxValuesByKey,
   mergeArraysOfObjectsByKey,
+  summarizeValuesByKey,
   filterSequentialItems,
   // arrays
   totalAndAverageArrays,
@@ -1390,8 +1391,8 @@ describe('conjunction-junction objects', () => {
     const expectedResult = {
       value: 12,
       messages: [
-        'index 0: key platform_runoff1a_gals_tot: 3 added; new cum. value: 3',
-        'index 1: key platform_runoff1a_gals_tot: 9 added; new cum. value: 12',
+        'index 0 key platform_runoff1a_gals_tot: 3 added >>> new cum. value: 3',
+        'index 1 key platform_runoff1a_gals_tot: 9 added >>> new cum. value: 12',
       ],
     };
     const result = totalValuesByKey(arrayOfObjects, key);
@@ -1415,8 +1416,61 @@ describe('conjunction-junction objects', () => {
     const expectedResult = {
       value: 6,
       messages: [
-        'index 0: key platform_runoff1a_gals_tot: 3 added; new cum. value: 3, counter: 1',
-        'index 1: key platform_runoff1a_gals_tot: 9 added; new cum. value: 12, counter: 2',
+        'index 0 key platform_runoff1a_gals_tot: 3 added >>> new cum. value: 3, counter: 1',
+        'index 1 key platform_runoff1a_gals_tot: 9 added >>> new cum. value: 12, counter: 2',
+      ],
+    };
+    const result = averageValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);  
+  });
+
+  it('summarizeValuesByKey', () => {
+    const arrayOfObjects = [
+      {
+        platform_runoff1a_gals_tot: 3,
+        platform_runoff1b_gals_tot: 5,
+        platform_runoff2a_gals_tot: 7, 
+      },
+      {
+        platform_runoff1a_gals_tot: 9,
+        platform_runoff1b_gals_tot: 15,
+        platform_runoff2a_gals_tot: 27, 
+      },
+    ];
+    const key = 'platform_runoff1a_gals_tot';
+    const expectedResult = {
+      tot: 12,
+      min: 3,
+      max: 9,
+      avg: 6,
+      messages: [
+        'index 0 key platform_runoff1a_gals_tot: 3 >>> current highest value: 3, >>> current lowest value: 3, added >>> new cum. value: 3, counter: 1',
+        'index 1 key platform_runoff1a_gals_tot: 9 >>> current highest value: 9, >>> current lowest value: 3, added >>> new cum. value: 12, counter: 2',
+      ],
+    };
+    const result = summarizeValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('averageValuesByKey', ()=>{
+    const arrayOfObjects = [
+      {
+        platform_runoff1a_gals_tot: 3,
+        platform_runoff1b_gals_tot: 5,
+        platform_runoff2a_gals_tot: 7, 
+      },
+      {
+        platform_runoff1a_gals_tot: 9,
+        platform_runoff1b_gals_tot: 15,
+        platform_runoff2a_gals_tot: 27, 
+      },
+    ];
+    const key = 'platform_runoff1a_gals_tot';
+    const expectedResult = {
+      value: 6,
+      messages: [
+        'index 0 key platform_runoff1a_gals_tot: 3 added >>> new cum. value: 3, counter: 1',
+        'index 1 key platform_runoff1a_gals_tot: 9 added >>> new cum. value: 12, counter: 2',
       ],
     };
     const result = averageValuesByKey(arrayOfObjects, key);

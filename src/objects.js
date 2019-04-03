@@ -12,7 +12,10 @@ const { convertScToCc,
 
 const convertObjectKeyCase = (object, caseOption='cC') => {
   if(!isObjectLiteral(object)) return {};
-  const c = caseOption === 'cC' ? 'cC' : 'Sc';
+  const c = 
+    caseOption === 'cC' ? 'cC' : 
+      caseOption === 'camel' ? 'cC' :
+        'Sc';
   const newObject = {};
   for(let key in object){
     if(c==='cC'){
@@ -412,6 +415,7 @@ const subArrayByKey = (array, groupBy) => {
 };
 
 const totalValuesByKey = (arrayOfObjects, key) => {
+  console.error('totalValuesByKey is deprecated, convert to summarizeValuesByKey.tot');
   // input: array of objects, and a single key (for numeric keys, stringify numbers)
   // output: sum of all values of all matching keys with numeric values
   // output: array of messages identifying how each index was handled
@@ -437,6 +441,7 @@ const totalValuesByKey = (arrayOfObjects, key) => {
 };
 
 const averageValuesByKey = (arrayOfObjects, key) => {
+  console.error('averageValuesByKey is deprecated, convert to summarizeValuesByKey.avg');
   // input: array of objects, and a single key (for numeric keys, stringify numbers)
   // output: sum of all values of all matching keys with numeric values
   // output: array of messages identifying how each index was handled
@@ -465,6 +470,7 @@ const averageValuesByKey = (arrayOfObjects, key) => {
 };
 
 const minValuesByKey = (arrayOfObjects, key) => {
+  console.error('minValuesByKey is deprecated, convert to summarizeValuesByKey.min');
   // input: array of objects, and a single key (for numeric keys, stringify numbers)
   // output: lowest value of all matching keys with numeric values
   // output: array of messages identifying how each index was handled
@@ -496,6 +502,7 @@ const minValuesByKey = (arrayOfObjects, key) => {
 };
 
 const maxValuesByKey = (arrayOfObjects, key) => {
+  console.error('maxValuesByKey is deprecated, convert to summarizeValuesByKey.max');
   // input: array of objects, and a single key (for numeric keys, stringify numbers)
   // output: highest value of all matching keys with numeric values
   // output: array of messages identifying how each index was handled
@@ -505,10 +512,10 @@ const maxValuesByKey = (arrayOfObjects, key) => {
   let counter = 0;
   const messages = arrayOfObjects.map((o,i)=>{
     if(o[key] === undefined){
-      return `index ${i} key ${key}: was undefined`;
+      return `err: index ${i} key ${key}: was undefined`;
     } else {
       if(!isPrimitiveNumber(o[key])){
-        return `index ${i} key ${key}: was ${o[key]} (not a number)`;
+        return `err: index ${i} key ${key}: was ${o[key]} (not a number)`;
       } else {
         counter ++;
         if(value === undefined) {
@@ -522,6 +529,48 @@ const maxValuesByKey = (arrayOfObjects, key) => {
   });
   return {
     value,
+    messages,
+  };
+};
+
+const summarizeValuesByKey = (arrayOfObjects, key) => {
+  // input: array of objects, and a single key (for numeric keys, stringify numbers)
+  // output: highest value of all matching keys with numeric values
+  // output: array of messages identifying how each index was handled
+  if(!Array.isArray(arrayOfObjects)) return {value: null, message: 'err: no array of objects'};
+  if(typeof key !== 'string') return {value: null, message: 'err: key must be a string'};
+  let max;
+  let min;
+  let tot = 0;
+  let counter = 0;
+  const messages = arrayOfObjects.map((o,i)=>{
+    if(o[key] === undefined){
+      return `err: index ${i} key ${key}: was undefined`;
+    } else {
+      if(!isPrimitiveNumber(o[key])){
+        return `err: index ${i} key ${key}: was ${o[key]} (not a number)`;
+      } else {
+        counter ++;
+        tot += o[key];
+        if(max === undefined) {
+          max = o[key];
+        } else {
+          max = Math.max(max, o[key]);
+        }
+        if(min === undefined){
+          min = o[key];
+        } else {
+          min = Math.min(min, o[key]);
+        }
+        return `index ${i} key ${key}: ${o[key]} >>> current highest value: ${max}, >>> current lowest value: ${min}, added >>> new cum. value: ${tot}, counter: ${counter}`;
+      }
+    }
+  });
+  return {
+    max,
+    min,
+    avg: precisionRound(tot/counter, 4),
+    tot,
     messages,
   };
 };
@@ -827,6 +876,7 @@ module.exports = {
   minValuesByKey,
   maxValuesByKey,
   mergeArraysOfObjectsByKey,
+  summarizeValuesByKey,
   filterSequentialItems,
   // arrays
   totalAndAverageArrays,

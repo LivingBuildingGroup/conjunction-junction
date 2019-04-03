@@ -675,7 +675,7 @@ describe('conjunction-junction db', ()=> {
     const keyLocsArray = [0,0,0];
     const expectedResult = {
       fetch: 'profiles.id as id, cassettes.id as cassettesId, tests.id as testsId, mediaCfSf, wtAstmDry',
-      tableName: 'profiles',
+      table: 'profiles',
       // first 0 in joinToing says cassettes joins to 0 of tables (profiles); the 1 in joinToing says join tests to cassettes (not profiles); the 1 in keyLocping says the foreign key is in tests, not cassettes
       join: 'left join cassettes on profiles.id_cassette = cassettes.id left join tests on profiles.id_test = tests.id',
     };
@@ -700,7 +700,7 @@ describe('conjunction-junction db', ()=> {
     const keyLocsArray = [0,0,2];
     const expectedResult = {
       fetch: 'profiles.id as id, cassettes.id as cassettesId, tests.id as testsId, mediaCfSf, wtAstmDry',
-      tableName: 'profiles',
+      table: 'profiles',
       // first 0 in joinToing says cassettes joins to 0 of tables (profiles); the 1 in joinToing says join tests to cassettes (not profiles); the 1 in keyLocping says the foreign key is in tests, not cassettes
       join: 'left join cassettes on profiles.id_cassette = cassettes.id left join tests on cassettes.id = tests.id_cassette',
     };
@@ -721,7 +721,7 @@ describe('conjunction-junction db', ()=> {
     const keyLocsArray = [0,0,2];
     const expectedResult = {
       fetch: 'profiles.id as id, cassettes.id as cassettesId, tests.id as testsId, mediaCfSf, wtAstmDry',
-      tableName: 'profiles',
+      table: 'profiles',
       // first 0 in joinToing says cassettes joins to 0 of tables (profiles); the 1 in joinToing says join tests to cassettes (not profiles); the 1 in keyLocping says the foreign key is in tests, not cassettes
       join: 'left join cassettes on profiles.id_cassette = cassettes.id left join tests on profiles.id = tests.id_profile',
     };
@@ -742,7 +742,7 @@ describe('conjunction-junction db', ()=> {
     const keyLocsArray = [0,0,2];
     const expectedResult = {
       fetch: 'profiles.id as id, cassettes.id as cassettesId, tests.id as testsId, mediaCfSf, wtAstmDry',
-      tableName: 'profiles',
+      table: 'profiles',
       // first 0 in joinToing says cassettes joins to 0 of tables (profiles); the 1 in joinToing says join tests to cassettes (not profiles); the 1 in keyLocping says the foreign key is in tests, not cassettes
       join: 'left join cassettes on profiles.id_cassette = cassettes.id left join tests on cassettes.id = tests.id_cassette',
     };
@@ -763,7 +763,7 @@ describe('conjunction-junction db', ()=> {
     const keyLocsArray = [0,0,2];
     const expectedResult = {
       fetch: 'profiles.id as id, cassettes.id as cassettesId, tests.id as testsId, mediaCfSf, wtAstmDry',
-      tableName: 'profiles',
+      table: 'profiles',
       // first 0 in joinToing says cassettes joins to 0 of tables (profiles); the 1 in joinToing says join tests to cassettes (not profiles); the 1 in keyLocping says the foreign key is in tests, not cassettes
       join: 'left join weatherLoFreq on profiles.id_weatherLoFreq = weatherLoFreq.id left join tests on weatherLoFreq.id = tests.id_weatherLoFreq',
     };

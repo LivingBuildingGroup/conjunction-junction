@@ -991,8 +991,8 @@ describe('conjunction-junction date-time', () => {
     // January 1, 2017
     const timestamp = new Date(2017,0,1,0,0,0);
     const option = 'days';
-    // 5 days later is Feburary 14, 2017
-    const expectedResult = new Date(2017,0,5,0,0,0);
+    // 5 days later is January 5 (because 1 + 5 = 6)
+    const expectedResult = new Date(2017,0,6,0,0,0);
     const result = addTime(timestamp, 5, option);
     expect(result).to.deep.equal(expectedResult);
   });
@@ -1000,8 +1000,8 @@ describe('conjunction-junction date-time', () => {
     // January 1, 2017
     const timestamp = new Date(2017,0,1,0,0,0);
     const option = 'days';
-    // 45 days later is Feburary 14, 2017
-    const expectedResult = new Date(2017,1,14,0,0,0);
+    // 45 days later is Feburary 14, 2017 (because dates are inclusive)
+    const expectedResult = new Date(2017,1,15,0,0,0);
     const result = addTime(timestamp, 45, option);
     expect(result).to.deep.equal(expectedResult);
   });

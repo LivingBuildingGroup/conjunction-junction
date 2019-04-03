@@ -23,7 +23,7 @@ var convertObjectKeyCase = function convertObjectKeyCase(object) {
   var caseOption = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'cC';
 
   if (!isObjectLiteral(object)) return {};
-  var c = caseOption === 'cC' ? 'cC' : 'Sc';
+  var c = caseOption === 'cC' ? 'cC' : caseOption === 'camel' ? 'cC' : 'Sc';
   var newObject = {};
   for (var key in object) {
     if (c === 'cC') {
@@ -532,10 +532,10 @@ var maxValuesByKey = function maxValuesByKey(arrayOfObjects, key) {
   var counter = 0;
   var messages = arrayOfObjects.map(function (o, i) {
     if (o[key] === undefined) {
-      return 'index ' + i + ' key ' + key + ': was undefined';
+      return 'err: index ' + i + ' key ' + key + ': was undefined';
     } else {
       if (!isPrimitiveNumber(o[key])) {
-        return 'index ' + i + ' key ' + key + ': was ' + o[key] + ' (not a number)';
+        return 'err: index ' + i + ' key ' + key + ': was ' + o[key] + ' (not a number)';
       } else {
         counter++;
         if (value === undefined) {
@@ -549,6 +549,48 @@ var maxValuesByKey = function maxValuesByKey(arrayOfObjects, key) {
   });
   return {
     value: value,
+    messages: messages
+  };
+};
+
+var summarizeValuesByKey = function summarizeValuesByKey(arrayOfObjects, key) {
+  // input: array of objects, and a single key (for numeric keys, stringify numbers)
+  // output: highest value of all matching keys with numeric values
+  // output: array of messages identifying how each index was handled
+  if (!Array.isArray(arrayOfObjects)) return { value: null, message: 'err: no array of objects' };
+  if (typeof key !== 'string') return { value: null, message: 'err: key must be a string' };
+  var max = void 0;
+  var min = void 0;
+  var tot = 0;
+  var counter = 0;
+  var messages = arrayOfObjects.map(function (o, i) {
+    if (o[key] === undefined) {
+      return 'err: index ' + i + ' key ' + key + ': was undefined';
+    } else {
+      if (!isPrimitiveNumber(o[key])) {
+        return 'err: index ' + i + ' key ' + key + ': was ' + o[key] + ' (not a number)';
+      } else {
+        counter++;
+        tot += o[key];
+        if (max === undefined) {
+          max = o[key];
+        } else {
+          max = Math.max(max, o[key]);
+        }
+        if (min === undefined) {
+          min = o[key];
+        } else {
+          min = Math.min(min, o[key]);
+        }
+        return 'index ' + i + ' key ' + key + ': ' + o[key] + ' >>> current highest value: ' + max + ', >>> current lowest value: ' + min + ', added >>> new cum. value: ' + tot + ', counter: ' + counter;
+      }
+    }
+  });
+  return {
+    max: max,
+    min: min,
+    avg: precisionRound(tot / counter, 4),
+    tot: tot,
     messages: messages
   };
 };
@@ -860,6 +902,7 @@ module.exports = {
   minValuesByKey: minValuesByKey,
   maxValuesByKey: maxValuesByKey,
   mergeArraysOfObjectsByKey: mergeArraysOfObjectsByKey,
+  summarizeValuesByKey: summarizeValuesByKey,
   filterSequentialItems: filterSequentialItems,
   // arrays
   totalAndAverageArrays: totalAndAverageArrays,
