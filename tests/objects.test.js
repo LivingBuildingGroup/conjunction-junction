@@ -49,10 +49,12 @@ const {
   date1,
   date2,
   date3,
+  date5,
   hour0, 
   hour1, 
   hour2, 
-  hour3 }   = require('./helper-data');
+  hour3,
+  hour5 }   = require('./helper-data');
 
 describe('conjunction-junction objects', () => { 
 
@@ -1782,6 +1784,484 @@ describe('conjunction-junction objects', () => {
       message: `in filterSequentialItems() at record 2 exceeded range of 60 (id: 2, delta: -120, absolute: 120, key: timestamp_cr6, value at 2: ${convertTimestampToString(hour3)}, value at last sequential index #1/id: 1: ${convertTimestampToString(hour1)})`,
     };
     const result = filterSequentialItems(arr, options);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('filterSequentialItems errs if not array', ()=>{
+    const arr = 'not an array';
+    const filterOptions = {
+      key: 'id',
+      increment: 1,
+      tolerance: 0,
+    };
+    const expectedResult = {
+      array: [], index: 0, stop: 0,
+      message: 'array to check for sequentiality is not an array',
+    };
+    const result = filterSequentialItems(arr, filterOptions);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('filterSequentialItems errs if no options object', ()=>{
+    const arr = [
+      {
+        id: 1,
+      },
+      {
+        id: 2,
+      },
+      {
+        id: 3,
+      }
+    ];
+    const filterOptions = 'not an object';
+    const expectedResult = {
+      array: [], index: 0, stop: 0,
+      message: 'options for array sequentiality is not an object',
+    };
+    const result = filterSequentialItems(arr, filterOptions);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('filterSequentialItems errs if key not a string', ()=>{
+    const arr = [
+      {
+        id: 1,
+      },
+      {
+        id: 2,
+      },
+      {
+        id: 3,
+      }
+    ];
+    const filterOptions = {
+      key: 3,
+      increment: 'one',
+      tolerance: 0,
+    };
+    const expectedResult = {
+      array: [], index: 0, stop: 0,
+      message: 'key to check for sequentiality is not a string',
+    };
+    const result = filterSequentialItems(arr, filterOptions);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('filterSequentialItems errs if increment NaN', ()=>{
+    const arr = [
+      {
+        id: 1,
+      },
+      {
+        id: 2,
+      },
+      {
+        id: 3,
+      }
+    ];
+    const filterOptions = {
+      key: 'id',
+      increment: 'one',
+      tolerance: 0,
+    };
+    const expectedResult = {
+      array: [], index: 0, stop: 0,
+      message: 'increment to check for sequentiality is not a number',
+    };
+    const result = filterSequentialItems(arr, filterOptions);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('filterSequentialItems errs if tolerance NaN', ()=>{
+    const arr = [
+      {
+        id: 1,
+      },
+      {
+        id: 2,
+      },
+      {
+        id: 3,
+      }
+    ];
+    const filterOptions = {
+      key: 'id',
+      increment: 1,
+      tolerance: 'zero',
+    };
+    const expectedResult = {
+      array: [], index: 0, stop: 0,
+      message: 'tolerance to check for sequentiality is not a number',
+    };
+    const result = filterSequentialItems(arr, filterOptions);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('filterSequentialItems returns full array integer key', ()=>{
+    const arr = [
+      {
+        id: 1,
+      },
+      {
+        id: 2,
+      },
+      {
+        id: 3,
+      }
+    ];
+    const filterOptions = {
+      key: 'id',
+      increment: 1,
+      tolerance: 0,
+    };
+    const result = filterSequentialItems(arr, filterOptions);
+    const expectedResult = {
+      array: arr,
+      index: 2,
+      stop: undefined,
+      message: 'ok',
+    };
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('filterSequentialItems returns full array timestamp key', ()=>{
+    const arr = [
+      {
+        timestamp: date0,
+      },
+      {
+        timestamp: date1,
+      },
+      {
+        timestamp: date2,
+      }
+    ];
+    const filterOptions = {
+      key: 'timestamp',
+      increment: 1,
+      tolerance: 0,
+    };
+    const result = filterSequentialItems(arr, filterOptions);
+    const expectedResult = {
+      array: arr,
+      index: 2,
+      stop: undefined,
+      message: 'ok',
+    };
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('filterSequentialItems returns full array hours', ()=>{
+    const arr = [
+      {
+        timestamp: hour0,
+      },
+      {
+        timestamp: hour1,
+      },
+      {
+        timestamp: hour2,
+      }
+    ];
+    const filterOptions = {
+      key: 'timestamp',
+      increment: 1,
+      tolerance: 0,
+      timestampUnits: 'hours',
+    };
+    const result = filterSequentialItems(arr, filterOptions);
+    const expectedResult = {
+      array: arr,
+      index: 2,
+      stop: undefined,
+      message: 'ok',
+    };
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('filterSequentialItems omits trailing gap integer key', ()=>{
+    const arr = [
+      {
+        id: 1,
+      },
+      {
+        id: 2,
+      },
+      {
+        id: 4,
+      }
+    ];
+    const filterOptions = {
+      key: 'id',
+      increment: 1,
+      tolerance: 0,
+    };
+    const result = filterSequentialItems(arr, filterOptions);
+    const expectedResult = {
+      array: [      
+        {
+          id: 1,
+        },
+        {
+          id: 2,
+        },
+      ],
+      index: 1,
+      stop: 2,
+      message: 'in filterSequentialItems() at record 2 exceeded range of 1 (id: 4, delta: 2, absolute: 2, key: id, value at 2: 4, value at last sequential index #1/id: 2: 2)',
+    };
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('filterSequentialItems omits trailing gap timestamp key', ()=>{
+    const arr = [
+      {
+        timestamp: date0,
+      },
+      {
+        timestamp: date1,
+      },
+      {
+        timestamp: date5,
+      }
+    ];
+    const filterOptions = {
+      key: 'timestamp',
+      increment: 1,
+      tolerance: 0,
+    };
+    const result = filterSequentialItems(arr, filterOptions);
+    const expectedResult = {
+      array: [      
+        {
+          timestamp: date0,
+        },
+        {
+          timestamp: date1,
+        },
+      ],
+      index: 1,
+      stop: 2,
+      message: 'in filterSequentialItems() at record 2 exceeded range of 1 (id: undefined, delta: -4, absolute: 4, key: timestamp, value at 2: Thursday, May 17, 2018, 1:05 PM, value at last sequential index #1/id: undefined: Thursday, May 17, 2018, 1:01 PM)',
+    };
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('filterSequentialItems omits trailing gap timestamp key hours', ()=>{
+    const arr = [
+      {
+        timestamp: hour0,
+      },
+      {
+        timestamp: hour1,
+      },
+      {
+        timestamp: hour5,
+      }
+    ];
+    const filterOptions = {
+      key: 'timestamp',
+      increment: 1,
+      tolerance: 0,
+      timestampUnits: 'hours',
+    };
+    const result = filterSequentialItems(arr, filterOptions);
+    const expectedResult = {
+      array: [      
+        {
+          timestamp: hour0,
+        },
+        {
+          timestamp: hour1,
+        },
+      ],
+      index: 1,
+      stop: 2,
+      message: 'in filterSequentialItems() at record 2 exceeded range of 1 (id: undefined, delta: -4, absolute: 4, key: timestamp, value at 2: Thursday, May 17, 2018, 6:00 PM, value at last sequential index #1/id: undefined: Thursday, May 17, 2018, 2:00 PM)',
+    };
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('filterSequentialItems omits trailing negative gap integer key', ()=>{
+    const arr = [
+      {
+        id: 5,
+      },
+      {
+        id: 6,
+      },
+      {
+        id: 2,
+      }
+    ];
+    const filterOptions = {
+      key: 'id',
+      increment: 1,
+      tolerance: 0,
+    };
+    const result = filterSequentialItems(arr, filterOptions);
+    const expectedResult = {
+      array: [      
+        {
+          id: 5,
+        },
+        {
+          id: 6,
+        },
+      ],
+      index: 1,
+      stop: 2,
+      message: 'in filterSequentialItems() at record 2 exceeded range of 1 (id: 2, delta: -4, absolute: 4, key: id, value at 2: 2, value at last sequential index #1/id: 6: 6)',
+    };
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('filterSequentialItems omits trailing negative gap timestamp key', ()=>{
+    const arr = [
+      {
+        timestamp: date1,
+      },
+      {
+        timestamp: date2,
+      },
+      {
+        timestamp: date0,
+      }
+    ];
+    const filterOptions = {
+      key: 'timestamp',
+      increment: 1,
+      tolerance: 0,
+      timestampUnits: 'minutes',
+    };
+    const result = filterSequentialItems(arr, filterOptions);
+    const expectedResult = {
+      array: [      
+        {
+          timestamp: date1,
+        },
+        {
+          timestamp: date2,
+        },
+      ],
+      index: 1,
+      stop: 2,
+      message: 'in filterSequentialItems() at record 2 exceeded range of 1 (id: undefined, delta: 2, absolute: 2, key: timestamp, value at 2: Thursday, May 17, 2018, 1:00 PM, value at last sequential index #1/id: undefined: Thursday, May 17, 2018, 1:02 PM)',
+    };
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('filterSequentialItems omits trailing negative gap timestamp key hours', ()=>{
+    const arr = [
+      {
+        timestamp: hour1,
+      },
+      {
+        timestamp: hour2,
+      },
+      {
+        timestamp: hour0,
+      }
+    ];
+    const filterOptions = {
+      key: 'timestamp',
+      increment: 1,
+      tolerance: 0,
+      timestampUnits: 'hours',
+    };
+    const result = filterSequentialItems(arr, filterOptions);
+    const expectedResult = {
+      array: [      
+        {
+          timestamp: hour1,
+        },
+        {
+          timestamp: hour2,
+        },
+      ],
+      index: 1,
+      stop: 2,
+      message: 'in filterSequentialItems() at record 2 exceeded range of 1 (id: undefined, delta: 2, absolute: 2, key: timestamp, value at 2: Thursday, May 17, 2018, 1:00 PM, value at last sequential index #1/id: undefined: Thursday, May 17, 2018, 3:00 PM)',
+    };
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('filterSequentialItems returns 1st item only if not sequential integer key', ()=>{
+    const arr = [
+      {
+        id: 5,
+      },
+      {
+        id: 16,
+      },
+      {
+        id: 20,
+      }
+    ];
+    const filterOptions = {
+      key: 'id',
+      increment: 1,
+      tolerance: 0,
+    };
+    const result = filterSequentialItems(arr, filterOptions);
+    const expectedResult = {
+      array: [      
+        {
+          id: 5,
+        },
+      ],
+      index: 0,
+      stop: 1,
+      message: 'in filterSequentialItems() at record 1 exceeded range of 1 (id: 16, delta: 11, absolute: 11, key: id, value at 1: 16, value at last sequential index #0/id: 5: 5)',
+    };
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('filterSequentialItems returns 1st item only if not sequential timestamp key', ()=>{
+    const arr = [
+      {
+        timestamp: date0,
+      },
+      {
+        timestamp: date5,
+      },
+      {
+        timestamp: date2,
+      }
+    ];
+    const filterOptions = {
+      key: 'timestamp',
+      increment: 1,
+      tolerance: 0,
+    };
+    const result = filterSequentialItems(arr, filterOptions);
+    const expectedResult = {
+      array: [      
+        {
+          timestamp: date0,
+        },
+      ],
+      index: 0,
+      stop: 1,
+      message: 'in filterSequentialItems() at record 1 exceeded range of 1 (id: undefined, delta: -5, absolute: 5, key: timestamp, value at 1: Thursday, May 17, 2018, 1:05 PM, value at last sequential index #0/id: undefined: Thursday, May 17, 2018, 1:00 PM)',
+    };
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('filterSequentialItems returns 1st item only if not sequential timestamp key hours', ()=>{
+    const arr = [
+      {
+        timestamp: hour0,
+      },
+      {
+        timestamp: hour5,
+      },
+      {
+        timestamp: hour2,
+      }
+    ];
+    const filterOptions = {
+      key: 'timestamp',
+      increment: 1,
+      tolerance: 0,
+      timestampUnits: 'hours',
+    };
+    const result = filterSequentialItems(arr, filterOptions);
+    const expectedResult = {
+      array: [      
+        {
+          timestamp: hour0,
+        },
+      ],
+      index: 0,
+      stop: 1,
+      message: 'in filterSequentialItems() at record 1 exceeded range of 1 (id: undefined, delta: -5, absolute: 5, key: timestamp, value at 1: Thursday, May 17, 2018, 6:00 PM, value at last sequential index #0/id: undefined: Thursday, May 17, 2018, 1:00 PM)',
+    };
     expect(result).to.deep.equal(expectedResult);
   });
 
