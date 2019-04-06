@@ -28,6 +28,28 @@ var calcDayOfYearFromTimestamp = function calcDayOfYearFromTimestamp(timestamp) 
   return daysAfterJan1;
 };
 
+var calcDayOfYearFromIntegers = function calcDayOfYearFromIntegers(y, m, d) {
+  // month is 1-indexed, i.e. 1 = January
+  if (!isPrimitiveNumber(y) || !isPrimitiveNumber(m) || !isPrimitiveNumber(d)) {
+    return -1;
+  }
+  var daysOfMonth = [31, // Jan
+  28, 31, // Mar
+  30, 31, // May
+  30, 31, // Jul
+  31, 30, // Sep
+  31, 30, // Nov
+  31];
+  var isLeap = y % 4 === 0;
+  var leapToAdd = !isLeap ? 0 : m === 2 && d === 29 ? 1 : m > 2 ? 1 : 0;
+  var priorMonths = daysOfMonth.slice(0, m - 1);
+  var priorDays = priorMonths.length === 0 ? 0 : priorMonths.reduce(function (accum, cv) {
+    return accum + cv;
+  }, 0);
+  var daysAfterJan1 = priorDays + d + leapToAdd;
+  return daysAfterJan1;
+};
+
 var getTheTimezoneOffset = function getTheTimezoneOffset(date) {
   // input: optional date parameter; no parameter = current date
   // returns user's current timezone offset from UTC/Zulu time
@@ -653,6 +675,7 @@ var rangeIsIncluded = function rangeIsIncluded(eventStartIn, eventEndIn, rangeSt
 module.exports = {
   isValidDate: isValidDate,
   calcDayOfYearFromTimestamp: calcDayOfYearFromTimestamp,
+  calcDayOfYearFromIntegers: calcDayOfYearFromIntegers,
   getTheTimezoneOffset: getTheTimezoneOffset,
   isDaylightSavings: isDaylightSavings,
   getDaysOfMonth: getDaysOfMonth,

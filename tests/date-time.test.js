@@ -6,6 +6,7 @@ const expect = chai.expect;
 const {
   isValidDate,
   calcDayOfYearFromTimestamp,
+  calcDayOfYearFromIntegers,
   getTheTimezoneOffset,
   isDaylightSavings,
   getDaysOfMonth,
@@ -100,6 +101,47 @@ describe('conjunction-junction date-time', () => {
     const timestamp = new Date(2016,2,31,0,0,0);
     const expectedResult = 31+29+31;
     const result = calcDayOfYearFromTimestamp(timestamp);
+    expect(result).to.equal(expectedResult);
+  });
+
+  it('calcDayOfYearFromIntegers 1 on Jan 1', () => {
+    const y = 2018;
+    const m = 1;
+    const d = 1;
+    const expectedResult = 1;
+    const result = calcDayOfYearFromIntegers(y,m,d);
+    expect(result).to.equal(expectedResult);
+  });
+  it('calcDayOfYearFromIntegers non-leap', () => {
+    const y = 2017;
+    const m = 3;
+    const d = 1;
+    const expectedResult = 31+28+1;
+    const result = calcDayOfYearFromIntegers(y,m,d);
+    expect(result).to.equal(expectedResult);
+  });
+  it('calcDayOfYearFromIntegers leap', () => {
+    const y = 2016;
+    const m = 3;
+    const d = 1;
+    const expectedResult = 31+28+1+1;
+    const result = calcDayOfYearFromIntegers(y,m,d);
+    expect(result).to.equal(expectedResult);
+  });
+  it('calcDayOfYearFromIntegers 12/31 leap', () => {
+    const y = 2016;
+    const m = 12;
+    const d = 31;
+    const expectedResult = 366;
+    const result = calcDayOfYearFromIntegers(y,m,d);
+    expect(result).to.equal(expectedResult);
+  });
+  it('calcDayOfYearFromIntegers 12/31 non-leap', () => {
+    const y = 2015;
+    const m = 12;
+    const d = 31;
+    const expectedResult = 365;
+    const result = calcDayOfYearFromIntegers(y,m,d);
     expect(result).to.equal(expectedResult);
   });
 

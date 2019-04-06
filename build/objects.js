@@ -439,6 +439,7 @@ var subArrayByKey = function subArrayByKey(array, groupBy) {
 };
 
 var totalValuesByKey = function totalValuesByKey(arrayOfObjects, key) {
+  console.error('totalValuesByKey is deprecated, convert to summarizeValuesByKey.tot');
   // input: array of objects, and a single key (for numeric keys, stringify numbers)
   // output: sum of all values of all matching keys with numeric values
   // output: array of messages identifying how each index was handled
@@ -464,6 +465,7 @@ var totalValuesByKey = function totalValuesByKey(arrayOfObjects, key) {
 };
 
 var averageValuesByKey = function averageValuesByKey(arrayOfObjects, key) {
+  console.error('averageValuesByKey is deprecated, convert to summarizeValuesByKey.avg');
   // input: array of objects, and a single key (for numeric keys, stringify numbers)
   // output: sum of all values of all matching keys with numeric values
   // output: array of messages identifying how each index was handled
@@ -492,6 +494,7 @@ var averageValuesByKey = function averageValuesByKey(arrayOfObjects, key) {
 };
 
 var minValuesByKey = function minValuesByKey(arrayOfObjects, key) {
+  console.error('minValuesByKey is deprecated, convert to summarizeValuesByKey.min');
   // input: array of objects, and a single key (for numeric keys, stringify numbers)
   // output: lowest value of all matching keys with numeric values
   // output: array of messages identifying how each index was handled
@@ -523,6 +526,7 @@ var minValuesByKey = function minValuesByKey(arrayOfObjects, key) {
 };
 
 var maxValuesByKey = function maxValuesByKey(arrayOfObjects, key) {
+  console.error('maxValuesByKey is deprecated, convert to summarizeValuesByKey.max');
   // input: array of objects, and a single key (for numeric keys, stringify numbers)
   // output: highest value of all matching keys with numeric values
   // output: array of messages identifying how each index was handled

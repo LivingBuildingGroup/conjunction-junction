@@ -30,6 +30,42 @@ const calcDayOfYearFromTimestamp = timestamp => {
   return daysAfterJan1;
 };
 
+const calcDayOfYearFromIntegers = (y,m,d) => {
+  // month is 1-indexed, i.e. 1 = January
+  if(!isPrimitiveNumber(y) || !isPrimitiveNumber(m) || !isPrimitiveNumber(d)){
+    return -1;
+  }
+  const daysOfMonth = [
+    31, // Jan
+    28,
+    31, // Mar
+    30, 
+    31, // May
+    30,
+    31, // Jul
+    31,
+    30, // Sep
+    31,
+    30, // Nov
+    31
+  ];
+  const isLeap = y%4 === 0;
+  const leapToAdd = 
+    !isLeap ? 
+      0 :
+      m===2 && d===29 ?
+        1 :
+        m>2 ?
+          1 :
+          0;
+  const priorMonths = daysOfMonth.slice(0,m-1);
+  const priorDays = priorMonths.length === 0 ? 
+    0 :
+    priorMonths.reduce((accum,cv)=>accum+cv, 0);
+  const daysAfterJan1 = priorDays + d + leapToAdd;
+  return daysAfterJan1;
+};
+
 const getTheTimezoneOffset = date => {
   // input: optional date parameter; no parameter = current date
   // returns user's current timezone offset from UTC/Zulu time
@@ -761,6 +797,7 @@ const rangeIsIncluded = (eventStartIn, eventEndIn, rangeStartIn, rangeEndIn) => 
 module.exports = {
   isValidDate,
   calcDayOfYearFromTimestamp,
+  calcDayOfYearFromIntegers,
   getTheTimezoneOffset,
   isDaylightSavings,
   getDaysOfMonth,
