@@ -205,6 +205,30 @@ var kelvinToCelsius = function kelvinToCelsius(kelvin) {
   return kelvin - 273.15;
 };
 
+var getDewPointC = function getDewPointC(t_air_c, rel_humidity) {
+  // Compute the dew point in degrees Celsius
+  // adapted from https://gist.github.com/sourceperl/45587ea99ff123745428
+  // t_air_c: current ambient temperature in degrees Celsius
+  // rel_humidity: relative humidity in %
+  // returns the dew point in degrees Celsius
+  var A = 17.27;
+  var B = 237.7;
+  var alpha = A * t_air_c / (B + t_air_c) + Math.log(rel_humidity / 100.0);
+  return alpha;
+};
+
+var getFrostPointC = function getFrostPointC(t_air_c, dew_point_c) {
+  // Compute the frost point in degrees Celsius
+  // adapted from https://gist.github.com/sourceperl/45587ea99ff123745428
+  // t_air_c: current ambient temperature in degrees Celsius
+  // dew_point_c: current dew point in degrees Celsius
+  // returns the frost point in degrees Celsius
+  var dew_point_k = 273.15 + dew_point_c;
+  var t_air_k = 273.15 + t_air_c;
+  var frost_point_k = dew_point_k - t_air_k + 2671.02 / (2954.61 / t_air_k + 2.193665 * Math.log(t_air_k) - 13.3448);
+  return frost_point_k - 273.15;
+};
+
 // @@@@@@@@@@ SLOPE @@@@@@@@@
 
 var pctToDeg = function pctToDeg(pct) {
@@ -326,6 +350,8 @@ module.exports = {
   celsiusToF: celsiusToF,
   fToCelsius: fToCelsius,
   kelvinToCelsius: kelvinToCelsius,
+  getDewPointC: getDewPointC,
+  getFrostPointC: getFrostPointC,
   pctToDeg: pctToDeg,
   degToPct: degToPct,
   degToRad: degToRad,
