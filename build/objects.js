@@ -594,7 +594,7 @@ var summarizeValuesByKey = function summarizeValuesByKey(arrayOfObjects, key) {
     max: max,
     min: min,
     avg: precisionRound(tot / counter, 4),
-    tot: tot,
+    tot: precisionRound(tot, 4),
     messages: messages
   };
 };

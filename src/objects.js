@@ -570,7 +570,7 @@ const summarizeValuesByKey = (arrayOfObjects, key) => {
     max,
     min,
     avg: precisionRound(tot/counter, 4),
-    tot,
+    tot: precisionRound(tot, 4),
     messages,
   };
 };
