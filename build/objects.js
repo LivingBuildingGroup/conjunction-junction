@@ -340,6 +340,8 @@ var roundAllValues = function roundAllValues(value, roundingKey, key) {
   if (isPrimitiveNumber(value)) {
     if (isPrimitiveNumber(roundingKey[key])) {
       return precisionRound(value, roundingKey[key]);
+    } else if (isPrimitiveNumber(roundingKey.default)) {
+      return precisionRound(value, roundingKey.default);
     } else {
       return value;
     }
