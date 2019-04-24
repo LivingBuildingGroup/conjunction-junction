@@ -23,6 +23,20 @@ var inchesToMm = function inchesToMm(inches) {
   return precisionRound(inches * 25.4, 4);
 };
 
+var feetToMeters = function feetToMeters(feet) {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if (!isPrimitiveNumber(feet)) return;
+  return precisionRound(feet * 0.3048, 4);
+};
+
+var metersToFeet = function metersToFeet(meters) {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if (!isPrimitiveNumber(meters)) return;
+  return precisionRound(meters * 3.28084, 4);
+};
+
 // @@@@@@@@@@ VOLUME @@@@@@@@@
 
 var ciToCf = function ciToCf(ci) {
@@ -332,6 +346,8 @@ var solarKwM2DayToUvProxy = function solarKwM2DayToUvProxy(kwM2) {
 module.exports = {
   mmToInches: mmToInches,
   inchesToMm: inchesToMm,
+  feetToMeters: feetToMeters,
+  metersToFeet: metersToFeet,
   ciToCf: ciToCf,
   galsToInches: galsToInches,
   inchesToGals: inchesToGals,

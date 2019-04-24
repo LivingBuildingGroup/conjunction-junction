@@ -22,6 +22,20 @@ const inchesToMm = inches => {
   return precisionRound(inches * 25.4, 4);
 };
 
+const feetToMeters = feet => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(feet)) return;
+  return precisionRound(feet * 0.3048, 4);
+};
+
+const metersToFeet = meters => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(meters)) return;
+  return precisionRound(meters * 3.28084, 4);
+};
+
 // @@@@@@@@@@ VOLUME @@@@@@@@@
 
 const ciToCf = ci => {
@@ -349,6 +363,8 @@ const solarKwM2DayToUvProxy = kwM2 => {
 module.exports = {
   mmToInches,
   inchesToMm,
+  feetToMeters,
+  metersToFeet,
   ciToCf,
   galsToInches,
   inchesToGals,
