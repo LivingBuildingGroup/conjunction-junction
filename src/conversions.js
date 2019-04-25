@@ -190,6 +190,30 @@ const calcVwc = (volume, water) => {
   return vwc;
 };
 
+// @@@@@@@@@@ MASS / WEIGHT @@@@@@@@@
+
+const lbsToKg = lbs => {
+  if(!isPrimitiveNumber(lbs)) return;
+  return precisionRound(lbs * 0.453592, 4);
+};
+
+const kgToLbs = kg => {
+  if(!isPrimitiveNumber(kg)) return;
+  return precisionRound(kg * 2.20462, 4);
+};
+
+// @@@@@@@@@@ DENSITY @@@@@@@@@
+
+const psfToKM2 = psf => {
+  if(!isPrimitiveNumber(psf)) return;
+  return precisionRound(psf * 4.88243, 4);
+};
+
+const kM2ToPsf = kM2 => {
+  if(!isPrimitiveNumber(kM2)) return;
+  return precisionRound(kM2 * 0.24816, 4);
+};
+
 // @@@@@@@@@@ TEMPERATURE @@@@@@@@@
 
 const celsiusToKelvin = celsius => {
@@ -379,6 +403,10 @@ module.exports = {
   ccToM3,
   m3ToCc,
   lToCc,
+  lbsToKg,
+  kgToLbs,
+  psfToKM2,
+  kM2ToPsf,
   celsiusToKelvin,
   celsiusToF,
   fToCelsius,

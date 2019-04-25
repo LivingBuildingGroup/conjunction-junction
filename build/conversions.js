@@ -177,6 +177,30 @@ var calcVwc = function calcVwc(volume, water) {
   return vwc;
 };
 
+// @@@@@@@@@@ MASS / WEIGHT @@@@@@@@@
+
+var lbsToKg = function lbsToKg(lbs) {
+  if (!isPrimitiveNumber(lbs)) return;
+  return precisionRound(lbs * 0.453592, 4);
+};
+
+var kgToLbs = function kgToLbs(kg) {
+  if (!isPrimitiveNumber(kg)) return;
+  return precisionRound(kg * 2.20462, 4);
+};
+
+// @@@@@@@@@@ DENSITY @@@@@@@@@
+
+var psfToKM2 = function psfToKM2(psf) {
+  if (!isPrimitiveNumber(psf)) return;
+  return precisionRound(psf * 4.88243, 4);
+};
+
+var kM2ToPsf = function kM2ToPsf(kM2) {
+  if (!isPrimitiveNumber(kM2)) return;
+  return precisionRound(kM2 * 0.24816, 4);
+};
+
 // @@@@@@@@@@ TEMPERATURE @@@@@@@@@
 
 var celsiusToKelvin = function celsiusToKelvin(celsius) {
@@ -362,6 +386,10 @@ module.exports = {
   ccToM3: ccToM3,
   m3ToCc: m3ToCc,
   lToCc: lToCc,
+  lbsToKg: lbsToKg,
+  kgToLbs: kgToLbs,
+  psfToKM2: psfToKM2,
+  kM2ToPsf: kM2ToPsf,
   celsiusToKelvin: celsiusToKelvin,
   celsiusToF: celsiusToF,
   fToCelsius: fToCelsius,
