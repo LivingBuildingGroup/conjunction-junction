@@ -75,6 +75,20 @@ var galsToCi = function galsToCi(gallons) {
   return precisionRound(gallons * 231, 4);
 };
 
+var ciToCc = function ciToCc(ci) {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if (!isPrimitiveNumber(ci)) return;
+  return precisionRound(ci * 16.3871, 4);
+};
+
+var ccToCi = function ccToCi(ci) {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if (!isPrimitiveNumber(ci)) return;
+  return precisionRound(ci * 0.0610237, 4);
+};
+
 var ciToGals = function ciToGals(ci) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
@@ -101,6 +115,12 @@ var lbsToGals = function lbsToGals(lbs) {
   // precision: 4 decimal places, set here
   if (!isPrimitiveNumber(lbs)) return;
   return precisionRound(lbs / 8.34, 4);
+};
+
+var kgToL = function kgToL(kg) {
+  // input: number, output: either a number or undefined;
+  if (!isPrimitiveNumber(kg)) return;
+  return kg;
 };
 
 var ccToL = function ccToL(cc) {
@@ -376,10 +396,13 @@ module.exports = {
   galsToInches: galsToInches,
   inchesToGals: inchesToGals,
   galsToCi: galsToCi,
+  ciToCc: ciToCc,
+  ccToCi: ccToCi,
   ciToGals: ciToGals,
   galsToCf: galsToCf,
   galsToLbs: galsToLbs,
   lbsToGals: lbsToGals,
+  kgToL: kgToL,
   _convertToCf: _convertToCf,
   calcVwc: calcVwc,
   ccToL: ccToL,

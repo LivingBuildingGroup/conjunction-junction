@@ -74,6 +74,20 @@ const galsToCi = gallons => {
   return precisionRound(gallons * 231, 4);
 };
 
+const ciToCc = ci => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(ci)) return;
+  return precisionRound(ci * 16.3871, 4);
+};
+
+const ccToCi = ci => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(ci)) return;
+  return precisionRound(ci * 0.0610237, 4);
+};
+
 const ciToGals = ci => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
@@ -100,6 +114,12 @@ const lbsToGals = lbs => {
   // precision: 4 decimal places, set here
   if(!isPrimitiveNumber(lbs)) return;
   return precisionRound(lbs / 8.34, 4);
+};
+
+const kgToL = kg => {
+  // input: number, output: either a number or undefined;
+  if(!isPrimitiveNumber(kg)) return;
+  return kg;
 };
 
 const ccToL = cc => {
@@ -393,10 +413,13 @@ module.exports = {
   galsToInches,
   inchesToGals,
   galsToCi,
+  ciToCc,
+  ccToCi,
   ciToGals,
   galsToCf,
   galsToLbs,
   lbsToGals,
+  kgToL,
   _convertToCf,
   calcVwc,
   ccToL,
