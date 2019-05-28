@@ -62,6 +62,7 @@ var formatTimestampForSql = function formatTimestampForSql(value) {
   }
 };
 
+// ADD QUESTION MARKS
 var escapeSpecial = function escapeSpecial(data) {
   var single = data.split('\'');
   var noSingle = single.join('\'\'');
@@ -70,6 +71,7 @@ var escapeSpecial = function escapeSpecial(data) {
   return noDouble;
 };
 
+// ADD QUESTION MARKS
 var unEscapeSpecial = function unEscapeSpecial(data) {
   var splitSingle = data.split('\'\'');
   var single = splitSingle.join('\'');

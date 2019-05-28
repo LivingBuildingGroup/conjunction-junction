@@ -47,8 +47,11 @@ const print = (data, options) => {
     arrays: true,
     stringLength: 250,
     object: ':(',
+    nan: 'NaN',
   };
-  const o = isObjectLiteral(options) ? options : defaultOptions ;
+  const o = isObjectLiteral(options) ?
+    Object.assign({},options, defaultOptions) : 
+    defaultOptions ;
   const trueValue     = typeof o.trueValue    === 'string' ? o.trueValue    : 'true' ;
   const falseValue    = typeof o.falseValue   === 'string' ? o.falseValue   : 'false' ;
   const undefinedValue= typeof o.undefinedValue==='string' ? o.undefinedValue:'undefined' ;
@@ -68,7 +71,7 @@ const print = (data, options) => {
     if(typeof o.round === 'number'){
       return precisionRound(data, o.round);
     }
-    return data;
+    return isPrimitiveNumber(data) ? data : o.nan;
   }
   if(isValidDate(data)){
     return convertTimestampToString(data);
