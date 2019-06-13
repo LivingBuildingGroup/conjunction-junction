@@ -10,6 +10,7 @@ const {
   getTheTimezoneOffset,
   isDaylightSavings,
   getDaysOfMonth,
+  getNameOfMonth,
   formatOffsetAsString,
   leadingZero,
   removeSpacesFromString,
@@ -18,6 +19,7 @@ const {
   convertTimestampToString,
   convertLocalStringTimestampToZuluStringTimestamp,
   dropZoneFromTimestamp,
+  convertDoyToDate,
   convertTimestampToIntegers,
   convertIntegersToTimestamp,
   totalMinsHoursDays,
@@ -25,6 +27,8 @@ const {
   addTime,
   createTimeframes,
   rangeIsIncluded,
+  printDate,
+  createTimestampLabel,
 } = require('../index');
 const {
   datez, date0,date1,date2,date3,date4,date5,date6,date7,date8,date9,

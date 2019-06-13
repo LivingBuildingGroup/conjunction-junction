@@ -10,6 +10,8 @@ const { isPrimitiveNumber,
 // @@@@@@@@@@@@@@@ TYPES @@@@@@@@@@@@@@@@
 
 const correctInputType = (value, key='', options={}) => {
+  // ADD A LOWER BIG-O OPTION TO PASS IN AN OBJECT WITH:
+  // { key: type, key: type}
   // Get data from input field and convert to a specified type
   const numberKeysSignatures  = Array.isArray(options.numberSignatures) ? options.numberSignatures   : ['number','Lbs','nessIn','Sf','Cf','idSlope'];
   const integerKeysSignatures = Array.isArray(options.integerSignatures) ? options.integerSignatures : ['integer','idComponent','idProfile','idCassette', 'idStorm','idTest','initialPlantHealth'];
@@ -18,9 +20,11 @@ const correctInputType = (value, key='', options={}) => {
   numberKeysSignatures.forEach(sig=>{
     if(key.includes(sig)) isNumber = true;
   });
-  integerKeysSignatures.forEach(sig=>{
-    if(key.includes(sig)) isInteger = true;
-  });
+  if(!isNumber){
+    integerKeysSignatures.forEach(sig=>{
+      if(key.includes(sig)) isInteger = true;
+    });
+  }
   const theValue = 
   isNumber  ? parseFloat(value)  :
     isInteger ? parseInt(value, 10):

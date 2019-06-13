@@ -6,6 +6,7 @@ const expect = chai.expect;
 const { 
   // object keys
   convertObjectKeyCase, 
+  prefixObjectKeys,
   shiftObjectKeysColumn,
   shiftArrayKeysColumn,
   getKeyArray, 
@@ -35,7 +36,6 @@ const {
   addAllItemsToArray,
   getPositionToInterpolate,
   interpolateArrayValues,
-  convertTimestampToString
 } = require('../index');
 
 const {
