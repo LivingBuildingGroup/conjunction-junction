@@ -98,16 +98,26 @@ const isDaylightSavings = offset => {
   return isDST;
 };
 
-const getDaysOfMonth = month => {
+const getDaysOfMonth = (month, year=2019) => {
   let monthDays;
+  if(year%4 === 0){
+    if(month ===1 || month === 'Feb'){
+      return 29;
+    }
+  }
   switch (month) {
   case 'Feb':
+  case 1:
     monthDays = 28;
     break;
   case 'Apr':
   case 'Jun':
   case 'Sep':
   case 'Nov':
+  case 3:
+  case 5:
+  case 8:
+  case 10:
     monthDays = 30;
     break;
   default:

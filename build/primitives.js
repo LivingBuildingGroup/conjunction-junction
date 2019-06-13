@@ -17,6 +17,8 @@ var correctInputType = function correctInputType(value) {
   var key = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
+  // ADD A LOWER BIG-O OPTION TO PASS IN AN OBJECT WITH:
+  // { key: type, key: type}
   // Get data from input field and convert to a specified type
   var numberKeysSignatures = Array.isArray(options.numberSignatures) ? options.numberSignatures : ['number', 'Lbs', 'nessIn', 'Sf', 'Cf', 'idSlope'];
   var integerKeysSignatures = Array.isArray(options.integerSignatures) ? options.integerSignatures : ['integer', 'idComponent', 'idProfile', 'idCassette', 'idStorm', 'idTest', 'initialPlantHealth'];
@@ -25,9 +27,11 @@ var correctInputType = function correctInputType(value) {
   numberKeysSignatures.forEach(function (sig) {
     if (key.includes(sig)) isNumber = true;
   });
-  integerKeysSignatures.forEach(function (sig) {
-    if (key.includes(sig)) isInteger = true;
-  });
+  if (!isNumber) {
+    integerKeysSignatures.forEach(function (sig) {
+      if (key.includes(sig)) isInteger = true;
+    });
+  }
   var theValue = isNumber ? parseFloat(value) : isInteger ? parseInt(value, 10) : value;
   return theValue;
 };
