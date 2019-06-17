@@ -1248,7 +1248,23 @@ describe('conjunction-junction objects', () => {
   });
 
   it('parseValuesObj2Levels',()=>{
-
+    const input = {
+      obj1 : {
+        sk1: 'value1',
+        retValue1: 'wrong return',
+      },
+      obj2 : {
+        sk2: 'value2',
+        retValue2: 'correct return',
+      },
+      obj3 : {
+        sk3: 'value3',
+        retValue3: 'wrong return',
+      }
+    };
+    const expectedResult = 'correct return';
+    const result = parseValuesObj2Levels('value2',input,'sk2','retValue2');
+    expect(result).to.deep.equal(expectedResult);
   });
   
   it('roundAllValues', ()=>{
@@ -1309,12 +1325,32 @@ describe('conjunction-junction objects', () => {
     expect(result).to.deep.equal(expectedResult);
   });
 
-  it('parseValuesFromArrayOfObj1Level',()=>{
+  it('parseValuesFromArrayOfObj1Level returns an empty array if input is not an array',()=>{
+    const array = 1;
+    const result = parseValuesFromArrayOfObj1Level(array,'key');
+    const expectedResult = [];
+    expect(result).to.deep.equal(expectedResult);
+  });
 
+  it('parseValuesFromArrayOfObj1Level ',()=>{
+    const array = [{key: 1, random: 6}, {key: 2, other: 5}];
+    const result = parseValuesFromArrayOfObj1Level(array,'key');
+    const expectedResult = [1,2];
+    expect(result).to.deep.equal(expectedResult);
   });
 
   it('convertArrayToObject',()=>{
+    const array = "string";
+    const result = parseValuesFromArrayOfObj1Level(array,'id');
+    const expectedResult = {};
+    expect(result).to.deep.equal(expectedResult);
+  });
 
+  it('convertArrayToObject',()=>{
+    const array = [ {id:0}, {id:1} ] ;
+    const result = parseValuesFromArrayOfObj1Level(array,'id');
+    const expectedResult = {0:{},1:{}};
+    expect(result).to.deep.equal(expectedResult);
   });
 
   it('convertObjectToArray',()=>{

@@ -12,28 +12,28 @@ var _require = require('./basic'),
 var mmToInches = function mmToInches(mm) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if (!isPrimitiveNumber(mm)) return;
+  if (!isPrimitiveNumber(mm)) return "Invalid input";
   return precisionRound(mm * 0.0393701, 4);
 };
 
 var inchesToMm = function inchesToMm(inches) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if (!isPrimitiveNumber(inches)) return;
+  if (!isPrimitiveNumber(inches)) return "Invalid input";
   return precisionRound(inches * 25.4, 4);
 };
 
 var feetToMeters = function feetToMeters(feet) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if (!isPrimitiveNumber(feet)) return;
+  if (!isPrimitiveNumber(feet)) return "Invalid input";
   return precisionRound(feet * 0.3048, 4);
 };
 
 var metersToFeet = function metersToFeet(meters) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if (!isPrimitiveNumber(meters)) return;
+  if (!isPrimitiveNumber(meters)) return "Invalid input";
   return precisionRound(meters * 3.28084, 4);
 };
 
@@ -78,28 +78,28 @@ var galsToCi = function galsToCi(gallons) {
 var ciToCc = function ciToCc(ci) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if (!isPrimitiveNumber(ci)) return;
+  if (!isPrimitiveNumber(ci)) return "Invalid input";
   return precisionRound(ci * 16.3871, 4);
 };
 
 var ccToCi = function ccToCi(ci) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if (!isPrimitiveNumber(ci)) return;
+  if (!isPrimitiveNumber(ci)) return "Invalid input";
   return precisionRound(ci * 0.0610237, 4);
 };
 
 var ciToGals = function ciToGals(ci) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if (!isPrimitiveNumber(ci)) return;
+  if (!isPrimitiveNumber(ci)) return "Invalid input";
   return precisionRound(ci / 231, 4);
 };
 
 var galsToCf = function galsToCf(gallons) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if (!isPrimitiveNumber(gallons)) return;
+  if (!isPrimitiveNumber(gallons)) return "Invalid input";
   return precisionRound(gallons * 0.133681, 4);
 };
 
@@ -119,42 +119,42 @@ var lbsToGals = function lbsToGals(lbs) {
 
 var kgToL = function kgToL(kg) {
   // input: number, output: either a number or undefined;
-  if (!isPrimitiveNumber(kg)) return;
+  if (!isPrimitiveNumber(kg)) return "Invalid input";
   return kg;
 };
 
 var ccToL = function ccToL(cc) {
-  if (!isPrimitiveNumber(cc)) return;
+  if (!isPrimitiveNumber(cc)) return "Invalid input";
   return precisionRound(cc * 0.001, 4);
 };
 
 var lToCc = function lToCc(L) {
-  if (!isPrimitiveNumber(L)) return;
+  if (!isPrimitiveNumber(L)) return "Invalid input";
   return precisionRound(L * 1000, 4);
 };
 
 var ccToCf = function ccToCf(cc) {
-  if (!isPrimitiveNumber(cc)) return;
+  if (!isPrimitiveNumber(cc)) return "Invalid input";
   return precisionRound(cc * 0.0000353147, 4);
 };
 
 var lToCf = function lToCf(L) {
-  if (!isPrimitiveNumber(L)) return;
+  if (!isPrimitiveNumber(L)) return "Invalid input";
   return precisionRound(L * 0.0353147, 4);
 };
 
 var ccToM3 = function ccToM3(cc) {
-  if (!isPrimitiveNumber(cc)) return;
+  if (!isPrimitiveNumber(cc)) return "Invalid input";
   return precisionRound(cc * 1000000, 4);
 };
 
 var m3ToCc = function m3ToCc(m3) {
-  if (!isPrimitiveNumber(m3)) return;
+  if (!isPrimitiveNumber(m3)) return 'Invalid input';
   return precisionRound(m3 / 1000000, 4);
 };
 
 var m3ToCf = function m3ToCf(m3) {
-  if (!isPrimitiveNumber(m3)) return;
+  if (!isPrimitiveNumber(m3)) return 'Invalid input';
   return precisionRound(m3 * 35.3147, 4);
 };
 
@@ -200,24 +200,24 @@ var calcVwc = function calcVwc(volume, water) {
 // @@@@@@@@@@ MASS / WEIGHT @@@@@@@@@
 
 var lbsToKg = function lbsToKg(lbs) {
-  if (!isPrimitiveNumber(lbs)) return;
+  if (!isPrimitiveNumber(lbs)) return 'Invalid input';
   return precisionRound(lbs * 0.453592, 4);
 };
 
 var kgToLbs = function kgToLbs(kg) {
-  if (!isPrimitiveNumber(kg)) return;
+  if (!isPrimitiveNumber(kg)) return 'Invalid input';
   return precisionRound(kg * 2.20462, 4);
 };
 
 // @@@@@@@@@@ DENSITY @@@@@@@@@
 
 var psfToKM2 = function psfToKM2(psf) {
-  if (!isPrimitiveNumber(psf)) return;
+  if (!isPrimitiveNumber(psf)) return 'Invalid input';
   return precisionRound(psf * 4.88243, 4);
 };
 
 var kM2ToPsf = function kM2ToPsf(kM2) {
-  if (!isPrimitiveNumber(kM2)) return;
+  if (!isPrimitiveNumber(kM2)) return 'Invalid input';
   return precisionRound(kM2 * 0.24816, 4);
 };
 
@@ -399,6 +399,7 @@ module.exports = {
   ciToCc: ciToCc,
   ccToCi: ccToCi,
   ciToGals: ciToGals,
+  ccToCf: ccToCf,
   galsToCf: galsToCf,
   galsToLbs: galsToLbs,
   lbsToGals: lbsToGals,
@@ -409,6 +410,7 @@ module.exports = {
   ccToM3: ccToM3,
   m3ToCc: m3ToCc,
   lToCc: lToCc,
+  lToCf: lToCf,
   lbsToKg: lbsToKg,
   kgToLbs: kgToLbs,
   psfToKM2: psfToKM2,

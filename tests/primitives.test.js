@@ -4,20 +4,21 @@ const chai = require('chai');
 const expect = chai.expect;
 
 const { 
-  // types
-  correctInputType, // do not do a test for this yet
-  // numbers
-  generateRandomNumber,
-  // mixed types
-  print,
-  numberToLetter,
-  // strings
-  titleCaseWord, 
-  lowerCaseWord,
-  convertScToCc,
-  convertCcToSc,
-  convertCcToSpace,
-  convertScToSpace,
+   // types
+   correctInputType, // do not do a test for this yet
+   // numbers
+   generateRandomNumber,
+   // mixed types
+   formatForPrint,
+   print,
+   numberToLetter,
+   // strings
+   titleCaseWord, 
+   lowerCaseWord,
+   convertScToCc,
+   convertCcToSc,
+   convertCcToSpace,
+   convertScToSpace,
 } = require('../index');
 
 const {
@@ -51,12 +52,19 @@ describe('conjunction-junction primitives', () => {
     expect(result).to.be.within(lower,upper);
   });
 
-  it('print',()=>{
+  // it('print',()=>{
+  //   const result = print(1.6877,"word");
+  //   expect(result).to.equal('');
+  // });
 
-  });
+  // it('formatForPrint',()=>{
+  //   const result = formatForPrint(1.6877,"word");
+  //   expect(result).to.equal('');
+  // });
   
   it('numberToLetter',()=>{
-
+    const letter = numberToLetter(3);
+    expect(letter).to.equal("C");
   });
   
 
@@ -83,11 +91,14 @@ describe('conjunction-junction primitives', () => {
     const expectedResult = 'SnakeCase';
     expect(result).to.equal(expectedResult);
   });
-
-  it('lowerCaseWord',()=>{
-
+  it('lowerCaseWord returns input string with first letter lower case',()=>{
+    const result = lowerCaseWord("WORD");
+    expect(result).to.equal("wORD");
   });
-  
+  it('lowerCaseWord returns error message if input is invalid',()=>{
+    const result = lowerCaseWord(1);
+    expect(result).to.equal("Invalid input");
+  });
   it('convertScToCc valid on valid input', () => { 
     const strings = [
       'snake_case', 'snake case', 'snakeCase',
@@ -123,6 +134,18 @@ describe('conjunction-junction primitives', () => {
       expect(result).to.equal(expectedResults[i]);
     });
   });
+  it('convertCcToSpace ', () => { 
+    const result = convertCcToSpace(53);
+    expect(result).to.equal('53');
+  });
+  it('convertCcToSpace ', () => { 
+    const result = convertCcToSpace({obj:2});
+    expect(result).to.equal('');
+  });
+  it('convertCcToSpace ', () => { 
+    const result = convertCcToSpace("capiTalsToSpace");
+    expect(result).to.equal('capi tals to space');
+  });
   it('convertCcToSc returns number as string', () => { 
     const result = convertCcToSc(53);
     expect(result).to.equal('53');
@@ -131,9 +154,18 @@ describe('conjunction-junction primitives', () => {
     const result = convertCcToSc({x: 3});
     expect(result).to.equal('');
   });
-
-  it('convertCcToSpace',()=>{
-
+  it('convertScToSpace returns empty string on invalid input', () => { 
+    const result = convertScToSpace(1);
+    expect(result).to.equal('Invalid input');
   });
+  it('convertScToSpace returns input string without underscores (1 underscore)', () => { 
+    const result = convertScToSpace("Hello_World");
+    expect(result).to.equal('Hello World');
+  });
+  it('convertScToSpace returns input string without underscores (multiple underscores)', () => { 
+    const result = convertScToSpace("Hello_W_o_r_l_d");
+    expect(result).to.equal('Hello W o r l d');
+  });
+
 
 });

@@ -11,28 +11,28 @@ const { isPrimitiveNumber,
 const mmToInches = mm => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(mm)) return;
+  if(!isPrimitiveNumber(mm)) return "Invalid input";
   return precisionRound(mm  * 0.0393701, 4);
 };
 
 const inchesToMm = inches => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(inches)) return;
+  if(!isPrimitiveNumber(inches)) return "Invalid input";
   return precisionRound(inches * 25.4, 4);
 };
 
 const feetToMeters = feet => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(feet)) return;
+  if(!isPrimitiveNumber(feet)) return "Invalid input";
   return precisionRound(feet * 0.3048, 4);
 };
 
 const metersToFeet = meters => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(meters)) return;
+  if(!isPrimitiveNumber(meters)) return "Invalid input";
   return precisionRound(meters * 3.28084, 4);
 };
 
@@ -77,28 +77,28 @@ const galsToCi = gallons => {
 const ciToCc = ci => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(ci)) return;
+  if(!isPrimitiveNumber(ci)) return "Invalid input";
   return precisionRound(ci * 16.3871, 4);
 };
 
 const ccToCi = ci => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(ci)) return;
+  if(!isPrimitiveNumber(ci)) return "Invalid input";
   return precisionRound(ci * 0.0610237, 4);
 };
 
 const ciToGals = ci => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(ci)) return;
+  if(!isPrimitiveNumber(ci)) return "Invalid input";
   return precisionRound(ci / 231, 4);
 };
 
 const galsToCf = gallons => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(gallons)) return;
+  if(!isPrimitiveNumber(gallons)) return "Invalid input";
   return precisionRound(gallons * 0.133681, 4);
 };
 
@@ -118,42 +118,42 @@ const lbsToGals = lbs => {
 
 const kgToL = kg => {
   // input: number, output: either a number or undefined;
-  if(!isPrimitiveNumber(kg)) return;
+  if(!isPrimitiveNumber(kg)) return "Invalid input";
   return kg;
 };
 
 const ccToL = cc => {
-  if(!isPrimitiveNumber(cc)) return;
+  if(!isPrimitiveNumber(cc)) return "Invalid input";
   return precisionRound(cc * 0.001, 4);
 };
 
 const lToCc = L => {
-  if(!isPrimitiveNumber(L)) return;
+  if(!isPrimitiveNumber(L)) return "Invalid input";
   return precisionRound(L * 1000, 4);
 };
 
 const ccToCf = cc => {
-  if(!isPrimitiveNumber(cc)) return;
+  if(!isPrimitiveNumber(cc)) return "Invalid input";
   return precisionRound(cc * 0.0000353147, 4);
 };
 
 const lToCf = L => {
-  if(!isPrimitiveNumber(L)) return;
+  if(!isPrimitiveNumber(L)) return "Invalid input";
   return precisionRound(L * 0.0353147, 4);
 };
 
 const ccToM3 = cc => {
-  if(!isPrimitiveNumber(cc)) return;
+  if(!isPrimitiveNumber(cc)) return "Invalid input";
   return precisionRound(cc * 1000000, 4);
 };
 
 const m3ToCc = m3 => {
-  if(!isPrimitiveNumber(m3)) return;
+  if(!isPrimitiveNumber(m3)) return 'Invalid input';
   return precisionRound(m3 / 1000000, 4);
 };
 
 const m3ToCf = m3 => {
-  if(!isPrimitiveNumber(m3)) return;
+  if(!isPrimitiveNumber(m3)) return 'Invalid input';
   return precisionRound(m3 * 35.3147, 4);
 };
 
@@ -213,24 +213,24 @@ const calcVwc = (volume, water) => {
 // @@@@@@@@@@ MASS / WEIGHT @@@@@@@@@
 
 const lbsToKg = lbs => {
-  if(!isPrimitiveNumber(lbs)) return;
+  if(!isPrimitiveNumber(lbs)) return 'Invalid input';
   return precisionRound(lbs * 0.453592, 4);
 };
 
 const kgToLbs = kg => {
-  if(!isPrimitiveNumber(kg)) return;
+  if(!isPrimitiveNumber(kg)) return 'Invalid input';
   return precisionRound(kg * 2.20462, 4);
 };
 
 // @@@@@@@@@@ DENSITY @@@@@@@@@
 
 const psfToKM2 = psf => {
-  if(!isPrimitiveNumber(psf)) return;
+  if(!isPrimitiveNumber(psf)) return 'Invalid input';
   return precisionRound(psf * 4.88243, 4);
 };
 
 const kM2ToPsf = kM2 => {
-  if(!isPrimitiveNumber(kM2)) return;
+  if(!isPrimitiveNumber(kM2)) return 'Invalid input';
   return precisionRound(kM2 * 0.24816, 4);
 };
 
@@ -416,6 +416,7 @@ module.exports = {
   ciToCc,
   ccToCi,
   ciToGals,
+  ccToCf,
   galsToCf,
   galsToLbs,
   lbsToGals,
@@ -426,6 +427,7 @@ module.exports = {
   ccToM3,
   m3ToCc,
   lToCc,
+  lToCf,
   lbsToKg,
   kgToLbs,
   psfToKM2,
