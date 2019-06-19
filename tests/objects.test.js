@@ -1339,24 +1339,100 @@ describe('conjunction-junction objects', () => {
     expect(result).to.deep.equal(expectedResult);
   });
 
-  it('convertArrayToObject',()=>{
-    const array = "string";
-    const result = parseValuesFromArrayOfObj1Level(array,'id');
+  it('convertArrayToObject returns empty object when input is not an array',()=>{
+    const array = 1;
+    const key = 'id';
+    const result = convertArrayToObject(array,key);
     const expectedResult = {};
     expect(result).to.deep.equal(expectedResult);
   });
 
-  it('convertArrayToObject',()=>{
-    const array = [ {id:0}, {id:1} ] ;
-    const result = parseValuesFromArrayOfObj1Level(array,'id');
-    const expectedResult = {0:{},1:{}};
+  it('convertArrayToObject returns object corresponding to array',()=>{
+    const array = [ {number:0}, {number:1} ];
+    const key = 'number';
+    const result = convertArrayToObject(array,key);
+    const expectedResult = {
+    0:{
+      number: 0,
+    },
+    1:{
+      number: 1,
+    }
+  };
     expect(result).to.deep.equal(expectedResult);
   });
 
-  it('convertObjectToArray',()=>{
-
+  it('convertArrayToObject returns empty object if input array contains no objects',()=>{
+    const array = [1,2,3] ;
+    const key = 'id';
+    const result = convertArrayToObject(array,key);
+    const expectedResult = {}
+    expect(result).to.deep.equal(expectedResult);
   });
 
+  it('convertArrayToObject returns object corresponding to array when input array is made up of objects and other types',()=>{
+    // const array.id = {};
+    const array = [1, {id:1} ] ;
+    const key = 'id';
+    const result = convertArrayToObject(array,key);
+    const expectedResult = {1:{}};
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('convertObjectToArray returns an empty array if input is not an object',()=>{
+      const obj = 1;
+      const result = convertObjectToArray(obj);
+      const expectedResult = [];
+      expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('convertObjectToArray returns an empty array if input is not an object',()=>{
+    const obj = ["string",2];
+    const result = convertObjectToArray(obj);
+    const expectedResult = [];
+    expect(result).to.deep.equal(expectedResult);
+});
+
+  it('convertObjectToArray returns an array corresponding to the input object (1 key)',()=>{
+    const obj = {number:1};
+    const result = convertObjectToArray(obj);
+    const expectedResult = [1];
+    expect(result).to.deep.equal(expectedResult);
+});
+
+it('convertObjectToArray returns an array corresponding to the input object (1 key)',()=>{
+  const obj = {number:1,number2:2,number3:3};
+  const result = convertObjectToArray(obj);
+  const expectedResult = [1,2,3];
+  expect(result).to.deep.equal(expectedResult);
+});
+
+  it('subArrayByKey returns empty arrays if input array is not an array', () => {
+    const array = "string";
+    const groupBy = 'key1';
+    const expectedResult = {
+      groupBy: 'key1',
+      arrayOfDataGroups: [],
+      arrayOfKeys: [],
+      arraysOfDataObjects: [{}],
+      };
+    const result = subArrayByKey(array, groupBy);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('subArrayByKey returns empty arrays if input groupBy is not a string', () => {
+    const array = [1,2,3];
+    const groupBy = 1;
+    const expectedResult = {
+      groupBy: 1,
+      arrayOfDataGroups: [],
+      arrayOfKeys: [],
+      arraysOfDataObjects: [{}],
+      };
+    const result = subArrayByKey(array, groupBy);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  
   it('subArrayByKey', () => {
     const array = [
       {
@@ -1437,6 +1513,110 @@ describe('conjunction-junction objects', () => {
     expect(result).to.deep.equal(expectedResult);
   });
 
+  it('totalValuesByKey returns error message if input array is not array', () => {
+    const arrayOfObjects = "Not an array";
+    const key = 'platform_runoff1a_gals_tot';
+    const expectedResult = {
+      value: null,
+      message: 'no array of objects',
+    };
+    const result = totalValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('totalValuesByKey returns error message if input key is not a string', () => {
+    const arrayOfObjects = [{number:1},{number2:2}];
+    const key = 123;
+    const expectedResult = {
+      value: null,
+      message: 'key must be a string',
+    };
+    const result = totalValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('totalValuesByKey returns object with error messages when key is not present in some of the objects and undefined in one of them', () => {
+    const arrayOfObjects = [{number:1,number3:3},{number:1,number2:null,number3:3},{number:1,number3:3}];;
+    const key = "number2";
+    const expectedResult = {
+      value: 0,
+      messages: [
+        'index 0 key number2: was undefined',
+        'index 1 key number2: was null (not a number)',
+        'index 2 key number2: was undefined'
+      ],
+    };
+    const result = totalValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('totalValuesByKey returns object with error mesage for one object in input array', () => {
+    const arrayOfObjects = [{number:1,number2:"string",number3:3},{number:1,number2:4,number3:3},{number:1,number2:6,number3:3}];
+    const key = "number2";
+    const expectedResult = {
+      value: 10,
+      messages: [
+        'index 0 key number2: was string (not a number)',
+        'index 1 key number2: 4 added >>> new cum. value: 4',
+        'index 2 key number2: 6 added >>> new cum. value: 10'
+      ],
+    };
+    const result = totalValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('averageValuesByKey returns error message if input array is not array', () => {
+    const arrayOfObjects = "Not an array";
+    const key = 'platform_runoff1a_gals_tot';
+    const expectedResult = {
+      value: null,
+      message: 'no array of objects',
+    };
+    const result = averageValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('averageValuesByKey returns error message if input key is not a string', () => {
+    const arrayOfObjects = [{number:1},{number2:2}];
+    const key = 123;
+    const expectedResult = {
+      value: null,
+      message: 'key must be a string',
+    };
+    const result = averageValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('averageValuesByKey returns object with error messages when key is not present in some of the objects and undefined in one of them', () => {
+    const arrayOfObjects = [{number:1,number3:3},{number:1,number2:null,number3:3},{number:1,number3:3}];;
+    const key = "number2";
+    const expectedResult = {
+      value: 0,
+      messages: [
+        'index 0 key number2: was undefined',
+        'index 1 key number2: was null (not a number)',
+        'index 2 key number2: was undefined'
+      ],
+    };
+    const result = averageValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('averageValuesByKey returns object with error mesage for one object in input array', () => {
+    const arrayOfObjects = [{number:1,number2:"string",number3:3},{number:1,number2:4,number3:3},{number:1,number2:6,number3:3}];
+    const key = "number2";
+    const expectedResult = {
+      value: 5,
+      messages: [
+        'index 0 key number2: was string (not a number)',
+        'index 1 key number2: 4 added >>> new cum. value: 4, counter: 1',
+        'index 2 key number2: 6 added >>> new cum. value: 10, counter: 2'
+      ],
+    };
+    const result = averageValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
   it('averageValuesByKey', ()=>{
     const arrayOfObjects = [
       {
@@ -1462,6 +1642,170 @@ describe('conjunction-junction objects', () => {
     expect(result).to.deep.equal(expectedResult);  
   });
 
+  it('minValuesByKey returns error message if input array is not an array', () => {
+    const arrayOfObjects = "Not an array";
+    const key = 'platform_runoff1a_gals_tot';
+    const expectedResult = {
+      value: null,
+      message: 'no array of objects',
+    };
+    const result = minValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('minValuesByKey returns error message if input key is not a string', () => {
+    const arrayOfObjects = [{number:1},{number2:2}];
+    const key = 123;
+    const expectedResult = {
+      value: null,
+      message: 'key must be a string',
+    };
+    const result = minValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('minValuesByKey returns object with error messages when key is not present in some of the objects and undefined in one of them', () => {
+    const arrayOfObjects = [{number:1,number3:3},{number:1,number2:null,number3:3},{number:1,number3:3}];;
+    const key = "number2";
+    const expectedResult = {
+      value: undefined,
+      messages: [
+        'index 0 key number2: was undefined',
+        'index 1 key number2: was null (not a number)',
+        'index 2 key number2: was undefined'
+      ],
+    };
+    const result = minValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('minValuesByKey returns object with error mesage for one object in input array', () => {
+    const arrayOfObjects = [{number:1,number2:"string",number3:3},{number:1,number2:4,number3:3},{number:1,number2:6,number3:3}];
+    const key = "number2";
+    const expectedResult = {
+      value: 4,
+      messages: [
+        'index 0 key number2: was string (not a number)',
+        'index 1 key number2: 4 >>> current lowest value: 4, counter: 1',
+        'index 2 key number2: 6 >>> current lowest value: 4, counter: 2'
+      ],
+    };
+    const result = minValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('minValuesByKey returns object with minumum value of input key (first key is min)', () => {
+    const arrayOfObjects = [{number:1,number2:2,number3:3},{number:1,number2:4,number3:3},{number:1,number2:6,number3:3}];
+    const key = "number2";
+    const expectedResult = {
+      value: 2,
+      messages: [
+        'index 0 key number2: 2 >>> current lowest value: 2, counter: 1',
+        'index 1 key number2: 4 >>> current lowest value: 2, counter: 2',
+        'index 2 key number2: 6 >>> current lowest value: 2, counter: 3'
+      ],
+    };
+    const result = minValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('minValuesByKey returns object with minumum value of input key', () => {
+    const arrayOfObjects = [{number:1,number2:2,number3:3},{number:1,number2:1,number3:3},{number:1,number2:6,number3:3}];
+    const key = "number2";
+    const expectedResult = {
+      value: 1,
+      messages: [
+        'index 0 key number2: 2 >>> current lowest value: 2, counter: 1',
+        'index 1 key number2: 1 >>> current lowest value: 1, counter: 2',
+        'index 2 key number2: 6 >>> current lowest value: 1, counter: 3'
+      ],
+    };
+    const result = minValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('maxValuesByKey returns error message if input array is not an array', () => {
+    const arrayOfObjects = "Not an array";
+    const key = 'platform_runoff1a_gals_tot';
+    const expectedResult = {
+      value: null,
+      message: 'no array of objects',
+    };
+    const result = maxValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('maxValuesByKey returns error message if input key is not a string', () => {
+    const arrayOfObjects = [{number:1},{number2:2}];
+    const key = 123;
+    const expectedResult = {
+      value: null,
+      message: 'key must be a string',
+    };
+    const result = maxValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('maxValuesByKey returns object with error messages when key is not present in some of the objects and undefined in one of them', () => {
+    const arrayOfObjects = [{number:1,number3:3},{number:1,number2:null,number3:3},{number:1,number3:3}];;
+    const key = "number2";
+    const expectedResult = {
+      value: undefined,
+      messages: [
+        'err: index 0 key number2: was undefined',
+        'err: index 1 key number2: was null (not a number)',
+        'err: index 2 key number2: was undefined'
+      ],
+    };
+    const result = maxValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('maxValuesByKey returns object with error mesage for one object in input array', () => {
+    const arrayOfObjects = [{number:1,number2:"string",number3:3},{number:1,number2:4,number3:3},{number:1,number2:6,number3:3}];
+    const key = "number2";
+    const expectedResult = {
+      value: 6,
+      messages: [
+        'err: index 0 key number2: was string (not a number)',
+        'index 1 key number2: 4 >>> current highest value: 4, counter: 1',
+        'index 2 key number2: 6 >>> current highest value: 6, counter: 2'
+      ],
+    };
+    const result = maxValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('maxValuesByKey returns object with minumum value of input key (first key is max)', () => {
+    const arrayOfObjects = [{number:1,number2:10,number3:3},{number:1,number2:4,number3:3},{number:1,number2:6,number3:3}];
+    const key = "number2";
+    const expectedResult = {
+      value: 10,
+      messages: [
+        'index 0 key number2: 10 >>> current highest value: 10, counter: 1',
+        'index 1 key number2: 4 >>> current highest value: 10, counter: 2',
+        'index 2 key number2: 6 >>> current highest value: 10, counter: 3'
+      ],
+    };
+    const result = maxValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('maxValuesByKey returns object with minumum value of input key', () => {
+    const arrayOfObjects = [{number:1,number2:2,number3:3},{number:1,number2:1,number3:3},{number:1,number2:6,number3:3}];
+    const key = "number2";
+    const expectedResult = {
+      value: 6,
+      messages: [
+        'index 0 key number2: 2 >>> current highest value: 2, counter: 1',
+        'index 1 key number2: 1 >>> current highest value: 2, counter: 2',
+        'index 2 key number2: 6 >>> current highest value: 6, counter: 3'
+      ],
+    };
+    const result = maxValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
   it('summarizeValuesByKey', () => {
     const arrayOfObjects = [
       {
@@ -1477,13 +1821,71 @@ describe('conjunction-junction objects', () => {
     ];
     const key = 'platform_runoff1a_gals_tot';
     const expectedResult = {
-      tot: 12,
-      min: 3,
       max: 9,
+      min: 3,
       avg: 6,
+      tot: 12,
       messages: [
         'index 0 key platform_runoff1a_gals_tot: 3 >>> current highest value: 3, >>> current lowest value: 3, added >>> new cum. value: 3, counter: 1',
         'index 1 key platform_runoff1a_gals_tot: 9 >>> current highest value: 9, >>> current lowest value: 3, added >>> new cum. value: 12, counter: 2',
+      ],
+    };
+    const result = summarizeValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('summarizeValuesByKey returns error message if input array is not an array', () => {
+    const arrayOfObjects = "Not an array";
+    const key = 'platform_runoff1a_gals_tot';
+    const expectedResult = {
+      value : null,
+      message: 'err: no array of objects',
+    };
+    const result = summarizeValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('summarizeValuesByKey returns error message if input key is not a string', () => {
+    const arrayOfObjects = [{number:1},{number2:2}];
+    const key = 123;
+    const expectedResult = {
+      value: null,
+      message: 'err: key must be a string',
+    };
+    const result = summarizeValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('summarizeValuesByKey returns object with error messages when key is not present in some of the objects and undefined in one of them', () => {
+    const arrayOfObjects = [{number:1,number3:3},{number:1,number2:null,number3:3},{number:1,number3:3}];;
+    const key = "number2";
+    const expectedResult = {
+      max: undefined,
+      min: undefined,
+      avg: 0,
+      tot: 0,
+      messages: [
+        'err: index 0 key number2: was undefined',
+        'err: index 1 key number2: was null (not a number)',
+        'err: index 2 key number2: was undefined'
+      ],
+    };
+    const result = summarizeValuesByKey(arrayOfObjects, key);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('summarizeValuesByKey returns object with error mesage for one object in input array', () => {
+    const arrayOfObjects = [{number:1,number2:"string",number3:3},{number:1,number2:4,number3:3},{number:1,number2:6,number3:3}];
+    const key = "number2";
+    const expectedResult = {
+      max: 6,
+      min: 4,
+      avg: 5,
+      tot: 10,
+      messages: [
+        'err: index 0 key number2: was string (not a number)',
+        'index 1 key number2: 4 >>> current highest value: 4, >>> current lowest value: 4, added >>> new cum. value: 4, counter: 1',
+        'index 2 key number2: 6 >>> current highest value: 6, >>> current lowest value: 4, added >>> new cum. value: 10, counter: 2'
       ],
     };
     const result = summarizeValuesByKey(arrayOfObjects, key);

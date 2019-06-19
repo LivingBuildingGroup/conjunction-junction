@@ -382,9 +382,9 @@ const subArrayByKey = (array, groupBy) => {
   if(!Array.isArray(array) || typeof groupBy !== 'string'){
     return {
       groupBy,
-      arraysOfDataObjects: [{}],
       arrayOfDataGroups: [],
       arrayOfKeys: [],
+      arraysOfDataObjects: [{}],
     };
   }
   const dGs = [];

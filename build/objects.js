@@ -404,9 +404,9 @@ var subArrayByKey = function subArrayByKey(array, groupBy) {
   if (!Array.isArray(array) || typeof groupBy !== 'string') {
     return {
       groupBy: groupBy,
-      arraysOfDataObjects: [{}],
       arrayOfDataGroups: [],
-      arrayOfKeys: []
+      arrayOfKeys: [],
+      arraysOfDataObjects: [{}]
     };
   }
   var dGs = [];
