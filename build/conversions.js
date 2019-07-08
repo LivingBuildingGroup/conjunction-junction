@@ -212,11 +212,23 @@ var kgToLbs = function kgToLbs(kg) {
 // @@@@@@@@@@ DENSITY @@@@@@@@@
 
 var psfToKM2 = function psfToKM2(psf) {
+  console.warn('psfToKM2 is deprecated use psfToKgM2');
   if (!isPrimitiveNumber(psf)) return;
   return precisionRound(psf * 4.88243, 4);
 };
 
 var kM2ToPsf = function kM2ToPsf(kM2) {
+  console.warn('kM2ToPsf is deprecated use kgM2ToPsf');
+  if (!isPrimitiveNumber(kM2)) return;
+  return precisionRound(kM2 * 0.24816, 4);
+};
+
+var psfToKgM2 = function psfToKgM2(psf) {
+  if (!isPrimitiveNumber(psf)) return;
+  return precisionRound(psf * 4.88243, 4);
+};
+
+var kgM2ToPsf = function kgM2ToPsf(kM2) {
   if (!isPrimitiveNumber(kM2)) return;
   return precisionRound(kM2 * 0.24816, 4);
 };
@@ -413,6 +425,8 @@ module.exports = {
   kgToLbs: kgToLbs,
   psfToKM2: psfToKM2,
   kM2ToPsf: kM2ToPsf,
+  psfToKgM2: psfToKgM2,
+  kgM2ToPsf: kgM2ToPsf,
   celsiusToKelvin: celsiusToKelvin,
   celsiusToF: celsiusToF,
   fToCelsius: fToCelsius,

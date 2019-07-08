@@ -495,6 +495,21 @@ var averageValuesByKey = function averageValuesByKey(arrayOfObjects, key) {
   };
 };
 
+var averageArray = function averageArray(array) {
+  var countNonNumberValues = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+  if (!Array.isArray(array)) {
+    return;
+  }
+  var length = 0;
+  var total = array.reduce(function (acc, c) {
+    length++;
+    var newValue = isPrimitiveNumber(c) ? c : 0;
+    return acc + newValue, 0;
+  });
+  return countNonNumberValues ? total / array.length : total / length;
+};
+
 var minValuesByKey = function minValuesByKey(arrayOfObjects, key) {
   console.error('minValuesByKey is deprecated, convert to summarizeValuesByKey.min');
   // input: array of objects, and a single key (for numeric keys, stringify numbers)
@@ -905,6 +920,7 @@ module.exports = {
   subArrayByKey: subArrayByKey,
   totalValuesByKey: totalValuesByKey,
   averageValuesByKey: averageValuesByKey,
+  averageArray: averageArray,
   minValuesByKey: minValuesByKey,
   maxValuesByKey: maxValuesByKey,
   mergeArraysOfObjectsByKey: mergeArraysOfObjectsByKey,

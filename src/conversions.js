@@ -225,11 +225,23 @@ const kgToLbs = kg => {
 // @@@@@@@@@@ DENSITY @@@@@@@@@
 
 const psfToKM2 = psf => {
+  console.warn('psfToKM2 is deprecated use psfToKgM2');
   if(!isPrimitiveNumber(psf)) return;
   return precisionRound(psf * 4.88243, 4);
 };
 
 const kM2ToPsf = kM2 => {
+  console.warn('kM2ToPsf is deprecated use kgM2ToPsf');
+  if(!isPrimitiveNumber(kM2)) return;
+  return precisionRound(kM2 * 0.24816, 4);
+};
+
+const psfToKgM2 = psf => {
+  if(!isPrimitiveNumber(psf)) return;
+  return precisionRound(psf * 4.88243, 4);
+};
+
+const kgM2ToPsf = kM2 => {
   if(!isPrimitiveNumber(kM2)) return;
   return precisionRound(kM2 * 0.24816, 4);
 };
@@ -430,6 +442,8 @@ module.exports = {
   kgToLbs,
   psfToKM2,
   kM2ToPsf,
+  psfToKgM2,
+  kgM2ToPsf,
   celsiusToKelvin,
   celsiusToF,
   fToCelsius,
