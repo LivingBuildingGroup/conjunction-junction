@@ -477,13 +477,16 @@ const averageArray = (array, countNonNumberValues=true) => {
   }
   let length = 0;
   const total = array.reduce((acc, c)=>{
-    length++;
+    if(isPrimitiveNumber(c)){
+      length++;
+    }
     const newValue = isPrimitiveNumber(c) ? c : 0;
-    return acc + newValue, 0;
-  });
-  return countNonNumberValues ? 
+    return acc + newValue;
+  },0);
+  const avg = countNonNumberValues ? 
     total / array.length :
-    total/length;
+    total / length;
+  return avg;
 };
 
 const minValuesByKey = (arrayOfObjects, key) => {

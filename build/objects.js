@@ -503,11 +503,14 @@ var averageArray = function averageArray(array) {
   }
   var length = 0;
   var total = array.reduce(function (acc, c) {
-    length++;
+    if (isPrimitiveNumber(c)) {
+      length++;
+    }
     var newValue = isPrimitiveNumber(c) ? c : 0;
-    return acc + newValue, 0;
-  });
-  return countNonNumberValues ? total / array.length : total / length;
+    return acc + newValue;
+  }, 0);
+  var avg = countNonNumberValues ? total / array.length : total / length;
+  return avg;
 };
 
 var minValuesByKey = function minValuesByKey(arrayOfObjects, key) {
