@@ -47,7 +47,7 @@ const generateRandomNumber = (lower, upper) => {
 
 // @@@@@@@@@@@@@@@ MIXED TYPES @@@@@@@@@@@@@@@@
 
-const print = (data, options) => {
+const formatForPrint = (data, options) => {    //plan to deprecate this, continue function but rename
   const defaultOptions = {
     round: 4,
     arrays: true,
@@ -107,7 +107,12 @@ const print = (data, options) => {
   return ':(';
 };
 
-const numberToLetter = (num, option) => {
+const print = (data, options) => {
+  console.warn('The function print is deprecated, use formatForPrint instead');
+  return formatForPrint(data,options);
+};
+
+const numberToLetter = (num) => {     //took out option that did wasn't used in function
   // 1-indexed, not 0-indexed, so subtract 1
   // move to conjunction-junction
   // make A if neg, Z if over
@@ -132,7 +137,7 @@ const titleCaseWord = (word, option) => {
 };
 
 const lowerCaseWord = word => {
-  if(typeof word !== 'string') return;
+  if(typeof word !== 'string') return '';
   const end = word.slice(1,word.length);
   const front = word.slice(0,1);
   return `${front.toLowerCase()}${end}`;
@@ -151,6 +156,7 @@ const convertScToCc = word => {
 };
 
 const convertCcToSc = word => {
+  // Future efficiency improvement needed
   // input: string in camelCase
   // disregards any other type of formatting, such as spaces and hyphens
   if(isPrimitiveNumber(word)) return `${word}`;
@@ -189,7 +195,7 @@ const convertCcToSpace = word => {
 };
 
 const convertScToSpace = word => {
-  if(typeof word !== 'string') return;
+  if(typeof word !== 'string') return '';
   const split = word.split('_');
   return split.join(' ');
 };
@@ -200,6 +206,7 @@ module.exports = {
   // numbers
   generateRandomNumber,
   // mixed types
+  formatForPrint,
   print,
   numberToLetter,
   // strings

@@ -15,6 +15,7 @@ const {
   ciToCc,
   ccToCi,
   ciToGals,
+  ccToCf,
   galsToCf,
   galsToLbs,
   lbsToGals,
@@ -25,10 +26,13 @@ const {
   ccToM3,
   m3ToCc,
   lToCc,
+  lToCf,
   lbsToKg,
   kgToLbs,
   psfToKM2,
   kM2ToPsf,
+  psfToKgM2,
+  kgM2ToPsf,
   celsiusToKelvin,
   celsiusToF,
   fToCelsius,
@@ -44,7 +48,9 @@ const {
   msToMph,
   mphToKph,
   kphToMph,
-  solarKwM2DayToUvProxy,            } = require('../index');
+  solarKwM2DayToUvProxy,
+  precisionRound,
+} = require('../index');
 const {
   numbers, 
   nonNumbers, 
@@ -522,6 +528,238 @@ describe('conjunction-junction conversions', () => { // mocha has built-in promi
     const delta = Math.abs(expectedResult - result);
     expect(delta).to.be.lessThan(0.00000001); // this doesn't work at e-9
   });
-
-  
+  it('msToKph, converts m/s to km/h (5 decimal points)', () => {
+    const expectedResult = 18;
+    const result = precisionRound(msToKph(5),5);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('kphToMs, converts km/h to m/s (5 decimal points)', () => {
+    const expectedResult = 8.33334;
+    const result = precisionRound(kphToMs(30),5);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('msToMph, converts m/s to miles per hour (5 decimal points)', () => {
+    const expectedResult = 671.082;
+    const result = precisionRound(msToMph(300),5);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('mphToKph, converts miles/hour to km/h (5 decimal points)', () => {
+    const expectedResult = 4.34522;
+    const result = precisionRound(mphToKph(2.7),5);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('kphToMph, converts miles/hour to km/h (5 decimal points)', () => {
+    const expectedResult = 1.98839;
+    const result = precisionRound(kphToMph(3.2),5);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('solarKwM2DayToUvProxy (5 decimal points)', () => {
+    const expectedResult = 6.75;
+    const result = precisionRound(solarKwM2DayToUvProxy(4.5),5);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('mmToInches, converts millimeters to inches (4 decimal points)', () => {
+    const expectedResult = 0.8268;
+    const result = precisionRound(mmToInches(21),4);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('mmToInches returns error message if input is not a number', () => {
+    const expectedResult = undefined;
+    const result = mmToInches('input');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('inchesToMm converts inches to millimeters', () => {
+    const expectedResult = 304.8;
+    const result = inchesToMm(12);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('inchesToMm returns error message if input is not a number', () => {
+    const expectedResult = undefined;
+    const result = inchesToMm('input');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('feetToMeters converts feet to meters', () => {
+    const expectedResult = 6.096;
+    const result = feetToMeters(20);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('feetToMeters returns error message if input is not a number', () => {
+    const expectedResult = undefined;
+    const result = feetToMeters('input');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('metersToFeet converts meters to feet', () => {
+    const expectedResult = 52.4934;
+    const result = metersToFeet(16);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('metersToFeet returns error message if input is not a number', () => {
+    const expectedResult = undefined;
+    const result = metersToFeet('input');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('ciToCc ', () => {
+    const expectedResult = 376.9033;
+    const result = ciToCc(23);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('ciToCc returns error message if input is not a number', () => {
+    const expectedResult = undefined;
+    const result = ciToCc('input');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('ccToCi ', () => {
+    const expectedResult = 0.6774;
+    const result = ccToCi(11.1);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('ccToCi returns error message if input is not a number', () => {
+    const expectedResult = undefined;
+    const result = ccToCi('input');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('ciToGals ', () => {
+    const expectedResult = 0.1429;
+    const result = ciToGals(33);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('ciToGals returns error message if input is not a number', () => {
+    const expectedResult = undefined;
+    const result = ciToGals('input');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('kgToL ', () => {
+    const expectedResult = 102;
+    const result = kgToL(102);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('kgToL returns error message if input is not a number', () => {
+    const expectedResult = undefined;
+    const result = kgToL('input');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('ccToL ', () => {
+    const expectedResult = 0.211;
+    const result = ccToL(211);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('ccToL returns error message if input is not a number', () => {
+    const expectedResult = undefined;
+    const result = ccToL('input');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('lToCc ', () => {
+    const expectedResult = 4000;
+    const result = lToCc(4);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('lToCc returns error message if input is not a number', () => {
+    const expectedResult = undefined;
+    const result = lToCc('input');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('ccToCf ', () => {
+    const expectedResult = 0.0008;
+    const result = ccToCf(23);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('ccToCf returns error message if input is not a number', () => {
+    const expectedResult = undefined;
+    const result = ccToCf('input');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('lToCf ', () => {
+    const expectedResult = 0.8122;
+    const result = lToCf(23);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('lToCf returns error message if input is not a number', () => {
+    const expectedResult = undefined;
+    const result = lToCf('input');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('ccToM3 ', () => {
+    const expectedResult = 3000000;
+    const result = ccToM3(3);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('ccToM3 returns error message if input is not a number', () => {
+    const expectedResult = undefined;
+    const result = ccToM3('input');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('m3ToCc ', () => {
+    const expectedResult = 0.003;
+    const result = m3ToCc(3000);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('m3ToCc returns error message if input is not a number', () => {
+    const expectedResult = undefined;
+    const result = m3ToCc('input');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('lbsToKg convert pounds to kilograms', () => {
+    const expectedResult = 13.6078;
+    const result = lbsToKg(30);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('lbsToKg returns error message if input is not a number', () => {
+    const expectedResult = undefined;
+    const result = lbsToKg('input');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('kgToLbs converts kilograms to pounds', () => {
+    const expectedResult = 88.1848;
+    const result = kgToLbs(40);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('kgToLbs returns error message if input is not a number', () => {
+    const expectedResult = undefined;
+    const result = kgToLbs('input');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('psfToKM2 ', () => {
+    const expectedResult = 58.5892;
+    const result = psfToKM2(12);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('psfToKM2 returns error message if input is not a number', () => {
+    const expectedResult = undefined;
+    const result = psfToKM2('input');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('kM2ToPsf ', () => {
+    const expectedResult = 4.9632;
+    const result = kM2ToPsf(20);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('kM2ToPsf returns error message if input is not a number', () => {
+    const expectedResult = undefined;
+    const result = kM2ToPsf('input');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('celsiusToF converts celsius to fahrenheit', () => {
+    const expectedResult = 89.6;
+    const result = celsiusToF(32);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('fToCelsius converts fahrenheit to celsious', () => {
+    const expectedResult = 13.33;
+    const result = precisionRound(fToCelsius(56),2);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('getDewPointC computes dew point given ambient temperature and relative humidity', () => {
+    const ambientTemp = 60;
+    const rel_humidity = 30;
+    const expectedResult = 13.33;
+    const result = getDewPointC(ambientTemp,rel_humidity);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('getFrostPointC computes frost point in Celsius', () => {
+    const ambientTemp = 60;
+    const dewPoint = 0.25;
+    const expectedResult = 13.33;
+    const result = getDewPointC(ambientTemp,dewPoint);
+    expect(result).to.equal(expectedResult); 
+  });
 });

@@ -124,6 +124,8 @@ var getNameOfMonth = function getNameOfMonth(monthAsNumber) {
   if (monthAsNumber === 10) return 'Oct';
   if (monthAsNumber === 11) return 'Nov';
   if (monthAsNumber === 12) return 'Dec';
+
+  return 'Input number for month is invalid';
 };
 
 // @@@@@@@@@@@@@ STRING HELPERS @@@@@@@@@@@@
@@ -709,5 +711,6 @@ module.exports = {
   createTimeframes: createTimeframes,
   rangeIsIncluded: rangeIsIncluded,
   printDate: printDate,
-  createTimestampLabel: createTimestampLabel
+  createTimestampLabel: createTimestampLabel,
+  _convertTimestampToStringInner: _convertTimestampToStringInner
 };

@@ -11,28 +11,28 @@ const { isPrimitiveNumber,
 const mmToInches = mm => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(mm)) return;
+  if(!isPrimitiveNumber(mm)) return ;
   return precisionRound(mm  * 0.0393701, 4);
 };
 
 const inchesToMm = inches => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(inches)) return;
+  if(!isPrimitiveNumber(inches)) return ;
   return precisionRound(inches * 25.4, 4);
 };
 
 const feetToMeters = feet => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(feet)) return;
+  if(!isPrimitiveNumber(feet)) return ;
   return precisionRound(feet * 0.3048, 4);
 };
 
 const metersToFeet = meters => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(meters)) return;
+  if(!isPrimitiveNumber(meters)) return ;
   return precisionRound(meters * 3.28084, 4);
 };
 
@@ -77,28 +77,28 @@ const galsToCi = gallons => {
 const ciToCc = ci => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(ci)) return;
+  if(!isPrimitiveNumber(ci)) return ;
   return precisionRound(ci * 16.3871, 4);
 };
 
 const ccToCi = ci => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(ci)) return;
+  if(!isPrimitiveNumber(ci)) return ;
   return precisionRound(ci * 0.0610237, 4);
 };
 
 const ciToGals = ci => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(ci)) return;
+  if(!isPrimitiveNumber(ci)) return ;
   return precisionRound(ci / 231, 4);
 };
 
 const galsToCf = gallons => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(gallons)) return;
+  if(!isPrimitiveNumber(gallons)) return ;
   return precisionRound(gallons * 0.133681, 4);
 };
 
@@ -118,32 +118,32 @@ const lbsToGals = lbs => {
 
 const kgToL = kg => {
   // input: number, output: either a number or undefined;
-  if(!isPrimitiveNumber(kg)) return;
+  if(!isPrimitiveNumber(kg)) return ;
   return kg;
 };
 
 const ccToL = cc => {
-  if(!isPrimitiveNumber(cc)) return;
+  if(!isPrimitiveNumber(cc)) return ;
   return precisionRound(cc * 0.001, 4);
 };
 
 const lToCc = L => {
-  if(!isPrimitiveNumber(L)) return;
+  if(!isPrimitiveNumber(L)) return ;
   return precisionRound(L * 1000, 4);
 };
 
 const ccToCf = cc => {
-  if(!isPrimitiveNumber(cc)) return;
+  if(!isPrimitiveNumber(cc)) return ;
   return precisionRound(cc * 0.0000353147, 4);
 };
 
 const lToCf = L => {
-  if(!isPrimitiveNumber(L)) return;
+  if(!isPrimitiveNumber(L)) return ;
   return precisionRound(L * 0.0353147, 4);
 };
 
 const ccToM3 = cc => {
-  if(!isPrimitiveNumber(cc)) return;
+  if(!isPrimitiveNumber(cc)) return ;
   return precisionRound(cc * 1000000, 4);
 };
 
@@ -428,6 +428,7 @@ module.exports = {
   ciToCc,
   ccToCi,
   ciToGals,
+  ccToCf,
   galsToCf,
   galsToLbs,
   lbsToGals,
@@ -438,6 +439,7 @@ module.exports = {
   ccToM3,
   m3ToCc,
   lToCc,
+  lToCf,
   lbsToKg,
   kgToLbs,
   psfToKM2,

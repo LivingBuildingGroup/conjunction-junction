@@ -9,6 +9,7 @@ const {
   // numbers
   generateRandomNumber,
   // mixed types
+  formatForPrint,
   print,
   numberToLetter,
   // strings
@@ -52,11 +53,82 @@ describe('conjunction-junction primitives', () => {
   });
 
   it('print',()=>{
+    const result = print(1.687777,'word');
+    expect(result).to.equal(1.6878);
+  });
 
+  it('formatForPrint if data input variable is input',()=>{
+    const result = formatForPrint(1.687123,'word');
+    expect(result).to.equal(1.6871);
+  });
+
+  it('formatForPrint if data input varibale is a string but not proper date format',()=>{
+    const result = formatForPrint('date','word');
+    expect(result).to.equal('date');
+  });
+
+  it('formatForPrint if data input varibale is a string (proper date format)',()=>{
+    const result = formatForPrint('2018-03-27 11:00:00 -0400','word');
+    expect(result).to.equal('Tuesday, March 27, 2018, 11:00 AM');
+  });
+
+  // //it('formatForPrint if data input varibale is a string (proper date format)',()=>{
+  //   const result = formatForPrint("2018-03-27 11:00:00 -0400","word");
+  //   expect(result).to.equal("Tuesday, March 27, 2018, 11:00 AM");
+  // });
+
+  it('formatForPrint if data input varibale is an array (proper date format) object parameter is not an object',()=>{
+    const array = [2,3,4,5,6];
+    const result = formatForPrint(array,'word');
+    expect(result).to.equal('2, 3, 4, 5, 6');
+  });
+
+  it('formatForPrint if data input varibale is an array (proper date format), options paramter is an object',()=>{
+    const array = [2,3,4,5,6];
+    const obj = {
+      number:1,
+      number2:2
+    };
+    const result = formatForPrint(array,obj);
+    expect(result).to.equal('2, 3, 4, 5, 6');
+  });
+
+  it('formatForPrint if data input variable is an object',()=>{
+    const obj = {
+      number:1,
+      number2:2
+    };
+    const result = formatForPrint(obj,'word');
+    expect(result).to.equal(':(');
+  });
+
+  it('formatForPrint if data input variable is a boolean true',()=>{
+    const boolean = true;
+    const result = formatForPrint(boolean,'word');
+    expect(result).to.equal('true');
+  });
+
+  it('formatForPrint if data input variable is a boolean false',()=>{
+    const boolean = false;
+    const result = formatForPrint(boolean,'word');
+    expect(result).to.equal('false');
+  });
+
+  it('formatForPrint if data input variable is undefined',()=>{
+    const res = undefined;
+    const result = formatForPrint(res,'word');
+    expect(result).to.equal('undefined');
+  });
+
+  it('formatForPrint if data input variable is null',()=>{
+    const res = null;
+    const result = formatForPrint(res,'word');
+    expect(result).to.equal('null');
   });
   
   it('numberToLetter',()=>{
-
+    const letter = numberToLetter(3);
+    expect(letter).to.equal('C');
   });
   
 
@@ -83,11 +155,14 @@ describe('conjunction-junction primitives', () => {
     const expectedResult = 'SnakeCase';
     expect(result).to.equal(expectedResult);
   });
-
-  it('lowerCaseWord',()=>{
-
+  it('lowerCaseWord returns input string with first letter lower case',()=>{
+    const result = lowerCaseWord('WORD');
+    expect(result).to.equal('wORD');
   });
-  
+  it('lowerCaseWord returns error message if input is invalid',()=>{
+    const result = lowerCaseWord(1);
+    expect(result).to.equal('');
+  });
   it('convertScToCc valid on valid input', () => { 
     const strings = [
       'snake_case', 'snake case', 'snakeCase',
@@ -123,6 +198,18 @@ describe('conjunction-junction primitives', () => {
       expect(result).to.equal(expectedResults[i]);
     });
   });
+  it('convertCcToSpace ', () => { 
+    const result = convertCcToSpace(53);
+    expect(result).to.equal('53');
+  });
+  it('convertCcToSpace ', () => { 
+    const result = convertCcToSpace({obj:2});
+    expect(result).to.equal('');
+  });
+  it('convertCcToSpace ', () => { 
+    const result = convertCcToSpace('capiTalsToSpace');
+    expect(result).to.equal('capi tals to space');
+  });
   it('convertCcToSc returns number as string', () => { 
     const result = convertCcToSc(53);
     expect(result).to.equal('53');
@@ -131,9 +218,18 @@ describe('conjunction-junction primitives', () => {
     const result = convertCcToSc({x: 3});
     expect(result).to.equal('');
   });
-
-  it('convertCcToSpace',()=>{
-
+  it('convertScToSpace returns empty string on invalid input', () => { 
+    const result = convertScToSpace(1);
+    expect(result).to.equal('');
   });
+  it('convertScToSpace returns input string without underscores (1 underscore)', () => { 
+    const result = convertScToSpace('Hello_World');
+    expect(result).to.equal('Hello World');
+  });
+  it('convertScToSpace returns input string without underscores (multiple underscores)', () => { 
+    const result = convertScToSpace('Hello_W_o_r_l_d');
+    expect(result).to.equal('Hello W o r l d');
+  });
+
 
 });
