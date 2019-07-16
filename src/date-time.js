@@ -131,6 +131,8 @@ const getNameOfMonth = monthAsNumber => {
   if(monthAsNumber === 10) return 'Oct';
   if(monthAsNumber === 11) return 'Nov';
   if(monthAsNumber === 12) return 'Dec';
+
+  return "Input number for month is invalid";
 };
 
 // @@@@@@@@@@@@@ STRING HELPERS @@@@@@@@@@@@
@@ -820,4 +822,7 @@ module.exports = {
   rangeIsIncluded,
   printDate,
   createTimestampLabel,
+  _convertTimestampToStringInner,
+  printDate,
+  convertDoyToDate,
 };

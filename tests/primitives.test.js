@@ -52,15 +52,79 @@ describe('conjunction-junction primitives', () => {
     expect(result).to.be.within(lower,upper);
   });
 
-  // it('print',()=>{
-  //   const result = print(1.6877,"word");
-  //   expect(result).to.equal('');
+  it('print',()=>{
+    const result = print(1.687777,"word");
+    expect(result).to.equal(1.6878);
+  });
+
+  it('formatForPrint if data input variable is input',()=>{
+    const result = formatForPrint(1.687123,"word");
+    expect(result).to.equal(1.6871);
+  });
+
+  it('formatForPrint if data input varibale is a string but not proper date format',()=>{
+    const result = formatForPrint("date","word");
+    expect(result).to.equal("date");
+  });
+
+  it('formatForPrint if data input varibale is a string (proper date format)',()=>{
+    const result = formatForPrint("2018-03-27 11:00:00 -0400","word");
+    expect(result).to.equal("Tuesday, March 27, 2018, 11:00 AM");
+  });
+
+  // //it('formatForPrint if data input varibale is a string (proper date format)',()=>{
+  //   const result = formatForPrint("2018-03-27 11:00:00 -0400","word");
+  //   expect(result).to.equal("Tuesday, March 27, 2018, 11:00 AM");
   // });
 
-  // it('formatForPrint',()=>{
-  //   const result = formatForPrint(1.6877,"word");
-  //   expect(result).to.equal('');
-  // });
+  it('formatForPrint if data input varibale is an array (proper date format) object parameter is not an object',()=>{
+    const array = [2,3,4,5,6];
+    const result = formatForPrint(array,"word");
+    expect(result).to.equal("2, 3, 4, 5, 6");
+  });
+
+  it('formatForPrint if data input varibale is an array (proper date format), options paramter is an object',()=>{
+    const array = [2,3,4,5,6];
+    const obj = {
+      number:1,
+      number2:2
+    };
+    const result = formatForPrint(array,obj);
+    expect(result).to.equal("2, 3, 4, 5, 6");
+  });
+
+  it('formatForPrint if data input variable is an object',()=>{
+    const obj = {
+      number:1,
+      number2:2
+    };
+    const result = formatForPrint(obj,"word");
+    expect(result).to.equal(":(");
+  });
+
+  it('formatForPrint if data input variable is a boolean true',()=>{
+    const boolean = true;
+    const result = formatForPrint(boolean,"word");
+    expect(result).to.equal("true");
+  });
+
+  it('formatForPrint if data input variable is a boolean false',()=>{
+    const boolean = false;
+    const result = formatForPrint(boolean,"word");
+    expect(result).to.equal("false");
+  });
+
+  it('formatForPrint if data input variable is undefined',()=>{
+    const res = undefined;
+    const result = formatForPrint(res,"word");
+    expect(result).to.equal("undefined");
+  });
+
+  it('formatForPrint if data input variable is null',()=>{
+    const res = null;
+    const result = formatForPrint(res,"word");
+    expect(result).to.equal("null");
+  });
   
   it('numberToLetter',()=>{
     const letter = numberToLetter(3);

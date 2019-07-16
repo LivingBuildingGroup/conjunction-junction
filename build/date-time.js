@@ -4,6 +4,10 @@
 
 'use strict';
 
+var _module$exports;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var _require = require('./basic'),
     isPrimitiveNumber = _require.isPrimitiveNumber,
     precisionRound = _require.precisionRound,
@@ -112,6 +116,8 @@ var getNameOfMonth = function getNameOfMonth(monthAsNumber) {
   if (monthAsNumber === 10) return 'Oct';
   if (monthAsNumber === 11) return 'Nov';
   if (monthAsNumber === 12) return 'Dec';
+
+  return "Input number for month is invalid";
 };
 
 // @@@@@@@@@@@@@ STRING HELPERS @@@@@@@@@@@@
@@ -672,7 +678,7 @@ var rangeIsIncluded = function rangeIsIncluded(eventStartIn, eventEndIn, rangeSt
 // @@@@@@@@@@@@@@@@ DISPLAY @@@@@@@@@@@@@@@
 
 
-module.exports = {
+module.exports = (_module$exports = {
   isValidDate: isValidDate,
   calcDayOfYearFromTimestamp: calcDayOfYearFromTimestamp,
   calcDayOfYearFromIntegers: calcDayOfYearFromIntegers,
@@ -697,5 +703,6 @@ module.exports = {
   createTimeframes: createTimeframes,
   rangeIsIncluded: rangeIsIncluded,
   printDate: printDate,
-  createTimestampLabel: createTimestampLabel
-};
+  createTimestampLabel: createTimestampLabel,
+  _convertTimestampToStringInner: _convertTimestampToStringInner
+}, _defineProperty(_module$exports, 'printDate', printDate), _defineProperty(_module$exports, 'convertDoyToDate', convertDoyToDate), _module$exports);
