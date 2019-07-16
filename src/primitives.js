@@ -25,10 +25,12 @@ const correctInputType = (value, key='', options={}) => {
       if(key.includes(sig)) isInteger = true;
     });
   }
-  const theValue = 
-  isNumber  ? parseFloat(value)  :
+  const tryValue = 
+  isNumber ? parseFloat(value)  :
     isInteger ? parseInt(value, 10):
       value ;
+  // the line below prevents converting 0.00 to 0
+  const theValue = tryValue === value ? value : tryValue;
   return theValue;
 };
 
