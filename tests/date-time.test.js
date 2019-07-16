@@ -27,8 +27,9 @@ const {
   addTime,
   createTimeframes,
   rangeIsIncluded,
-  printDate,
   createTimestampLabel,
+  _convertTimestampToStringInner,
+  printDate,
 } = require('../index');
 const {
   datez, date0,date1,date2,date3,date4,date5,date6,date7,date8,date9,
@@ -195,6 +196,27 @@ describe('conjunction-junction date-time', () => {
     const month = 'Feb';
     const expectedResult = 28;
     const result = getDaysOfMonth(month);
+    expect(result).to.equal(expectedResult);
+  });
+
+  it('getNameofMonth given a number',()=>{
+    const month = 3;
+    const expectedResult = 'Mar';
+    const result = getNameOfMonth(month);
+    expect(result).to.equal(expectedResult);
+  });
+
+  it('getNameofMonth given a number',()=>{
+    const month = 12;
+    const expectedResult = 'Dec';
+    const result = getNameOfMonth(month);
+    expect(result).to.equal(expectedResult);
+  });
+
+  it('getNameofMonth given an invalid number (other than ints 1-12)',()=>{
+    const month = 32;
+    const expectedResult = 'Input number for month is invalid';
+    const result = getNameOfMonth(month);
     expect(result).to.equal(expectedResult);
   });
 
@@ -678,6 +700,12 @@ describe('conjunction-junction date-time', () => {
     expect(result).to.deep.equal(expectedResult);
   });
 
+  // it('_convertTimestampToStringInner', () => {
+  //   // 2018-05-17
+  //   const result = _convertTimestampToStringInner(date1, 'date');
+  //   expect(result).to.equal(date1String);
+  // });
+
   it('convertTimestampToString date only', () => {
     // 2018-05-17
     const result = convertTimestampToString(date1, 'date');
@@ -867,8 +895,32 @@ describe('conjunction-junction date-time', () => {
     expect(result).to.deep.equal(expectedResult);
   });
 
-  it('totalMinsHoursDays', ()=>{
+  it('totalMinsHoursDays when input is a number', ()=>{
+    const obj = {
+      minutesGT: 65,
+      days: 0,
+      hours: 1,
+      minutes: 5,
+    };
+    const result = totalMinsHoursDays(65);
+    expect(result).to.deep.equal(obj);
+  });
 
+  it('totalMinsHoursDays when input is an object', ()=>{
+    const input = {
+      minutesGT: 65,
+      days: 0,
+      hours: 1,
+      minutes: 5,
+    };
+    const output = {
+      minutesGT: 65,
+      days: 0,
+      hours: 1,
+      minutes: 5,
+    };
+    const result = totalMinsHoursDays(input);
+    expect(result).to.deep.equal(output);
   });
 
   it('dateDelta default minutes', () => {
@@ -1091,7 +1143,16 @@ describe('conjunction-junction date-time', () => {
   });
 
   it('createTimeframes', () => {
-
+    const obj = {
+      number:1,
+      number2:2,
+    };
+    const expectedResult = {
+      daysAgo1: 1,
+      number2:2,
+    };
+    const result = createTimeframes('string');
+    expect(result).to.deep.equal(expectedResult);
   });
 
   it('rangeIsIncluded invalid start date', () => {
@@ -1383,6 +1444,23 @@ describe('conjunction-junction date-time', () => {
       rangeEndIn
     );
     expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('convertDoyToDate Jan 6', () => {
+    const result = convertDoyToDate(6,2001);
+    const expectedResult = new Date(2001,0); // 'Sat, 06 Jan 2001 05:00:00 GMT'
+    expectedResult.setDate(6);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('convertDoyToDate Feb 12', () => {
+    const doy = 31 + 12;
+    const result = convertDoyToDate(doy,2001);
+    const expectedResult = new Date(2001,0); // '12 Feb 2001'
+    expectedResult.setDate(doy);
+    expect(result).to.deep.equal(expectedResult);
+    expect(expectedResult.getDate()).to.equal(12);
+    expect(expectedResult.getMonth()).to.equal(1);
   });
 
 });

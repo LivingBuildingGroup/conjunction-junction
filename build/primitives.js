@@ -32,7 +32,9 @@ var correctInputType = function correctInputType(value) {
       if (key.includes(sig)) isInteger = true;
     });
   }
-  var theValue = isNumber ? parseFloat(value) : isInteger ? parseInt(value, 10) : value;
+  var tryValue = isNumber ? parseFloat(value) : isInteger ? parseInt(value, 10) : value;
+  // the line below prevents converting 0.00 to 0
+  var theValue = tryValue === value ? value : tryValue;
   return theValue;
 };
 
@@ -49,7 +51,8 @@ var generateRandomNumber = function generateRandomNumber(lower, upper) {
 
 // @@@@@@@@@@@@@@@ MIXED TYPES @@@@@@@@@@@@@@@@
 
-var print = function print(data, options) {
+var formatForPrint = function formatForPrint(data, options) {
+  //plan to deprecate this, continue function but rename
   var defaultOptions = {
     round: 4,
     arrays: true,
@@ -106,7 +109,13 @@ var print = function print(data, options) {
   return ':(';
 };
 
-var numberToLetter = function numberToLetter(num, option) {
+var print = function print(data, options) {
+  console.warn('The function print is deprecated, use formatForPrint instead');
+  return formatForPrint(data, options);
+};
+
+var numberToLetter = function numberToLetter(num) {
+  //took out option that did wasn't used in function
   // 1-indexed, not 0-indexed, so subtract 1
   // move to conjunction-junction
   // make A if neg, Z if over
@@ -131,7 +140,7 @@ var titleCaseWord = function titleCaseWord(word, option) {
 };
 
 var lowerCaseWord = function lowerCaseWord(word) {
-  if (typeof word !== 'string') return;
+  if (typeof word !== 'string') return '';
   var end = word.slice(1, word.length);
   var front = word.slice(0, 1);
   return '' + front.toLowerCase() + end;
@@ -152,6 +161,7 @@ var convertScToCc = function convertScToCc(word) {
 };
 
 var convertCcToSc = function convertCcToSc(word) {
+  // Future efficiency improvement needed
   // input: string in camelCase
   // disregards any other type of formatting, such as spaces and hyphens
   if (isPrimitiveNumber(word)) return '' + word;
@@ -198,7 +208,7 @@ var convertCcToSpace = function convertCcToSpace(word) {
 };
 
 var convertScToSpace = function convertScToSpace(word) {
-  if (typeof word !== 'string') return;
+  if (typeof word !== 'string') return '';
   var split = word.split('_');
   return split.join(' ');
 };
@@ -209,6 +219,7 @@ module.exports = {
   // numbers
   generateRandomNumber: generateRandomNumber,
   // mixed types
+  formatForPrint: formatForPrint,
   print: print,
   numberToLetter: numberToLetter,
   // strings
