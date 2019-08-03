@@ -17,7 +17,6 @@ const {
   lowerCaseWord,
   convertScToCc,
   convertCcToSc,
-  convertCcToSpace,
   convertScToSpace,
 } = require('../index');
 
@@ -198,17 +197,37 @@ describe('conjunction-junction primitives', () => {
       expect(result).to.equal(expectedResults[i]);
     });
   });
-  it('convertCcToSpace ', () => { 
-    const result = convertCcToSpace(53);
+  it('convertCcToSc with space number', () => { 
+    const result = convertCcToSc(53,' ');
     expect(result).to.equal('53');
   });
-  it('convertCcToSpace ', () => { 
-    const result = convertCcToSpace({obj:2});
+  it('convertCcToSc with space object', () => { 
+    const result = convertCcToSc({obj:2},' ');
     expect(result).to.equal('');
   });
-  it('convertCcToSpace ', () => { 
-    const result = convertCcToSpace('capiTalsToSpace');
+  it('convertCcToSc with space camel', () => { 
+    const result = convertCcToSc('capiTalsToSpace',' ');
     expect(result).to.equal('capi tals to space');
+  });
+  it('convertCcToSc with space camel NOT number', () => { 
+    const result = convertCcToSc('capiTalsTo7Space',' ');
+    expect(result).to.equal('capi tals to7 space');
+  });
+  it('convertCcToSc with space camel number', () => { 
+    const result = convertCcToSc('capiTalsTo7Space',' ',{numbers:true});
+    expect(result).to.equal('capi tals to 7 space');
+  });
+  it('convertCcToSc with dash camel', () => { 
+    const result = convertCcToSc('capiTals3ToDash','-');
+    expect(result).to.equal('capi-tals3-to-dash');
+  });
+  it('convertCcToSc with dash camel NOT number', () => { 
+    const result = convertCcToSc('capiTals4ToSpace','-');
+    expect(result).to.equal('capi-tals4-to-space');
+  });
+  it('convertCcToSc with dash camel number', () => { 
+    const result = convertCcToSc('capiTals4ToSpace','-',{numbers:true});
+    expect(result).to.equal('capi-tals-4-to-space');
   });
   it('convertCcToSc returns number as string', () => { 
     const result = convertCcToSc(53);

@@ -1,8 +1,7 @@
 'use strict';
 const { convertStringToTimestamp,
   convertTimestampToString,
-  isValidDate,
-  dateDelta }       = require('./date-time');
+  isValidDate }       = require('./date-time');
 const { isPrimitiveNumber,
   precisionRound,
   isObjectLiteral } = require('./basic');
@@ -43,6 +42,32 @@ const generateRandomNumber = (lower, upper) => {
   const ran  = lower + dist ;  // new random number, corrected for the lower range, e.g. if dist is 5, and lower range is 50, then our random number is 55 (lower range + the distance up that range)
   const num  = Math.ceil(ran); // ceiling so we get an integer; since Math.random() is exclusive of 1, the ceiling allows to hit the bottom range at 0, and upper range at 0.99999...; optionally we could accept a parameter to allow this to be a specific decimaml
   return num;
+};
+
+const printNumber = (num, triggerSize = 999000, round = 2) => {
+  return !isPrimitiveNumber(num)  ?
+    '' :
+    num >= triggerSize ?
+      String.fromCharCode(8734) : // infinity
+      precisionRound(num, round);
+};
+
+const numberToModNumber = (value, consolidateBy) => {
+  // consolidate as in consolidate values from a range into a single value that can be used as an exact match
+  // e.g. 22, 23, 24, 25, 26 consolidated by 5 = 20, 20, 20, 25, 25
+  if(!consolidateBy) {
+    return value;
+  }
+  if(isPrimitiveNumber(consolidateBy) && isPrimitiveNumber(value)){
+    return consolidateBy === 0 ? 0 :
+      precisionRound(Math.floor(value/consolidateBy) * consolidateBy, 2);
+  }
+  if(isObjectLiteral(consolidateBy)){
+    return consolidateBy.hasOwnProperty(value) ?
+      consolidateBy[value] :
+      value;
+  }
+  return value;
 };
 
 // @@@@@@@@@@@@@@@ MIXED TYPES @@@@@@@@@@@@@@@@
@@ -155,43 +180,59 @@ const convertScToCc = word => {
   return `${first}${othersCamel.join('')}`;
 };
 
-const convertCcToSc = word => {
+const convertCcToSc = (word, divider, options={}) => {
   // Future efficiency improvement needed
   // input: string in camelCase
   // disregards any other type of formatting, such as spaces and hyphens
   if(isPrimitiveNumber(word)) return `${word}`;
   if(typeof word !== 'string') return '';
-  // const theWord = 'theWord';
+  const _divider = isPrimitiveNumber(divider) || typeof divider === 'string' ?
+    divider : '_';
   let newWord = '';
-  const caps  = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-  const lower = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']; 
+  const caps  = {A:true,B:true,C:true,D:true,E:true,F:true,G:true,H:true,I:true,J:true,K:true,L:true,M:true,N:true,O:true,P:true,Q:true,R:true,S:true,T:true,U:true,V:true,W:true,X:true,Y:true,Z:true};
+  let numbers;
+  if(options.numbers){
+    numbers = {};
+    for(let i=0;i<=9;i++){
+      numbers[`${i}`] = true;
+    }
+  }
+  let lastWasLetter;
   for(let i=0; i<= word.length; i++ ) {
+    const c = word.charAt(i);
     const char =
-      caps.includes(word.charAt(i)) ?
-        `_${lower[caps.findIndex(letter=>letter===word.charAt(i))]}`
-        : word.charAt(i);
+      caps[c] ?
+        `${_divider}${c.toLowerCase()}` :
+        numbers && numbers[c] && lastWasLetter ?
+          `${divider}${c}` :
+          c;
+    if(numbers && !numbers[c]){
+      lastWasLetter = true;
+    }
     newWord += char;
   }
   return newWord;
 };
 
 const convertCcToSpace = word => {
+  console.warn('convertCcToSpace is deprecated, use convertCcToSc(word, " ")');
+  return convertCcToSc(word, ' ');
   // input: string in camelCase
   // disregards any other type of formatting, such as spaces and hyphens
-  if(isPrimitiveNumber(word)) return `${word}`;
-  if(typeof word !== 'string') return '';
-  // const theWord = 'theWord';
-  let newWord = '';
-  const caps  = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-  const lower = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']; 
-  for(let i=0; i<= word.length; i++ ) {
-    const char =
-      caps.includes(word.charAt(i)) ?
-        ` ${lower[caps.findIndex(letter=>letter===word.charAt(i))]}`
-        : word.charAt(i);
-    newWord += char;
-  }
-  return newWord;
+  // if(isPrimitiveNumber(word)) return `${word}`;
+  // if(typeof word !== 'string') return '';
+  // // const theWord = 'theWord';
+  // let newWord = '';
+  // const caps  = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+  // const lower = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']; 
+  // for(let i=0; i<= word.length; i++ ) {
+  //   const char =
+  //     caps.includes(word.charAt(i)) ?
+  //       ` ${lower[caps.findIndex(letter=>letter===word.charAt(i))]}`
+  //       : word.charAt(i);
+  //   newWord += char;
+  // }
+  // return newWord;
 };
 
 const convertScToSpace = word => {
@@ -205,6 +246,8 @@ module.exports = {
   correctInputType, // do not do a test for this yet
   // numbers
   generateRandomNumber,
+  numberToModNumber,
+  printNumber,
   // mixed types
   formatForPrint,
   print,

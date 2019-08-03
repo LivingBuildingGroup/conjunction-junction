@@ -3,8 +3,7 @@
 var _require = require('./date-time'),
     convertStringToTimestamp = _require.convertStringToTimestamp,
     convertTimestampToString = _require.convertTimestampToString,
-    isValidDate = _require.isValidDate,
-    dateDelta = _require.dateDelta;
+    isValidDate = _require.isValidDate;
 
 var _require2 = require('./basic'),
     isPrimitiveNumber = _require2.isPrimitiveNumber,
@@ -47,6 +46,29 @@ var generateRandomNumber = function generateRandomNumber(lower, upper) {
   var ran = lower + dist; // new random number, corrected for the lower range, e.g. if dist is 5, and lower range is 50, then our random number is 55 (lower range + the distance up that range)
   var num = Math.ceil(ran); // ceiling so we get an integer; since Math.random() is exclusive of 1, the ceiling allows to hit the bottom range at 0, and upper range at 0.99999...; optionally we could accept a parameter to allow this to be a specific decimaml
   return num;
+};
+
+var printNumber = function printNumber(num) {
+  var triggerSize = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 999000;
+  var round = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 2;
+
+  return !isPrimitiveNumber(num) ? '' : num >= triggerSize ? String.fromCharCode(8734) : // infinity
+  precisionRound(num, round);
+};
+
+var numberToModNumber = function numberToModNumber(value, consolidateBy) {
+  // consolidate as in consolidate values from a range into a single value that can be used as an exact match
+  // e.g. 22, 23, 24, 25, 26 consolidated by 5 = 20, 20, 20, 25, 25
+  if (!consolidateBy) {
+    return value;
+  }
+  if (isPrimitiveNumber(consolidateBy) && isPrimitiveNumber(value)) {
+    return consolidateBy === 0 ? 0 : precisionRound(Math.floor(value / consolidateBy) * consolidateBy, 2);
+  }
+  if (isObjectLiteral(consolidateBy)) {
+    return consolidateBy.hasOwnProperty(value) ? consolidateBy[value] : value;
+  }
+  return value;
 };
 
 // @@@@@@@@@@@@@@@ MIXED TYPES @@@@@@@@@@@@@@@@
@@ -160,51 +182,55 @@ var convertScToCc = function convertScToCc(word) {
   return '' + first + othersCamel.join('');
 };
 
-var convertCcToSc = function convertCcToSc(word) {
+var convertCcToSc = function convertCcToSc(word, divider) {
+  var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
   // Future efficiency improvement needed
   // input: string in camelCase
   // disregards any other type of formatting, such as spaces and hyphens
   if (isPrimitiveNumber(word)) return '' + word;
   if (typeof word !== 'string') return '';
-  // const theWord = 'theWord';
+  var _divider = isPrimitiveNumber(divider) || typeof divider === 'string' ? divider : '_';
   var newWord = '';
-  var caps = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-  var lower = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-
-  var _loop = function _loop(i) {
-    var char = caps.includes(word.charAt(i)) ? '_' + lower[caps.findIndex(function (letter) {
-      return letter === word.charAt(i);
-    })] : word.charAt(i);
+  var caps = { A: true, B: true, C: true, D: true, E: true, F: true, G: true, H: true, I: true, J: true, K: true, L: true, M: true, N: true, O: true, P: true, Q: true, R: true, S: true, T: true, U: true, V: true, W: true, X: true, Y: true, Z: true };
+  var numbers = void 0;
+  if (options.numbers) {
+    numbers = {};
+    for (var i = 0; i <= 9; i++) {
+      numbers['' + i] = true;
+    }
+  }
+  var lastWasLetter = void 0;
+  for (var _i = 0; _i <= word.length; _i++) {
+    var c = word.charAt(_i);
+    var char = caps[c] ? '' + _divider + c.toLowerCase() : numbers && numbers[c] && lastWasLetter ? '' + divider + c : c;
+    if (numbers && !numbers[c]) {
+      lastWasLetter = true;
+    }
     newWord += char;
-  };
-
-  for (var i = 0; i <= word.length; i++) {
-    _loop(i);
   }
   return newWord;
 };
 
 var convertCcToSpace = function convertCcToSpace(word) {
+  console.warn('convertCcToSpace is deprecated, use convertCcToSc(word, " ")');
+  return convertCcToSc(word, ' ');
   // input: string in camelCase
   // disregards any other type of formatting, such as spaces and hyphens
-  if (isPrimitiveNumber(word)) return '' + word;
-  if (typeof word !== 'string') return '';
-  // const theWord = 'theWord';
-  var newWord = '';
-  var caps = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-  var lower = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-
-  var _loop2 = function _loop2(i) {
-    var char = caps.includes(word.charAt(i)) ? ' ' + lower[caps.findIndex(function (letter) {
-      return letter === word.charAt(i);
-    })] : word.charAt(i);
-    newWord += char;
-  };
-
-  for (var i = 0; i <= word.length; i++) {
-    _loop2(i);
-  }
-  return newWord;
+  // if(isPrimitiveNumber(word)) return `${word}`;
+  // if(typeof word !== 'string') return '';
+  // // const theWord = 'theWord';
+  // let newWord = '';
+  // const caps  = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+  // const lower = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']; 
+  // for(let i=0; i<= word.length; i++ ) {
+  //   const char =
+  //     caps.includes(word.charAt(i)) ?
+  //       ` ${lower[caps.findIndex(letter=>letter===word.charAt(i))]}`
+  //       : word.charAt(i);
+  //   newWord += char;
+  // }
+  // return newWord;
 };
 
 var convertScToSpace = function convertScToSpace(word) {
@@ -218,6 +244,8 @@ module.exports = {
   correctInputType: correctInputType, // do not do a test for this yet
   // numbers
   generateRandomNumber: generateRandomNumber,
+  numberToModNumber: numberToModNumber,
+  printNumber: printNumber,
   // mixed types
   formatForPrint: formatForPrint,
   print: print,
