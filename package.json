@@ -1,6 +1,6 @@
 {
   "name": "conjunction-junction",
-  "version": "3.13.10",
+  "version": "3.13.11",
   "description": "JavaScript pure helper functions",
   "main": "index.js",
   "scripts": {
@@ -22,13 +22,11 @@
   },
   "homepage": "https://github.com/bradcgarner/conjunction-junction#readme",
   "devDependencies": {
+    "braces": "^2.3.1",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "nyc": "^14.1.1"
-  },
-  "dependencies": {
-    "braces": "^2.3.1"
   }
 }
