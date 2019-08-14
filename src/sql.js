@@ -73,6 +73,7 @@ const unEscapeSpecial = data => {
 };
 
 const formatDataForSql = (data, key, option={type:'raw'}) => {
+  // UPDATE THIS TO PREVENT \n--
   // input: data: of any type, EXCEPT object literal
   // option: 'knex' formats data for object to use with knex, e.g. keeps arrays intact, and keeps timestamps as instances of Date, keeps null as null
   // option: 'raw' formats data for raw SQL, e.g. formats arrays as joined strings as '{1,2,3}', converts timestamps to string, converts null to a string 'null'

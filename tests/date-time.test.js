@@ -653,6 +653,22 @@ describe('conjunction-junction date-time', () => {
     expect(result).to.deep.equal(expectedResult);
   });
 
+
+  it('convertStringToTimestamp no seconds', () => {
+    const string = '2018-03-15 15:25';
+    const expectedResult = new Date();
+    expectedResult.setFullYear(2018);
+    expectedResult.setMonth(2); // months are 0-index in date objects
+    expectedResult.setDate(15);
+    expectedResult.setHours(11); // CHANGE THIS TO 10 IN WINTER!
+    expectedResult.setMinutes(25);
+    expectedResult.setSeconds(0);
+    expectedResult.setMilliseconds(0);
+    const result = convertStringToTimestamp(string);
+    console.log('string', string);
+    console.log('tmstmp', result);
+    expect(result).to.deep.equal(expectedResult);
+  });
   it('convertStringToTimestamp +00:00', () => {
     const string = '2018-03-15T15:25:19+00:00';
     const expectedResult = new Date();

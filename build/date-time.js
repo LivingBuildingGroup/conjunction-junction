@@ -4,6 +4,8 @@
 
 'use strict';
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 var _require = require('./basic'),
     isPrimitiveNumber = _require.isPrimitiveNumber,
     precisionRound = _require.precisionRound,
@@ -216,13 +218,15 @@ var parseTimestampString = function parseTimestampString(string) {
       }
     }
   });
-  var timeSplitString = typeof dateTimeArray[1] !== 'string' ? [''] : dateTimeArray[1].split(':');
+  var timeSplitStringRaw = typeof dateTimeArray[1] !== 'string' ? ['0', '0', '0'] : dateTimeArray[1].split(':');
+
+  var timeSplitString = timeSplitStringRaw.length >= 3 ? timeSplitStringRaw : timeSplitStringRaw.length === 2 ? [].concat(_toConsumableArray(timeSplitStringRaw), ['0']) : timeSplitStringRaw.length === 1 ? [].concat(_toConsumableArray(timeSplitStringRaw), ['0', '0']) : ['0', '0', '0'];
 
   var ms = 0;
   var timeSplit = timeSplitString.map(function (s, i) {
     if (i <= 1) {
       // hours, minutes
-      return parseInt(s, 10);
+      return parseInt(s, 10) || 0;
     } else if (i === 2) {
       // seconds
       var split1 = s.split('+');
@@ -230,7 +234,7 @@ var parseTimestampString = function parseTimestampString(string) {
       var seconds = split2[0];
       var secondsSplit = seconds.split('.');
       ms = secondsSplit[1] ? parseInt(secondsSplit[1], 10) : 0;
-      return parseInt(secondsSplit[0], 10);
+      return parseInt(secondsSplit[0], 10) || 0;
     } else {
       return null;
     }

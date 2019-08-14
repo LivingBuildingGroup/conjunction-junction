@@ -232,14 +232,23 @@ const parseTimestampString = string => {
       }
     }
   });
-  const timeSplitString = typeof dateTimeArray[1] !== 'string' ?
-    [''] :
+  const timeSplitStringRaw = typeof dateTimeArray[1] !== 'string' ?
+    ['0','0','0'] :
     dateTimeArray[1].split(':');
+
+  const timeSplitString = 
+    timeSplitStringRaw.length >= 3 ?
+      timeSplitStringRaw :
+      timeSplitStringRaw.length === 2 ?
+        [...timeSplitStringRaw , '0'] :
+        timeSplitStringRaw.length === 1 ?
+          [...timeSplitStringRaw , '0', '0'] :
+          ['0','0','0'];
 
   let ms = 0;
   const timeSplit = timeSplitString.map((s,i)=>{
     if(i<=1){ // hours, minutes
-      return parseInt(s, 10);
+      return parseInt(s, 10) || 0;
     } else if (i === 2) { // seconds
       const split1 = s.split('+');
       const split2 = 
@@ -247,7 +256,7 @@ const parseTimestampString = string => {
       const seconds = split2[0];
       const secondsSplit = seconds.split('.');
       ms = secondsSplit[1] ? parseInt(secondsSplit[1],10) : 0 ;
-      return parseInt(secondsSplit[0],10);
+      return parseInt(secondsSplit[0],10) || 0;
     } else {
       return null;
     }
