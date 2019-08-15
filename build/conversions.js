@@ -12,28 +12,28 @@ var _require = require('./basic'),
 var mmToInches = function mmToInches(mm) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if (!isPrimitiveNumber(mm)) return "Invalid input";
+  if (!isPrimitiveNumber(mm)) return 'Invalid input';
   return precisionRound(mm * 0.0393701, 4);
 };
 
 var inchesToMm = function inchesToMm(inches) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if (!isPrimitiveNumber(inches)) return "Invalid input";
+  if (!isPrimitiveNumber(inches)) return 'Invalid input';
   return precisionRound(inches * 25.4, 4);
 };
 
 var feetToMeters = function feetToMeters(feet) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if (!isPrimitiveNumber(feet)) return "Invalid input";
+  if (!isPrimitiveNumber(feet)) return 'Invalid input';
   return precisionRound(feet * 0.3048, 4);
 };
 
 var metersToFeet = function metersToFeet(meters) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if (!isPrimitiveNumber(meters)) return "Invalid input";
+  if (!isPrimitiveNumber(meters)) return 'Invalid input';
   return precisionRound(meters * 3.28084, 4);
 };
 
@@ -78,28 +78,28 @@ var galsToCi = function galsToCi(gallons) {
 var ciToCc = function ciToCc(ci) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if (!isPrimitiveNumber(ci)) return "Invalid input";
+  if (!isPrimitiveNumber(ci)) return 'Invalid input';
   return precisionRound(ci * 16.3871, 4);
 };
 
 var ccToCi = function ccToCi(ci) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if (!isPrimitiveNumber(ci)) return "Invalid input";
+  if (!isPrimitiveNumber(ci)) return 'Invalid input';
   return precisionRound(ci * 0.0610237, 4);
 };
 
 var ciToGals = function ciToGals(ci) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if (!isPrimitiveNumber(ci)) return "Invalid input";
+  if (!isPrimitiveNumber(ci)) return 'Invalid input';
   return precisionRound(ci / 231, 4);
 };
 
 var galsToCf = function galsToCf(gallons) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if (!isPrimitiveNumber(gallons)) return "Invalid input";
+  if (!isPrimitiveNumber(gallons)) return 'Invalid input';
   return precisionRound(gallons * 0.133681, 4);
 };
 
@@ -119,38 +119,38 @@ var lbsToGals = function lbsToGals(lbs) {
 
 var kgToL = function kgToL(kg) {
   // input: number, output: either a number or undefined;
-  if (!isPrimitiveNumber(kg)) return "Invalid input";
+  if (!isPrimitiveNumber(kg)) return 'Invalid input';
   return kg;
 };
 
 var ccToL = function ccToL(cc) {
-  if (!isPrimitiveNumber(cc)) return "Invalid input";
+  if (!isPrimitiveNumber(cc)) return 'Invalid input';
   return precisionRound(cc * 0.001, 4);
 };
 
 var lToCc = function lToCc(L) {
-  if (!isPrimitiveNumber(L)) return "Invalid input";
+  if (!isPrimitiveNumber(L)) return 'Invalid input';
   return precisionRound(L * 1000, 4);
 };
 
 var ccToCf = function ccToCf(cc) {
-  if (!isPrimitiveNumber(cc)) return "Invalid input";
+  if (!isPrimitiveNumber(cc)) return 'Invalid input';
   return precisionRound(cc * 0.0000353147, 4);
 };
 
 var lToCf = function lToCf(L) {
-  if (!isPrimitiveNumber(L)) return "Invalid input";
+  if (!isPrimitiveNumber(L)) return 'Invalid input';
   return precisionRound(L * 0.0353147, 4);
 };
 
 var ccToM3 = function ccToM3(cc) {
-  if (!isPrimitiveNumber(cc)) return "Invalid input";
-  return precisionRound(cc * 1000000, 4);
+  if (!isPrimitiveNumber(cc)) return 'Invalid input';
+  return precisionRound(cc / 1000000, 4);
 };
 
 var m3ToCc = function m3ToCc(m3) {
   if (!isPrimitiveNumber(m3)) return 'Invalid input';
-  return precisionRound(m3 / 1000000, 4);
+  return precisionRound(m3 * 1000000, 4);
 };
 
 var m3ToCf = function m3ToCf(m3) {
@@ -387,6 +387,327 @@ var solarKwM2DayToUvProxy = function solarKwM2DayToUvProxy(kwM2) {
   return kwM2 * 1.5;
 };
 
+var calculateGradient = function calculateGradient(height, length) {
+  if (!isPrimitiveNumber(height) || !isPrimitiveNumber(length)) {
+    return;
+  }
+  return height / length;
+};
+
+//temperature in Celsius
+var tempCorrection = function tempCorrection(temperature) {
+  if (!isPrimitiveNumber(temperature)) {
+    return;
+  }
+  return temperature * temperature * 0.00044 - 0.042 * temperature + 1.6641;
+};
+
+//width is in feet 
+var gpmPerFtToTempCorrection = function gpmPerFtToTempCorrection(flowRate, width, tempCorrection, gpmPerFt) {
+  var result = 0;
+  if (!isPrimitiveNumber(flowRate) || !isPrimitiveNumber(width) || !isPrimitiveNumber(tempCorrection || !isPrimitiveNumber(gpmPerFt))) {
+    return;
+  }
+  if (flowRate > 0) {
+    result = flowRate / width * tempCorrection;
+  } else {
+    result = gpmPerFt;
+  }
+  return result;
+};
+
+var gpmToLiterPerMin = function gpmToLiterPerMin(gpm) {
+  if (!isPrimitiveNumber(gpm)) {
+    return;
+  }
+  return gpm * 3.7854;
+};
+
+var literPerMinToGpm = function literPerMinToGpm(litersPerMin) {
+  if (!isPrimitiveNumber(litersPerMin)) {
+    return;
+  }
+  return litersPerMin * 0.26417287472922;
+};
+
+var gpmToCubicMetersPerMin = function gpmToCubicMetersPerMin(gpm) {
+  if (!isPrimitiveNumber(gpm)) {
+    return;
+  }
+  return gpm * 0.00378541;
+};
+
+var cubicMetersPerMinToGpm = function cubicMetersPerMinToGpm(cubicMeterPerMin) {
+  if (!isPrimitiveNumber(cubicMeterPerMin)) {
+    return;
+  }
+  return cubicMeterPerMin * 264.172052;
+};
+
+// const gpmToCubicMeterPerMinPerFt = gpm =>{
+//   return gpm * ;
+// }
+
+// const cubicMeterPerMinPerFtToGpm = cubicMeterPerMinPerFt =>{
+//   return cubicMeterPerMinPerFt * ;
+// };
+
+//gpm/ft to cubic meters per SECOND per METER
+//gpm/ft to cubic meters per SECOND per foot
+
+var acresToHectares = function acresToHectares(acres) {
+  if (!isPrimitiveNumber(acres)) {
+    return;
+  }
+  return acres * 0.404686;
+};
+
+var hectaresToAcres = function hectaresToAcres(hectares) {
+  if (!isPrimitiveNumber(hectares)) {
+    return;
+  }
+  return hectares * 2.47105;
+};
+
+var galPerSecPerHectareToGalPerSecPerAcre = function galPerSecPerHectareToGalPerSecPerAcre(galPerSecPerHectares) {
+  if (!isPrimitiveNumber(galPerSecPerHectares)) {
+    return;
+  }
+  return galPerSecPerHectares * 0.404685642;
+};
+
+var galPerSecPerAcreToGalPerSecPerHectare = function galPerSecPerAcreToGalPerSecPerHectare(galPerSecPerAcres) {
+  if (!isPrimitiveNumber(galPerSecPerAcres)) {
+    return;
+  }
+  return galPerSecPerAcres * 2.47105381;
+};
+
+var acresToSqrFt = function acresToSqrFt(acres) {
+  if (!isPrimitiveNumber(acres)) {
+    return;
+  }
+  return acres * 43560;
+};
+
+var sqrFtToAcres = function sqrFtToAcres(sqrFt) {
+  if (!isPrimitiveNumber(sqrFt)) {
+    return;
+  }
+  return sqrFt * 2.2957e-5;
+};
+
+var acreInchesToGals = function acreInchesToGals(acreInches) {
+  if (!isPrimitiveNumber(acreInches)) {
+    return;
+  }
+  return acreInches * 27154.285990761;
+};
+
+var galsToAcreInches = function galsToAcreInches(gallons) {
+  if (!isPrimitiveNumber(gallons)) {
+    return;
+  }
+  return gallons * 0.00003682659895164399;
+};
+
+var acreInchesToCubicMeters = function acreInchesToCubicMeters(acreInches) {
+  if (!isPrimitiveNumber(acreInches)) {
+    return;
+  }
+  return acreInches * 102.79015312896;
+};
+
+var cubicMetersToAcreInches = function cubicMetersToAcreInches(cubicMeters) {
+  if (!isPrimitiveNumber(cubicMeters)) {
+    return;
+  }
+  return cubicMeters * 0.009728558325;
+};
+
+var litersPerSecPerHectareToGalPerSecPerAcre = function litersPerSecPerHectareToGalPerSecPerAcre(litersPerSecPerHectare) {
+  if (!isPrimitiveNumber(litersPerSecPerHectare)) {
+    return;
+  }
+  return litersPerSecPerHectare * 0.106906637;
+};
+
+var galPerSecPerAcreToLitersPerSecPerHectare = function galPerSecPerAcreToLitersPerSecPerHectare(galPerSecPerAcre) {
+  if (!isPrimitiveNumber(galPerSecPerAcre)) {
+    return;
+  }
+  return galPerSecPerAcre * 9.35395623;
+};
+
+var sqrFtToSqrMeters = function sqrFtToSqrMeters(sqrFt) {
+  if (!isPrimitiveNumber(sqrFt)) {
+    return;
+  }
+  return sqrFt * 0.092903;
+};
+
+var sqrMetersToSqrFt = function sqrMetersToSqrFt(sqrMeters) {
+  if (!isPrimitiveNumber(sqrMeters)) {
+    return;
+  }
+  return sqrMeters * 10.763910;
+};
+
+//cubic meters per second to gallons per minute  
+
+var cubicFtToGals = function cubicFtToGals(cubicFt) {
+  if (!isPrimitiveNumber(cubicFt)) {
+    return;
+  }
+  return cubicFt * 7.48052;
+};
+
+var galToCubicFt = function galToCubicFt(gallons) {
+  if (!isPrimitiveNumber(gallons)) {
+    return;
+  }
+  return gallons * 0.133681;
+};
+
+var cubicFtToLiters = function cubicFtToLiters(cubicFt) {
+  if (!isPrimitiveNumber(cubicFt)) {
+    return;
+  }
+  return cubicFt * 28.316846;
+};
+
+var litersToCubicFt = function litersToCubicFt(liters) {
+  if (!isPrimitiveNumber(liters)) {
+    return;
+  }
+  return liters * 0.0353147;
+};
+
+var gpmToCubicFtPerSec = function gpmToCubicFtPerSec(gpm) {
+  if (!isPrimitiveNumber(gpm)) {
+    return;
+  }
+  return gpm * 0.002228009259;
+};
+
+var cubicFtPerSecToGpm = function cubicFtPerSecToGpm(cubicFtPerSec) {
+  if (!isPrimitiveNumber(cubicFtPerSec)) {
+    return;
+  }
+  return cubicFtPerSec * 448.831168831169;
+};
+
+var gpmToLiterPerSec = function gpmToLiterPerSec(gpm) {
+  if (!isPrimitiveNumber(gpm)) {
+    return;
+  }
+  return gpm * 0.0630901964;
+};
+
+var litersPerSecToGpm = function litersPerSecToGpm(litersPerSec) {
+  if (!isPrimitiveNumber(litersPerSec)) {
+    return;
+  }
+  return litersPerSec * 15.850323141489;
+};
+
+var cubicFtPerSecToLitersPerSec = function cubicFtPerSecToLitersPerSec(cubicFt) {
+  if (!isPrimitiveNumber(cubicFt)) {
+    return;
+  }
+  return cubicFt * 28.316846592;
+};
+
+var litersPerSecToCubicFtPerSec = function litersPerSecToCubicFtPerSec(litersPerSec) {
+  if (!isPrimitiveNumber(litersPerSec)) {
+    return;
+  }
+  return litersPerSec * 0.035314666721;
+};
+
+var convertUnits = function convertUnits(unit1, unit2, value) {
+  if (!isPrimitiveNumber(value)) {
+    return;
+  }
+  var functionKey = unit1 + '_' + unit2;
+  //unit1 and unit2 must become lowerCase
+  //all the units used in key must be singular 
+  //gals,meters
+  //in cases where the unit has format Ua/Ub, then it would be written as UaUb
+  var functionObject = {
+    'ci_cf': ciToCf,
+    'gal_inch': galsToInches,
+    'gal_ci': galsToCi,
+    'gal_cf': galsToCf,
+    'gal_lb': galsToLbs,
+    'lb_gal': lbsToGals,
+    // 'lM2_mm': lM2ToMm,
+    // 'mm_lM2': mmToLM2,
+    //convertToCf
+    'c_kelvin': celsiusToKelvin,
+    'kelvin_c': kelvinToCelsius,
+    'pct_deg': pctToDeg,
+    'deg_pct': degToPct,
+    'deg_rad': degToRad,
+    'rad_deg': radToDeg,
+    'ms_kph': msToKph,
+    'kph_ms': kphToMs,
+    'ms_mph': msToMph,
+    'mph_kph': mphToKph,
+    'kph_mph': kphToMph,
+    'mm_inch': mmToInches,
+    'inch_mm': inchesToMm,
+    'foot_meter': feetToMeters,
+    'meter_foot': metersToFeet,
+    'ci_cc': ciToCc,
+    'cc_ci': ccToCi,
+    'ci_gal': ciToGals,
+    'kg_l': kgToL,
+    'cc_l': ccToL,
+    'l_cc': lToCc,
+    'cc_cf': ccToCf,
+    'l_cf': lToCf,
+    'cc_m3': ccToM3,
+    'm3_cc': m3ToCc,
+    'lb_kg': lbsToKg,
+    'kg_lb': kgToLbs,
+    'psf_kM2': psfToKM2,
+    'kM2_psf': kM2ToPsf,
+    'c_f': celsiusToF,
+    'f_c': fToCelsius,
+    'gpm_lpm': gpmToLiterPerMin,
+    'lpm_gpm': literPerMinToGpm,
+    'gpm_m3min': gpmToCubicMetersPerMin,
+    'm3min_gpm': cubicMetersPerMinToGpm,
+    'acre_ha': acresToHectares,
+    'ha_acre': hectaresToAcres,
+    'gpsacre_gpsha': galPerSecPerAcreToGalPerSecPerHectare,
+    'gpsha_gpsacre': galPerSecPerHectareToGalPerSecPerAcre,
+    'acre_sf': acresToSqrFt,
+    'sf_acre': sqrFtToAcres,
+    'acreInch_gal': acreInchesToGals,
+    'gal_acreInch': galsToAcreInches,
+    'acreInch_m3': acreInchesToCubicMeters,
+    'm3_acreInch': cubicMetersToAcreInches,
+    'gpsacre_literPerSecPerHa': galPerSecPerAcreToLitersPerSecPerHectare,
+    'literPerSecPerHa_gpsacre': litersPerSecPerHectareToGalPerSecPerAcre,
+    'sf_m2': sqrFtToSqrMeters,
+    'm2_sf': sqrMetersToSqrFt,
+    'ft3_gal': cubicFtToGals,
+    'gal_ft3': galToCubicFt,
+    'liter_ft3': litersToCubicFt,
+    'ft3_liter': cubicFtToLiters,
+    'gpm_ft3sec': gpmToCubicFtPerSec,
+    'ft3sec_gpm': cubicFtPerSecToGpm,
+    'gpm_litersec': gpmToLiterPerSec,
+    'litersec_gpm': litersPerSecToGpm,
+    'ft3sec_litersec': cubicFtPerSecToLitersPerSec,
+    'litersec_ft3sec': litersPerSecToCubicFtPerSec
+  };
+
+  return typeof functionObject[functionKey] === 'function' ? functionObject[functionKey](value) : undefined;
+};
+
 module.exports = {
   mmToInches: mmToInches,
   inchesToMm: inchesToMm,
@@ -430,5 +751,37 @@ module.exports = {
   msToMph: msToMph,
   mphToKph: mphToKph,
   kphToMph: kphToMph,
-  solarKwM2DayToUvProxy: solarKwM2DayToUvProxy
+  solarKwM2DayToUvProxy: solarKwM2DayToUvProxy,
+  calculateGradient: calculateGradient,
+  tempCorrection: tempCorrection,
+  gpmPerFtToTempCorrection: gpmPerFtToTempCorrection,
+  gpmToLiterPerMin: gpmToLiterPerMin,
+  literPerMinToGpm: literPerMinToGpm,
+  gpmToCubicMetersPerMin: gpmToCubicMetersPerMin,
+  cubicMetersPerMinToGpm: cubicMetersPerMinToGpm,
+  acresToHectares: acresToHectares,
+  hectaresToAcres: hectaresToAcres,
+  galPerSecPerHectareToGalPerSecPerAcre: galPerSecPerHectareToGalPerSecPerAcre,
+  galPerSecPerAcreToGalPerSecPerHectare: galPerSecPerAcreToGalPerSecPerHectare,
+  acresToSqrFt: acresToSqrFt,
+  sqrFtToAcres: sqrFtToAcres,
+  acreInchesToGals: acreInchesToGals,
+  galsToAcreInches: galsToAcreInches,
+  acreInchesToCubicMeters: acreInchesToCubicMeters,
+  cubicMetersToAcreInches: cubicMetersToAcreInches,
+  litersPerSecPerHectareToGalPerSecPerAcre: litersPerSecPerHectareToGalPerSecPerAcre,
+  galPerSecPerAcreToLitersPerSecPerHectare: galPerSecPerAcreToLitersPerSecPerHectare,
+  sqrFtToSqrMeters: sqrFtToSqrMeters,
+  sqrMetersToSqrFt: sqrMetersToSqrFt,
+  cubicFtToGals: cubicFtToGals,
+  galToCubicFt: galToCubicFt,
+  cubicFtToLiters: cubicFtToLiters,
+  litersToCubicFt: litersToCubicFt,
+  gpmToCubicFtPerSec: gpmToCubicFtPerSec,
+  cubicFtPerSecToGpm: cubicFtPerSecToGpm,
+  gpmToLiterPerSec: gpmToLiterPerSec,
+  litersPerSecToGpm: litersPerSecToGpm,
+  litersPerSecToCubicFtPerSec: litersPerSecToCubicFtPerSec,
+  cubicFtPerSecToLitersPerSec: cubicFtPerSecToLitersPerSec,
+  convertUnits: convertUnits
 };

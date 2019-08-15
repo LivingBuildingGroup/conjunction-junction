@@ -49,7 +49,39 @@ const {
   fToCelsius,
   getDewPointC,
   getFrostPointC,
-            } = require('../index');
+  calculateGradient,
+  tempCorrection,
+  gpmPerFtToTempCorrection,
+  gpmToLiterPerMin,  
+  literPerMinToGpm,
+  gpmToCubicMetersPerMin,
+  cubicMetersPerMinToGpm,
+  acresToHectares,
+  hectaresToAcres,
+  galPerSecPerAcreToGalPerSecPerHectare,
+  galPerSecPerHectareToGalPerSecPerAcre,
+  acresToSqrFt,
+  sqrFtToAcres,
+  acreInchesToGals,
+  galsToAcreInches,
+  acreInchesToCubicMeters,
+  cubicMetersToAcreInches,
+  galPerSecPerAcreToLitersPerSecPerHectare,
+  litersPerSecPerHectareToGalPerSecPerAcre,
+  sqrFtToSqrMeters,
+  sqrMetersToSqrFt,
+  cubicFtToGals,
+  galToCubicFt,
+  litersToCubicFt,
+  cubicFtToLiters,
+  gpmToCubicFtPerSec,
+  cubicFtPerSecToGpm,
+  gpmToLiterPerSec,
+  litersPerSecToGpm,
+  cubicFtPerSecToLitersPerSec,
+  litersPerSecToCubicFtPerSec,
+  convertUnits,
+} = require('../index');
 const {
   numbers, 
   nonNumbers, 
@@ -678,7 +710,7 @@ describe('conjunction-junction conversions', () => { // mocha has built-in promi
     expect(result).to.equal(expectedResult); 
   });
   it('ccToM3 ', () => {
-    const expectedResult = 3000000;
+    const expectedResult = 0;
     const result = ccToM3(3);
     expect(result).to.equal(expectedResult); 
   });
@@ -688,7 +720,7 @@ describe('conjunction-junction conversions', () => { // mocha has built-in promi
     expect(result).to.equal(expectedResult); 
   });
   it('m3ToCc ', () => {
-    const expectedResult = 0.003;
+    const expectedResult = 3000000000;
     const result = m3ToCc(3000);
     expect(result).to.equal(expectedResult); 
   });
@@ -761,4 +793,514 @@ describe('conjunction-junction conversions', () => { // mocha has built-in promi
     const result = getDewPointC(ambientTemp,dewPoint);
     expect(result).to.equal(expectedResult); 
   });
+  it('calculateGradient calculates gradient given height and length',()=>{
+    const height = 1.2;
+    const length = 12;
+    const result = precisionRound(calculateGradient(height,length),4);
+    const expectedResult = 0.1;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('tempCorrection receives temperature in Celsius and returns temperature correction',()=>{
+    const temperature = 20;
+    const result = precisionRound(tempCorrection(temperature),4);
+    const expectedResult = 1.0001;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('gpmPerFtToTempCorrection calculates gallons per minute with flow rate, temperature correction, width and gpm per foot',()=>{
+    const result = gpmPerFtToTempCorrection(0.98,1.00,1.00,0.98);
+    const expectedResult = 0.98;
+    expect(result).to.equal(expectedResult);
+  });
+  it('gpmPerFtToTempCorrection when flowRate input is less than 0',()=>{
+    const result = gpmPerFtToTempCorrection(-1,1.00,1.00,0.80);
+    const expectedResult = 0.80;
+    expect(result).to.equal(expectedResult);
+  });
+  it('gpmToLiterPerMin converts gallons per minute to liters per minute',()=>{
+    const result = precisionRound(gpmToLiterPerMin(12),4);
+    const expectedResult = 45.4249;
+    expect(result).to.equal(expectedResult);
+  });
+  it('gpmToLiterPerMin when input parameter is not a primitive number',()=>{
+    const result = gpmToLiterPerMin('string');
+    const expectedResult = null;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('literPerMinToGpm converts liters per minute to gallons per minute',()=>{
+    const result = precisionRound(literPerMinToGpm(7),4);
+    const expectedResult = 1.8492;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('literPerMinToGpm converts liters per minute to gallons per minute',()=>{
+    const result = precisionRound(literPerMinToGpm(7),4);
+    const expectedResult = 1.8492;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('gpmToCubicMetersPerMin converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(gpmToCubicMetersPerMin(8),4);
+    const expectedResult = 0.0303;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('cubicMetersPerMinToGpm converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(cubicMetersPerMinToGpm(14),4);
+    const expectedResult = 3698.4087;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('acresToHectares converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(acresToHectares(30),4);
+    const expectedResult = 12.1406;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('hectaresToAcres converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(hectaresToAcres(15),4);
+    const expectedResult = 37.0658;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('galPerSecPerHectareToGalPerSecPerAcre converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(galPerSecPerHectareToGalPerSecPerAcre(20),4);
+    const expectedResult = 8.0937;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('galPerSecPerAcreToGalPerSecPerHectare converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(galPerSecPerAcreToGalPerSecPerHectare(14.5),4);
+    const expectedResult = 35.8303;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('acresToSqrFt converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(acresToSqrFt(0.88),4);
+    const expectedResult =38332.8;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('sqrFtToAcres converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(sqrFtToAcres(35.01),4);
+    const expectedResult =0.0008;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('galsToAcreInches converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(galsToAcreInches(16.866),4);
+    const expectedResult =0.0006;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('acreInchesToGals converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(acreInchesToGals(10.1),4);
+    const expectedResult = 274258.2885;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('acreInchesToCubicMeters converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(acreInchesToCubicMeters(20.3),4);
+    const expectedResult = 2086.6401;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('cubicMetersToAcreInches converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(cubicMetersToAcreInches(24.3),4);
+    const expectedResult = 0.2364;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('litersPerSecPerHectareToGalPerSecPerAcre converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(litersPerSecPerHectareToGalPerSecPerAcre(4.04),4);
+    const expectedResult = 0.4319;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('galPerSecPerAcreToLitersPerSecPerHectare converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(galPerSecPerAcreToLitersPerSecPerHectare(12),4);
+    const expectedResult = 112.2475;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('sqrFtToSqrMeters converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(sqrFtToSqrMeters(9.6),4);
+    const expectedResult = 0.8919;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('sqrMetersToSqrFt converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(sqrMetersToSqrFt(10.2),4);
+    const expectedResult = 109.7919;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('cubicFtToGals converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(cubicFtToGals(20.6),4);
+    const expectedResult = 154.0987;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('galToCubicFt converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(galToCubicFt(30.9),4);
+    const expectedResult = 4.1307;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('cubicFtToLiters converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(cubicFtToLiters(4.8),4);
+    const expectedResult = 135.9209;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('litersToCubicFt converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(litersToCubicFt(3.9),4);
+    const expectedResult = 0.1377;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('gpmToCubicFtPerSec converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(gpmToCubicFtPerSec(30.1),4);
+    const expectedResult = 0.0671;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('cubicFtPerSecToGpm converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(cubicFtPerSecToGpm(19.6),4);
+    const expectedResult = 8797.0909;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('litersPerSecToGpm converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(litersPerSecToGpm(9),4);
+    const expectedResult = 142.6529;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('gpmToLiterPerSec converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(gpmToLiterPerSec(6.6),4);
+    const expectedResult = 0.4164;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('cubicFtPerSecToLitersPerSec converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(cubicFtPerSecToLitersPerSec(7.8),4);
+    const expectedResult = 220.8714;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('litersPerSecToCubicFtPerSec converts gallons per minute to cubic meters per minute',()=>{
+    const result = precisionRound(litersPerSecToCubicFtPerSec(9.0222),4);
+    const expectedResult = 0.3186;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts ci to cf', () => { 
+    const result = convertUnits('ci','cf',7623);
+    const expectedResult = 4.4115;
+    expect(result).to.equal(expectedResult);
+  });
+  // it('convertUnits converts gallons to inches',()=>{
+  //   const result = precisionRound(convertUnits(),4);
+  //   const expectedResult = 0.3186;
+  //   expect(result).to.equal(expectedResult); 
+  // });
+  it('convertUnits converts gallons to ci',()=>{
+    const result = precisionRound(convertUnits('gal','ci',33),4);
+    const expectedResult = 7623;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts gallons to cf',()=>{
+    const result = precisionRound(convertUnits('gal','cf',33),4);
+    const expectedResult = 4.4115;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts gallons to pounds',()=>{
+    const result = precisionRound(convertUnits('gal','lb',10),4);
+    const expectedResult = 83.4;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts pounds to gallons',()=>{
+    const result = precisionRound(convertUnits('lb','gal',83.4),4);
+    const expectedResult = 10;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts celsius to kelvin',()=>{
+    const result = precisionRound(convertUnits('c','kelvin',32),4);
+    const expectedResult = 305.15;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts kelvin to celsius',()=>{
+    const result = precisionRound(convertUnits('kelvin','c',273),4);
+    const expectedResult = -0.15;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts pct to degrees',()=>{
+    const result = precisionRound(convertUnits('pct','deg',0.5),4);
+    const expectedResult = 45;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts degrees to pct',()=>{
+    const result = precisionRound(convertUnits('deg','pct',45),4);
+    const expectedResult = 0.5;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts radians to degrees',()=>{
+    const result = precisionRound(convertUnits('rad','deg',2),4);
+    const expectedResult = 114.5916;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts degrees to radians',()=>{
+    const result = precisionRound(convertUnits('deg','rad',12),4);
+    const expectedResult = 0.2094;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts m/s to kph',()=>{
+    const result = precisionRound(convertUnits('ms','kph',10),4);
+    const expectedResult = 36;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts kph to ms',()=>{
+    const result = precisionRound(convertUnits('kph','ms',36),4);
+    const expectedResult = 10;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts mph to ms',()=>{
+    const result = precisionRound(convertUnits('mph','ms',20),4);
+    const expectedResult = 8.9408;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts ms to mph',()=>{
+    const result = precisionRound(convertUnits('ms','mph',12),4);
+    const expectedResult = 26.8433;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts mph to kph',()=>{
+    const result = precisionRound(convertUnits('mph','kph',51),4);
+    const expectedResult = 82.0763;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts kph to mph',()=>{
+    const result = precisionRound(convertUnits('kph','mph',150),4);
+    const expectedResult = 93.2057;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts mm to inches',()=>{
+    const result = precisionRound(convertUnits('mm','inch',762),4);
+    const expectedResult = 30;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts inches to mm',()=>{
+    const result = precisionRound(convertUnits('inch','mm',30),4);
+    const expectedResult = 762;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts feet to meters',()=>{
+    const result = precisionRound(convertUnits('foot','meter',99.0814),4);
+    const expectedResult = 30.2;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts meters to feet',()=>{
+    const result = precisionRound(convertUnits('meter','foot',30.2),4);
+    const expectedResult = 99.0814;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts cc to ci',()=>{
+    const result = precisionRound(convertUnits('cc','ci',20),4);
+    const expectedResult = 1.2205;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts ci to cc',()=>{
+    const result = precisionRound(convertUnits('ci','cc',1.2204),4);
+    const expectedResult = 19.9988;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts ci to gallons',()=>{
+    const result = precisionRound(convertUnits('ci','gal',200),4);
+    const expectedResult = 0.8658;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts kilograms to liters',()=>{
+    const result = precisionRound(convertUnits('kg','l',20),4);
+    const expectedResult = 20;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts cc to liters',()=>{
+    const result = precisionRound(convertUnits('cc','l',300),4);
+    const expectedResult = 0.3;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts liters to cc',()=>{
+    const result = precisionRound(convertUnits('l','cc',0.3),4);
+    const expectedResult = 300;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts cc to cf',()=>{
+    const result = precisionRound(convertUnits('cc','cf',200),4);
+    const expectedResult = 0.0071;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts l to cf',()=>{
+    const result = precisionRound(convertUnits('l','cf',240),4);
+    const expectedResult = 8.4755;
+    expect(result).to.equal(expectedResult); 
+  });
+  it('convertUnits converts cc to m3',()=>{
+    const result = precisionRound(convertUnits('cc','m3',7000),4);
+    const expectedResult = 0.007;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts m3 to cc',()=>{
+    const result = precisionRound(convertUnits('m3','cc',0.007),4);
+    const expectedResult = 7000;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts pounds to kilograms',()=>{
+    const result = precisionRound(convertUnits('lb','kg',30.4),4);
+    const expectedResult = 13.7892;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts kilograms to pounds',()=>{
+    const result = precisionRound(convertUnits('kg','lb',20),4);
+    const expectedResult = 44.0924;
+    expect(result).to.equal(expectedResult);
+  });
+  // it('convertUnits converts psf to kM2',()=>{
+  //   const result = precisionRound(convertUnits('psf','kM2',20),4);
+  //   const expectedResult = 44.0924;
+  //   expect(result).to.equal(expectedResult);
+  // });
+  // it('convertUnits converts kM2 to psf',()=>{
+  //   const result = precisionRound(convertUnits('kM2','psf',20),4);
+  //   const expectedResult = 44.0924;
+  //   expect(result).to.equal(expectedResult);
+  // });
+  it('convertUnits converts celsius to fahrenheit',()=>{
+    const result = precisionRound(convertUnits('c','f',0),4);
+    const expectedResult = 32;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts fahrenheit to celsius',()=>{
+    const result = precisionRound(convertUnits('f','c',32),4);
+    const expectedResult = 0;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts gpm to lpm',()=>{
+    const result = precisionRound(convertUnits('gpm','lpm',7.9252),4);
+    const expectedResult = 30.0001;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts lpm to gpm',()=>{
+    const result = precisionRound(convertUnits('lpm','gpm',30),4);
+    const expectedResult = 7.9252;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts gpm to cubic meters per minute',()=>{
+    const result = precisionRound(convertUnits('gpm','m3min',6604.3013),4);
+    const expectedResult = 25;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts cubic meters per minute to gpm',()=>{
+    const result = precisionRound(convertUnits('m3min','gpm',25),4);
+    const expectedResult = 6604.3013;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts acres to hectares',()=>{
+    const result = precisionRound(convertUnits('acre','ha',74.1316),4);
+    const expectedResult = 30;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts hectares to acres',()=>{
+    const result = precisionRound(convertUnits('ha','acre',30),4);
+    const expectedResult = 74.1315;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts hectares to acres',()=>{
+    const result = precisionRound(convertUnits('ha','acre',30),4);
+    const expectedResult = 74.1315;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts gallons per second per acre to gallons per second her hectare',()=>{
+    const result = precisionRound(convertUnits('gpsacre','gpsha',15),4);
+    const expectedResult = 37.0658;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts gallons per second her hectare to gallons per second per acre',()=>{
+    const result = precisionRound(convertUnits('gpsha','gpsacre',37.0658),4);
+    const expectedResult = 15;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts acres to square feet',()=>{
+    const result = precisionRound(convertUnits('acre','sf',15),4);
+    const expectedResult = 653400;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts square feet to acres',()=>{
+    const result = precisionRound(convertUnits('sf','acre',200),4);
+    const expectedResult = 0.0046;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts acreInches to gallons',()=>{
+    const result = precisionRound(convertUnits('acreInch','gal',14),4);
+    const expectedResult = 380160.0039;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts gallons to acreInches',()=>{
+    const result = precisionRound(convertUnits('gal','acreInch',20),4);
+    const expectedResult = 0.0007;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts acre inches to m3',()=>{
+    const result = precisionRound(convertUnits('acreInch','m3',30),4);
+    const expectedResult = 3083.7046;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts cubic meters to acreInches',()=>{
+    const result = precisionRound(convertUnits('m3','acreInch',20),4);
+    const expectedResult = 0.1946;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts gallons per second per acre to liters per second per hectare',()=>{
+    const result = precisionRound(convertUnits('gpsacre','literPerSecPerHa',9),4);
+    const expectedResult = 84.1856;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts liters per second per hectare to gallons per second per acre',()=>{
+    const result = precisionRound(convertUnits('literPerSecPerHa','gpsacre',8),4);
+    const expectedResult = 0.8553;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts square feet to square meters',()=>{
+    const result = precisionRound(convertUnits('sf','m2',20),4);
+    const expectedResult = 1.8581;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts square meters to square feet',()=>{
+    const result = precisionRound(convertUnits('m2','sf',2),4);
+    const expectedResult = 21.5278;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts cubic feet to gallons',()=>{
+    const result = precisionRound(convertUnits('ft3','gal',4),4);
+    const expectedResult = 29.9221;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts gallons to cubic feet',()=>{
+    const result = precisionRound(convertUnits('gal','ft3',20),4);
+    const expectedResult = 2.6736;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts liters to cubic feet',()=>{
+    const result = precisionRound(convertUnits('liter','ft3',25),4);
+    const expectedResult = 0.8829;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts cubic feet to liters',()=>{
+    const result = precisionRound(convertUnits('ft3','liter',2),4);
+    const expectedResult = 56.6337;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts gpm to cubic feet per second',()=>{
+    const result = precisionRound(convertUnits('gpm','ft3sec',20),4);
+    const expectedResult = 0.0446;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts cubic feet per second to gpm',()=>{
+    const result = precisionRound(convertUnits('ft3sec','gpm',0.0446),4);
+    const expectedResult = 20.0179;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts liters per second to gpm',()=>{
+    const result = precisionRound(convertUnits('litersec','gpm',2),4);
+    const expectedResult = 31.7006;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts gpm to liters per second',()=>{
+    const result = precisionRound(convertUnits('gpm','litersec',3),4);
+    const expectedResult = 0.1893;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts cubic feet per second to liters per second',()=>{
+    const result = precisionRound(convertUnits('ft3sec','litersec',3),4);
+    const expectedResult = 84.9505;
+    expect(result).to.equal(expectedResult);
+  });
+  it('convertUnits converts liters per second to cubic feet per second',()=>{
+    const result = precisionRound(convertUnits('litersec','ft3sec',10),4);
+    const expectedResult = 0.3531;
+    expect(result).to.equal(expectedResult);
+  });
+
+
 });

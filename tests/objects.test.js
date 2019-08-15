@@ -94,6 +94,7 @@ describe('conjunction-junction objects', () => {
     ];
     objects.forEach((o,i)=>{
       const result = convertObjectKeyCase(o);
+      console.log(result);
       expect(result).to.deep.equal(expectedResults[i]);
     });
   });

@@ -11,28 +11,28 @@ const { isPrimitiveNumber,
 const mmToInches = mm => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(mm)) return "Invalid input";
+  if(!isPrimitiveNumber(mm)) return 'Invalid input';
   return precisionRound(mm  * 0.0393701, 4);
 };
 
 const inchesToMm = inches => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(inches)) return "Invalid input";
+  if(!isPrimitiveNumber(inches)) return 'Invalid input';
   return precisionRound(inches * 25.4, 4);
 };
 
 const feetToMeters = feet => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(feet)) return "Invalid input";
+  if(!isPrimitiveNumber(feet)) return 'Invalid input';
   return precisionRound(feet * 0.3048, 4);
 };
 
 const metersToFeet = meters => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(meters)) return "Invalid input";
+  if(!isPrimitiveNumber(meters)) return 'Invalid input';
   return precisionRound(meters * 3.28084, 4);
 };
 
@@ -77,28 +77,28 @@ const galsToCi = gallons => {
 const ciToCc = ci => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(ci)) return "Invalid input";
+  if(!isPrimitiveNumber(ci)) return 'Invalid input';
   return precisionRound(ci * 16.3871, 4);
 };
 
 const ccToCi = ci => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(ci)) return "Invalid input";
+  if(!isPrimitiveNumber(ci)) return 'Invalid input';
   return precisionRound(ci * 0.0610237, 4);
 };
 
 const ciToGals = ci => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(ci)) return "Invalid input";
+  if(!isPrimitiveNumber(ci)) return 'Invalid input';
   return precisionRound(ci / 231, 4);
 };
 
 const galsToCf = gallons => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(gallons)) return "Invalid input";
+  if(!isPrimitiveNumber(gallons)) return 'Invalid input';
   return precisionRound(gallons * 0.133681, 4);
 };
 
@@ -118,38 +118,38 @@ const lbsToGals = lbs => {
 
 const kgToL = kg => {
   // input: number, output: either a number or undefined;
-  if(!isPrimitiveNumber(kg)) return "Invalid input";
+  if(!isPrimitiveNumber(kg)) return 'Invalid input';
   return kg;
 };
 
 const ccToL = cc => {
-  if(!isPrimitiveNumber(cc)) return "Invalid input";
+  if(!isPrimitiveNumber(cc)) return 'Invalid input';
   return precisionRound(cc * 0.001, 4);
 };
 
 const lToCc = L => {
-  if(!isPrimitiveNumber(L)) return "Invalid input";
+  if(!isPrimitiveNumber(L)) return 'Invalid input';
   return precisionRound(L * 1000, 4);
 };
 
 const ccToCf = cc => {
-  if(!isPrimitiveNumber(cc)) return "Invalid input";
+  if(!isPrimitiveNumber(cc)) return 'Invalid input';
   return precisionRound(cc * 0.0000353147, 4);
 };
 
 const lToCf = L => {
-  if(!isPrimitiveNumber(L)) return "Invalid input";
+  if(!isPrimitiveNumber(L)) return 'Invalid input';
   return precisionRound(L * 0.0353147, 4);
 };
 
 const ccToM3 = cc => {
-  if(!isPrimitiveNumber(cc)) return "Invalid input";
-  return precisionRound(cc * 1000000, 4);
+  if(!isPrimitiveNumber(cc)) return 'Invalid input';
+  return precisionRound(cc / 1000000, 4);
 };
 
 const m3ToCc = m3 => {
   if(!isPrimitiveNumber(m3)) return 'Invalid input';
-  return precisionRound(m3 / 1000000, 4);
+  return precisionRound(m3 * 1000000, 4);
 };
 
 const m3ToCf = m3 => {
@@ -404,6 +404,332 @@ const solarKwM2DayToUvProxy = kwM2 => {
   return kwM2 * 1.5;
 };
 
+const calculateGradient = (height, length) => { 
+  if(!isPrimitiveNumber(height) || !isPrimitiveNumber(length)){
+    return;
+  }
+  return height / length;
+};
+
+//temperature in Celsius
+const tempCorrection = temperature => {
+  if(!isPrimitiveNumber(temperature)){
+    return;
+  }
+  return (temperature * temperature * 0.00044) - (0.042 * temperature) + 1.6641;
+};
+
+//width is in feet 
+const gpmPerFtToTempCorrection = (flowRate,width,tempCorrection,gpmPerFt) =>{
+  let result = 0;
+  if(!isPrimitiveNumber(flowRate) || !isPrimitiveNumber(width) ||
+   !isPrimitiveNumber(tempCorrection || !isPrimitiveNumber(gpmPerFt))){
+    return;
+  }
+  if(flowRate > 0){
+    result = (flowRate/width)*tempCorrection;
+  }
+  else{
+    result = gpmPerFt;
+  }
+  return result;
+};
+
+const gpmToLiterPerMin = gpm =>{
+  if(!isPrimitiveNumber(gpm)){
+    return;
+  }
+  return gpm * 3.7854;
+};
+
+const literPerMinToGpm = litersPerMin =>{
+  if(!isPrimitiveNumber(litersPerMin)){
+    return;
+  }
+  return litersPerMin * 0.26417287472922;
+};
+
+const gpmToCubicMetersPerMin = gpm =>{
+  if(!isPrimitiveNumber(gpm)){
+    return;
+  }
+  return gpm * 0.00378541;
+};
+
+const cubicMetersPerMinToGpm = cubicMeterPerMin =>{
+  if(!isPrimitiveNumber(cubicMeterPerMin)){
+    return;
+  }
+  return cubicMeterPerMin * 264.172052;
+};
+
+// const gpmToCubicMeterPerMinPerFt = gpm =>{
+//   return gpm * ;
+// }
+
+// const cubicMeterPerMinPerFtToGpm = cubicMeterPerMinPerFt =>{
+//   return cubicMeterPerMinPerFt * ;
+// };
+
+//gpm/ft to cubic meters per SECOND per METER
+//gpm/ft to cubic meters per SECOND per foot
+
+const acresToHectares = acres => {
+  if(!isPrimitiveNumber(acres)){
+    return;
+  }
+  return acres *0.404686;
+};
+
+const hectaresToAcres = hectares =>{
+  if(!isPrimitiveNumber(hectares)){
+    return;
+  }
+  return hectares * 2.47105;
+};
+
+const galPerSecPerHectareToGalPerSecPerAcre = galPerSecPerHectares =>{
+  if(!isPrimitiveNumber(galPerSecPerHectares)){
+    return;
+  }
+  return galPerSecPerHectares * 0.404685642;
+};
+
+const galPerSecPerAcreToGalPerSecPerHectare = galPerSecPerAcres =>{
+  if(!isPrimitiveNumber(galPerSecPerAcres)){
+    return;
+  }
+  return galPerSecPerAcres * 2.47105381;
+};
+
+const acresToSqrFt = acres =>{
+  if(!isPrimitiveNumber(acres)){
+    return;
+  }
+  return acres * 43560;
+};
+
+const sqrFtToAcres = sqrFt =>{
+  if(!isPrimitiveNumber(sqrFt)){
+    return;
+  }
+  return sqrFt * 2.2957e-5;
+};
+
+const acreInchesToGals = acreInches =>{
+  if(!isPrimitiveNumber(acreInches)){
+    return;
+  }
+  return acreInches * 27154.285990761;
+};
+
+const galsToAcreInches = gallons =>{
+  if(!isPrimitiveNumber(gallons)){
+    return;
+  }
+  return  gallons * 0.00003682659895164399;
+};
+
+
+const acreInchesToCubicMeters = acreInches =>{
+  if(!isPrimitiveNumber(acreInches)){
+    return;
+  }
+  return acreInches * 102.79015312896;
+};
+
+const cubicMetersToAcreInches = cubicMeters=>{
+  if(!isPrimitiveNumber(cubicMeters)){
+    return;
+  }
+  return cubicMeters * 0.009728558325;
+};
+
+const litersPerSecPerHectareToGalPerSecPerAcre = litersPerSecPerHectare =>{
+  if(!isPrimitiveNumber(litersPerSecPerHectare)){
+    return;
+  }
+  return litersPerSecPerHectare * 0.106906637;
+};
+
+const galPerSecPerAcreToLitersPerSecPerHectare = galPerSecPerAcre =>{
+  if(!isPrimitiveNumber(galPerSecPerAcre)){
+    return;
+  }
+  return galPerSecPerAcre * 9.35395623;
+};
+
+const sqrFtToSqrMeters = sqrFt =>{
+  if(!isPrimitiveNumber(sqrFt)){
+    return;
+  }
+  return sqrFt * 0.092903;
+};
+ 
+const sqrMetersToSqrFt = sqrMeters =>{
+  if(!isPrimitiveNumber(sqrMeters)){
+    return;
+  }
+  return sqrMeters * 10.763910;
+};
+
+//cubic meters per second to gallons per minute  
+
+const cubicFtToGals = cubicFt =>{
+  if(!isPrimitiveNumber(cubicFt)){
+    return;
+  }
+  return cubicFt * 7.48052;
+};
+
+const galToCubicFt = gallons =>{
+  if(!isPrimitiveNumber(gallons)){
+    return;
+  }
+  return gallons * 0.133681;
+};
+
+const cubicFtToLiters = cubicFt =>{
+  if(!isPrimitiveNumber(cubicFt)){
+    return;
+  }
+  return cubicFt * 28.316846;
+};
+
+const litersToCubicFt = liters =>{
+  if(!isPrimitiveNumber(liters)){
+    return;
+  }
+  return liters * 0.0353147;
+};
+
+const gpmToCubicFtPerSec = gpm =>{
+  if(!isPrimitiveNumber(gpm)){
+    return;
+  }
+  return gpm * 0.002228009259;
+};
+
+const cubicFtPerSecToGpm = cubicFtPerSec =>{
+  if(!isPrimitiveNumber(cubicFtPerSec)){
+    return;
+  }
+  return cubicFtPerSec * 448.831168831169;
+};
+
+const gpmToLiterPerSec = gpm =>{
+  if(!isPrimitiveNumber(gpm)){
+    return;
+  }
+  return gpm * 0.0630901964;
+};
+
+const litersPerSecToGpm = litersPerSec =>{
+  if(!isPrimitiveNumber(litersPerSec)){
+    return;
+  }
+  return litersPerSec * 15.850323141489;
+};
+
+const cubicFtPerSecToLitersPerSec = cubicFt =>{
+  if(!isPrimitiveNumber(cubicFt)){
+    return;
+  }
+  return cubicFt * 28.316846592;
+};
+
+const litersPerSecToCubicFtPerSec = litersPerSec =>{
+  if(!isPrimitiveNumber(litersPerSec)){
+    return;
+  }
+  return litersPerSec * 0.035314666721;
+};
+
+const convertUnits = (unit1,unit2,value) =>{
+  if(!isPrimitiveNumber(value)){
+    return;
+  }
+  const functionKey = `${unit1}_${unit2}`;
+  //unit1 and unit2 must become lowerCase
+  //all the units used in key must be singular 
+  //gals,meters
+  //in cases where the unit has format Ua/Ub, then it would be written as UaUb
+  const functionObject = {
+    'ci_cf': ciToCf,
+    'gal_inch': galsToInches,
+    'gal_ci': galsToCi,
+    'gal_cf': galsToCf,
+    'gal_lb': galsToLbs,
+    'lb_gal': lbsToGals,
+    // 'lM2_mm': lM2ToMm,
+    // 'mm_lM2': mmToLM2,
+    //convertToCf
+    'c_kelvin': celsiusToKelvin,
+    'kelvin_c': kelvinToCelsius,
+    'pct_deg': pctToDeg,
+    'deg_pct': degToPct,
+    'deg_rad': degToRad,
+    'rad_deg': radToDeg,
+    'ms_kph': msToKph,
+    'kph_ms': kphToMs,
+    'ms_mph': msToMph,
+    'mph_kph': mphToKph,
+    'kph_mph': kphToMph,
+    'mm_inch': mmToInches,
+    'inch_mm': inchesToMm,
+    'foot_meter': feetToMeters,
+    'meter_foot': metersToFeet,
+    'ci_cc': ciToCc,
+    'cc_ci': ccToCi,
+    'ci_gal': ciToGals,
+    'kg_l': kgToL,
+    'cc_l': ccToL,
+    'l_cc': lToCc,
+    'cc_cf': ccToCf,
+    'l_cf': lToCf,
+    'cc_m3': ccToM3,
+    'm3_cc': m3ToCc,
+    'lb_kg': lbsToKg,
+    'kg_lb': kgToLbs,
+    'psf_kM2': psfToKM2,
+    'kM2_psf': kM2ToPsf,
+    'c_f': celsiusToF,
+    'f_c': fToCelsius,
+    'gpm_lpm': gpmToLiterPerMin,
+    'lpm_gpm': literPerMinToGpm,
+    'gpm_m3min': gpmToCubicMetersPerMin,
+    'm3min_gpm':cubicMetersPerMinToGpm,
+    'acre_ha': acresToHectares,
+    'ha_acre': hectaresToAcres,
+    'gpsacre_gpsha': galPerSecPerAcreToGalPerSecPerHectare,
+    'gpsha_gpsacre':galPerSecPerHectareToGalPerSecPerAcre,
+    'acre_sf': acresToSqrFt,
+    'sf_acre': sqrFtToAcres,
+    'acreInch_gal': acreInchesToGals,
+    'gal_acreInch': galsToAcreInches,
+    'acreInch_m3': acreInchesToCubicMeters,
+    'm3_acreInch': cubicMetersToAcreInches,
+    'gpsacre_literPerSecPerHa':galPerSecPerAcreToLitersPerSecPerHectare,
+    'literPerSecPerHa_gpsacre': litersPerSecPerHectareToGalPerSecPerAcre,
+    'sf_m2': sqrFtToSqrMeters,
+    'm2_sf': sqrMetersToSqrFt,
+    'ft3_gal': cubicFtToGals,
+    'gal_ft3': galToCubicFt,
+    'liter_ft3': litersToCubicFt,
+    'ft3_liter': cubicFtToLiters,
+    'gpm_ft3sec': gpmToCubicFtPerSec,
+    'ft3sec_gpm': cubicFtPerSecToGpm,
+    'gpm_litersec': gpmToLiterPerSec,
+    'litersec_gpm': litersPerSecToGpm,
+    'ft3sec_litersec': cubicFtPerSecToLitersPerSec,
+    'litersec_ft3sec': litersPerSecToCubicFtPerSec,
+  };
+
+  return typeof functionObject[functionKey] === 'function' ?
+    functionObject[functionKey](value) : undefined;
+}; 
+
+
 module.exports = {
   mmToInches,
   inchesToMm,
@@ -448,4 +774,36 @@ module.exports = {
   mphToKph,
   kphToMph,
   solarKwM2DayToUvProxy,
+  calculateGradient,
+  tempCorrection,
+  gpmPerFtToTempCorrection,
+  gpmToLiterPerMin,
+  literPerMinToGpm,
+  gpmToCubicMetersPerMin,
+  cubicMetersPerMinToGpm,
+  acresToHectares,
+  hectaresToAcres,
+  galPerSecPerHectareToGalPerSecPerAcre,
+  galPerSecPerAcreToGalPerSecPerHectare,
+  acresToSqrFt,
+  sqrFtToAcres,
+  acreInchesToGals,
+  galsToAcreInches,
+  acreInchesToCubicMeters,
+  cubicMetersToAcreInches,
+  litersPerSecPerHectareToGalPerSecPerAcre,
+  galPerSecPerAcreToLitersPerSecPerHectare,
+  sqrFtToSqrMeters,
+  sqrMetersToSqrFt,
+  cubicFtToGals,
+  galToCubicFt,
+  cubicFtToLiters,
+  litersToCubicFt,
+  gpmToCubicFtPerSec,
+  cubicFtPerSecToGpm,
+  gpmToLiterPerSec,
+  litersPerSecToGpm,
+  litersPerSecToCubicFtPerSec,
+  cubicFtPerSecToLitersPerSec,
+  convertUnits,
 };
