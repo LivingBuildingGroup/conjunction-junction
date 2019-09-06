@@ -729,7 +729,7 @@ describe('conjunction-junction conversions', () => { // mocha has built-in promi
     expect(result).to.equal(expectedResult); 
   });
   it('kM2ToPsf ', () => {
-    const expectedResult = 4.9632;
+    const expectedResult = 4.0963;
     const result = kM2ToPsf(20);
     expect(result).to.equal(expectedResult); 
   });

@@ -233,7 +233,7 @@ const psfToKM2 = psf => {
 const kM2ToPsf = kM2 => {
   console.warn('kM2ToPsf is deprecated use kgM2ToPsf');
   if(!isPrimitiveNumber(kM2)) return;
-  return precisionRound(kM2 * 0.24816, 4);
+  return precisionRound(kM2 * 0.204816, 4);
 };
 
 const psfToKgM2 = psf => {
@@ -243,7 +243,7 @@ const psfToKgM2 = psf => {
 
 const kgM2ToPsf = kM2 => {
   if(!isPrimitiveNumber(kM2)) return;
-  return precisionRound(kM2 * 0.24816, 4);
+  return precisionRound(kM2 * 0.204816, 4);
 };
 
 // @@@@@@@@@@ TEMPERATURE @@@@@@@@@
