@@ -19,6 +19,8 @@ const {
   galsToCf,
   galsToLbs,
   lbsToGals,
+  lM2ToGalSf,
+  galSfToLM2,
   kgToL,
   _convertToCf,
   calcVwc,
@@ -210,11 +212,24 @@ describe('conjunction-junction conversions', () => { // mocha has built-in promi
       expect(num).to.equal(undefined);
     });
   });
-  it('lbsToGals true on arrays', () => { 
+  it('lbsToGals true', () => { 
     const lbs = 83.4;
     const expectedResult = 10;
     const gals = lbsToGals(lbs);
     expect(gals).to.equal(expectedResult);
+  });
+  it('lM2ToGalSf', () => { 
+    const lM2 = 55.63;
+    const expectedResult = 1.3653;
+    const gsf = lM2ToGalSf(lM2);
+    expect(gsf).to.equal(expectedResult);
+  });
+
+  it('galSfToLM2', () => { 
+    const gsf = 1.3653;
+    const expectedResult = 55.6303;
+    const lM2 = galSfToLM2(gsf);
+    expect(lM2).to.equal(expectedResult);
   });
 
   it('_convertToCf cf', () => { 

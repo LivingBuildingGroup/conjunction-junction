@@ -117,6 +117,16 @@ var lbsToGals = function lbsToGals(lbs) {
   return precisionRound(lbs / 8.34, 4);
 };
 
+var lM2ToGalSf = function lM2ToGalSf(lM2) {
+  if (!isPrimitiveNumber(lM2)) return;
+  return precisionRound(lM2 * 0.02454239, 4);
+};
+
+var galSfToLM2 = function galSfToLM2(gsf) {
+  if (!isPrimitiveNumber(gsf)) return;
+  return precisionRound(gsf * 40.745833577571, 4);
+};
+
 var kgToL = function kgToL(kg) {
   // input: number, output: either a number or undefined;
   if (!isPrimitiveNumber(kg)) return;
@@ -415,6 +425,8 @@ module.exports = {
   galsToCf: galsToCf,
   galsToLbs: galsToLbs,
   lbsToGals: lbsToGals,
+  lM2ToGalSf: lM2ToGalSf,
+  galSfToLM2: galSfToLM2,
   kgToL: kgToL,
   _convertToCf: _convertToCf,
   calcVwc: calcVwc,

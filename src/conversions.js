@@ -116,6 +116,16 @@ const lbsToGals = lbs => {
   return precisionRound(lbs / 8.34, 4);
 };
 
+const lM2ToGalSf = lM2 => {
+  if(!isPrimitiveNumber(lM2)) return;
+  return precisionRound(lM2 * 0.02454239, 4);
+};
+
+const galSfToLM2 = gsf => {
+  if(!isPrimitiveNumber(gsf)) return;
+  return precisionRound(gsf * 40.745833577571, 4);
+};
+
 const kgToL = kg => {
   // input: number, output: either a number or undefined;
   if(!isPrimitiveNumber(kg)) return ;
@@ -432,6 +442,8 @@ module.exports = {
   galsToCf,
   galsToLbs,
   lbsToGals,
+  lM2ToGalSf,
+  galSfToLM2,
   kgToL,
   _convertToCf,
   calcVwc,
