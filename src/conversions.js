@@ -220,6 +220,18 @@ const calcVwc = (volume, water) => {
   return vwc;
 };
 
+// @@@@@@@@@@ FLOW RATE @@@@@@@@@
+
+const cfSAcToLSHa = cfSAc => {
+  if(!isPrimitiveNumber(cfSAc)) return;
+  return precisionRound(cfSAc * 69.9724518, 4);
+};
+
+const lSHaToCfSAc = lSHa => {
+  if(!isPrimitiveNumber(lSHa)) return;
+  return precisionRound(lSHa * 0.0142913386, 4);
+};
+
 // @@@@@@@@@@ MASS / WEIGHT @@@@@@@@@
 
 const lbsToKg = lbs => {
@@ -454,6 +466,8 @@ module.exports = {
   lToCf,
   lbsToKg,
   kgToLbs,
+  cfSAcToLSHa,
+  lSHaToCfSAc,
   psfToKM2,
   kM2ToPsf,
   psfToKgM2,

@@ -31,6 +31,8 @@ const {
   lToCf,
   lbsToKg,
   kgToLbs,
+  cfSAcToLSHa,
+  lSHaToCfSAc,
   psfToKM2,
   kM2ToPsf,
   psfToKgM2,

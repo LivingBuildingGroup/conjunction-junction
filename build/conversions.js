@@ -207,6 +207,18 @@ var calcVwc = function calcVwc(volume, water) {
   return vwc;
 };
 
+// @@@@@@@@@@ FLOW RATE @@@@@@@@@
+
+var cfSAcToLSHa = function cfSAcToLSHa(cfSAc) {
+  if (!isPrimitiveNumber(cfSAc)) return;
+  return precisionRound(cfSAc * 69.9724518, 4);
+};
+
+var lSHaToCfSAc = function lSHaToCfSAc(lSHa) {
+  if (!isPrimitiveNumber(lSHa)) return;
+  return precisionRound(lSHa * 0.0142913386, 4);
+};
+
 // @@@@@@@@@@ MASS / WEIGHT @@@@@@@@@
 
 var lbsToKg = function lbsToKg(lbs) {
@@ -437,6 +449,8 @@ module.exports = {
   lToCf: lToCf,
   lbsToKg: lbsToKg,
   kgToLbs: kgToLbs,
+  cfSAcToLSHa: cfSAcToLSHa,
+  lSHaToCfSAc: lSHaToCfSAc,
   psfToKM2: psfToKM2,
   kM2ToPsf: kM2ToPsf,
   psfToKgM2: psfToKgM2,
