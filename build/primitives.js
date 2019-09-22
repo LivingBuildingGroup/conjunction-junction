@@ -51,8 +51,9 @@ var generateRandomNumber = function generateRandomNumber(lower, upper) {
 var printNumber = function printNumber(num) {
   var triggerSize = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 999000;
   var round = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 2;
+  var nan = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
 
-  return !isPrimitiveNumber(num) ? '' : num >= triggerSize ? String.fromCharCode(8734) : // infinity
+  return !isPrimitiveNumber(num) ? nan : num >= triggerSize ? String.fromCharCode(8734) : // infinity
   precisionRound(num, round);
 };
 
@@ -80,7 +81,8 @@ var formatForPrint = function formatForPrint(data, options) {
     arrays: true,
     stringLength: 250,
     object: ':(',
-    nan: 'NaN'
+    nan: 'NaN',
+    triggerSize: 999999
   };
   var o = isObjectLiteral(options) ? Object.assign({}, options, defaultOptions) : defaultOptions;
   var trueValue = typeof o.trueValue === 'string' ? o.trueValue : 'true';
@@ -98,10 +100,8 @@ var formatForPrint = function formatForPrint(data, options) {
     return data;
   }
   if (typeof data === 'number') {
-    if (typeof o.round === 'number') {
-      return precisionRound(data, o.round);
-    }
-    return isPrimitiveNumber(data) ? data : o.nan;
+    var round = isPrimitiveNumber(o.round) ? o.round : defaultOptions.round;
+    return printNumber(data, o.triggerSize, round, o.nan);
   }
   if (isValidDate(data)) {
     return convertTimestampToString(data);

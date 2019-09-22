@@ -44,9 +44,9 @@ const generateRandomNumber = (lower, upper) => {
   return num;
 };
 
-const printNumber = (num, triggerSize = 999000, round = 2) => {
+const printNumber = (num, triggerSize = 999000, round = 2, nan='') => {
   return !isPrimitiveNumber(num)  ?
-    '' :
+    nan :
     num >= triggerSize ?
       String.fromCharCode(8734) : // infinity
       precisionRound(num, round);
@@ -79,6 +79,7 @@ const formatForPrint = (data, options) => {    //plan to deprecate this, continu
     stringLength: 250,
     object: ':(',
     nan: 'NaN',
+    triggerSize: 999999,
   };
   const o = isObjectLiteral(options) ?
     Object.assign({},options, defaultOptions) : 
@@ -99,10 +100,8 @@ const formatForPrint = (data, options) => {    //plan to deprecate this, continu
     return data;
   }
   if(typeof data === 'number') {
-    if(typeof o.round === 'number'){
-      return precisionRound(data, o.round);
-    }
-    return isPrimitiveNumber(data) ? data : o.nan;
+    const round = isPrimitiveNumber(o.round) ? o.round : defaultOptions.round;
+    return printNumber(data, o.triggerSize, round, o.nan);
   }
   if(isValidDate(data)){
     return convertTimestampToString(data);
