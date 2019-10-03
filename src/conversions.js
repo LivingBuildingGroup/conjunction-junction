@@ -36,6 +36,22 @@ const metersToFeet = meters => {
   return precisionRound(meters * 3.28084, 4);
 };
 
+// @@@@@@@@@@ AREA @@@@@@@@@
+
+const sfToM2 = sf => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(sf)) return ;
+  return precisionRound(sf * 0.092903, 4);
+};
+
+const m2ToSf = m2 => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(m2)) return ;
+  return precisionRound(m2 * 10.7639, 4);
+};
+
 // @@@@@@@@@@ VOLUME @@@@@@@@@
 
 const ciToCf = ci => {
@@ -451,6 +467,8 @@ module.exports = {
   ccToCi,
   ciToGals,
   ccToCf,
+  sfToM2,
+  m2ToSf,
   galsToCf,
   galsToLbs,
   lbsToGals,

@@ -16,6 +16,8 @@ const {
   ccToCi,
   ciToGals,
   ccToCf,
+  sfToM2,
+  m2ToSf,
   galsToCf,
   galsToLbs,
   lbsToGals,
