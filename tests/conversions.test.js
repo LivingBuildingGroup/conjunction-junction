@@ -24,6 +24,7 @@ const {
   lM2ToGalSf,
   galSfToLM2,
   kgToL,
+  kgToMm,
   _convertToCf,
   calcVwc,
   ccToL,

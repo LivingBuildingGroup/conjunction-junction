@@ -149,6 +149,12 @@ var kgToL = function kgToL(kg) {
   return kg;
 };
 
+var kgToMm = function kgToMm(kg, M2) {
+  if (!isPrimitiveNumber(kg)) return;
+  if (!isPrimitiveNumber(M2)) return;
+  return precisionRound(kg / M2, 4);
+};
+
 var ccToL = function ccToL(cc) {
   if (!isPrimitiveNumber(cc)) return;
   return precisionRound(cc * 0.001, 4);
@@ -458,6 +464,7 @@ module.exports = {
   lM2ToGalSf: lM2ToGalSf,
   galSfToLM2: galSfToLM2,
   kgToL: kgToL,
+  kgToMm: kgToMm,
   _convertToCf: _convertToCf,
   calcVwc: calcVwc,
   ccToL: ccToL,
