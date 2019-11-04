@@ -152,6 +152,8 @@ var kgToL = function kgToL(kg) {
 var kgToMm = function kgToMm(kg, M2) {
   if (!isPrimitiveNumber(kg)) return;
   if (!isPrimitiveNumber(M2)) return;
+  // assumption 1 kg = 1 L
+  // assumption 1L / 1 M2 = 1mm
   return precisionRound(kg / M2, 4);
 };
 
@@ -173,6 +175,11 @@ var ccToCf = function ccToCf(cc) {
 var lToCf = function lToCf(L) {
   if (!isPrimitiveNumber(L)) return;
   return precisionRound(L * 0.0353147, 4);
+};
+
+var cfToL = function cfToL(cf) {
+  if (!isPrimitiveNumber(cf)) return;
+  return precisionRound(cf * 28.317, 4);
 };
 
 var ccToM3 = function ccToM3(cc) {
@@ -472,6 +479,7 @@ module.exports = {
   m3ToCc: m3ToCc,
   lToCc: lToCc,
   lToCf: lToCf,
+  cfToL: cfToL,
   lbsToKg: lbsToKg,
   kgToLbs: kgToLbs,
   cfSAcToLSHa: cfSAcToLSHa,
