@@ -84,6 +84,16 @@ var inchesToGals = function inchesToGals(inches, squareFeet) {
   return ciToGals(cubicInches);
 };
 
+var mmToL = function mmToL(mm, m2) {
+  if (!isPrimitiveNumber(mm) || !isPrimitiveNumber(m2)) return;
+  return precisionRound(mm * m2, 4);
+};
+
+var lToMm = function lToMm(l, m2) {
+  if (!isPrimitiveNumber(l) || !isPrimitiveNumber(m2)) return;
+  return precisionRound(l / m2, 4);
+};
+
 var galsToCi = function galsToCi(gallons) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
@@ -458,6 +468,8 @@ module.exports = {
   ciToCf: ciToCf,
   galsToInches: galsToInches,
   inchesToGals: inchesToGals,
+  mmToL: mmToL,
+  lToMm: lToMm,
   galsToCi: galsToCi,
   ciToCc: ciToCc,
   ccToCi: ccToCi,

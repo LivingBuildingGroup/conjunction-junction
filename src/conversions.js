@@ -83,6 +83,16 @@ const inchesToGals = (inches, squareFeet) => {
   return ciToGals(cubicInches);
 }; 
 
+const mmToL = (mm, m2) => {
+  if(!isPrimitiveNumber(mm) || !isPrimitiveNumber(m2)) return;
+  return precisionRound(mm * m2, 4);
+};
+
+const lToMm = (l, m2) => {
+  if(!isPrimitiveNumber(l) || !isPrimitiveNumber(m2)) return;
+  return precisionRound(l/m2, 4);
+};
+
 const galsToCi = gallons => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
@@ -475,6 +485,8 @@ module.exports = {
   ciToCf,
   galsToInches,
   inchesToGals,
+  mmToL,
+  lToMm,
   galsToCi,
   ciToCc,
   ccToCi,
