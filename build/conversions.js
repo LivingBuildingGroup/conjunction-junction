@@ -181,6 +181,16 @@ var kgToMm = function kgToMm(kg, M2) {
   return precisionRound(kg / M2, 4);
 };
 
+var kgToCc = function kgToCc(kg) {
+  if (!isPrimitiveNumber(kg)) return;
+  return precisionRound(kg * 1000, 4);
+};
+
+var ccToKg = function ccToKg(cc) {
+  if (!isPrimitiveNumber(cc)) return;
+  return precisionRound(cc / 1000, 4);
+};
+
 var ccToL = function ccToL(cc) {
   if (!isPrimitiveNumber(cc)) return;
   return precisionRound(cc * 0.001, 4);
@@ -500,6 +510,8 @@ module.exports = {
   galSfToLM2: galSfToLM2,
   kgToL: kgToL,
   kgToMm: kgToMm,
+  kgToCc: kgToCc,
+  ccToKg: ccToKg,
   _convertToCf: _convertToCf,
   calcVwc: calcVwc,
   ccToL: ccToL,
