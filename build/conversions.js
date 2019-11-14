@@ -129,6 +129,20 @@ var galsToCf = function galsToCf(gallons) {
   return precisionRound(gallons * 0.133681, 4);
 };
 
+var lbsCfToKgM3 = function lbsCfToKgM3(lbsCf) {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if (!isPrimitiveNumber(lbsCf)) return;
+  return precisionRound(lbsCf * 16.018463, 4);
+};
+
+var kgM3ToLbsCf = function kgM3ToLbsCf(kgM3) {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if (!isPrimitiveNumber(kgM3)) return;
+  return precisionRound(kgM3 * 0.062428, 4);
+};
+
 var galsToLbs = function galsToLbs(gallons) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
@@ -478,6 +492,8 @@ module.exports = {
   sfToM2: sfToM2,
   m2ToSf: m2ToSf,
   galsToCf: galsToCf,
+  lbsCfToKgM3: lbsCfToKgM3,
+  kgM3ToLbsCf: kgM3ToLbsCf,
   galsToLbs: galsToLbs,
   lbsToGals: lbsToGals,
   lM2ToGalSf: lM2ToGalSf,
