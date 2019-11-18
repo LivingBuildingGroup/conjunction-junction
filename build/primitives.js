@@ -24,11 +24,15 @@ var correctInputType = function correctInputType(value) {
   var isNumber = false;
   var isInteger = false;
   numberKeysSignatures.forEach(function (sig) {
-    if (key.includes(sig)) isNumber = true;
+    if (typeof key === 'string' && typeof key.includes === 'function' && key.includes(sig)) {
+      isNumber = true;
+    }
   });
   if (!isNumber) {
     integerKeysSignatures.forEach(function (sig) {
-      if (key.includes(sig)) isInteger = true;
+      if (typeof key === 'string' && typeof key.includes === 'function' && key.includes(sig)) {
+        isInteger = true;
+      }
     });
   }
   var tryValue = isNumber ? parseFloat(value) : isInteger ? parseInt(value, 10) : value;

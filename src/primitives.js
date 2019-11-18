@@ -17,11 +17,15 @@ const correctInputType = (value, key='', options={}) => {
   let isNumber = false;
   let isInteger = false;
   numberKeysSignatures.forEach(sig=>{
-    if(key.includes(sig)) isNumber = true;
+    if(typeof key === 'string' && typeof key.includes === 'function' && key.includes(sig)) {
+      isNumber = true;
+    }
   });
   if(!isNumber){
     integerKeysSignatures.forEach(sig=>{
-      if(key.includes(sig)) isInteger = true;
+      if(typeof key === 'string' && typeof key.includes === 'function' && key.includes(sig)) {
+        isInteger = true;
+      }
     });
   }
   const tryValue = 
