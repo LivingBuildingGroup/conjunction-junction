@@ -142,6 +142,20 @@ const kgM3ToLbsCf = kgM3 => {
   return precisionRound(kgM3 * 0.062428, 4);
 };
 
+const m3ToL = m3 => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(m3)) return;
+  return precisionRound(m3 / 1000, 4);
+};
+
+const lToM3 = l => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(l)) return;
+  return precisionRound(l * 1000, 4);
+};
+
 const galsToLbs = gallons => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
@@ -521,6 +535,8 @@ module.exports = {
   galsToCf,
   lbsCfToKgM3,
   kgM3ToLbsCf,
+  m3ToL,
+  lToM3,
   galsToLbs,
   lbsToGals,
   lM2ToGalSf,
