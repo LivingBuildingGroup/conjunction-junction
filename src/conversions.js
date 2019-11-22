@@ -2,7 +2,8 @@
 
 'use strict';
 
-const { isPrimitiveNumber, 
+const { 
+  isPrimitiveNumber, 
   isObjectLiteral, 
   precisionRound } = require('./basic');
 
@@ -22,18 +23,18 @@ const inchesToMm = inches => {
   return precisionRound(inches * 25.4, 4);
 };
 
-const feetToMeters = feet => {
+const feetToMeters = (feet, round=4) => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
   if(!isPrimitiveNumber(feet)) return ;
-  return precisionRound(feet * 0.3048, 4);
+  return precisionRound(feet * 0.3048, round);
 };
 
-const metersToFeet = meters => {
+const metersToFeet = (meters, round=4) => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
   if(!isPrimitiveNumber(meters)) return ;
-  return precisionRound(meters * 3.28084, 4);
+  return precisionRound(meters * 3.28084, round);
 };
 
 // @@@@@@@@@@ AREA @@@@@@@@@
@@ -52,6 +53,48 @@ const m2ToSf = m2 => {
   return precisionRound(m2 * 10.7639, 4);
 };
 
+const sfToAc = sf => {
+    // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(sf)) return ;
+  return precisionRound(sf / 43560, 4);
+};
+
+const acToSf = ac => {
+  // input: number, output: either a number or undefined;
+// precision: 4 decimal places, set here
+if(!isPrimitiveNumber(ac)) return ;
+return precisionRound(ac * 43560, 4);
+};
+
+const acToHa = ac => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(ac)) return ;
+  return precisionRound(ac * 0.404686, 4);
+};
+
+const haToAc = ha => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(ha)) return ;
+  return precisionRound(ha * 2.47105, 4);
+};
+
+const m2ToHa = m2 => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(m2)) return ;
+  return precisionRound(m2 / 10000, 4);
+};
+
+const haToM2 = ha => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(ha)) return ;
+  return precisionRound(ha * 10000, 4);
+};
+
 // @@@@@@@@@@ VOLUME @@@@@@@@@
 
 const ciToCf = ci => {
@@ -61,36 +104,11 @@ const ciToCf = ci => {
   return precisionRound(ci / (12 * 12 * 12), 4);
 };
 
-// @@@@@@@@@@ LIQUID @@@@@@@@@
-
-const galsToInches = (gallons, squareFeet) => {
-  // input: numbers, output: either a number or undefined;
+const cfToCi = cf => {
+  // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(gallons) || !isPrimitiveNumber(squareFeet)) return;
-  if(squareFeet === 0) return 0;
-  const squareInches = squareFeet * 144;
-  const cubicInches = gallons * 231;
-  return precisionRound(cubicInches / squareInches, 4);
-}; 
-
-const inchesToGals = (inches, squareFeet) => {
-  // input: numbers, output: either a number or undefined;
-  // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(inches) || !isPrimitiveNumber(squareFeet)) return;
-  if(squareFeet === 0) return 0;
-  const squareInches = squareFeet * 144;
-  const cubicInches = squareInches * inches;
-  return ciToGals(cubicInches);
-}; 
-
-const mmToL = (mm, m2) => {
-  if(!isPrimitiveNumber(mm) || !isPrimitiveNumber(m2)) return;
-  return precisionRound(mm * m2, 4);
-};
-
-const lToMm = (l, m2) => {
-  if(!isPrimitiveNumber(l) || !isPrimitiveNumber(m2)) return;
-  return precisionRound(l/m2, 4);
+  if(!isPrimitiveNumber(cf)) return;
+  return precisionRound(cf * (12 * 12 * 12), 4);
 };
 
 const galsToCi = gallons => {
@@ -98,6 +116,13 @@ const galsToCi = gallons => {
   // precision: 4 decimal places, set here
   if(!isPrimitiveNumber(gallons)) return;
   return precisionRound(gallons * 231, 4);
+};
+
+const ciToGals = ci => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(ci)) return ;
+  return precisionRound(ci / 231, 4);
 };
 
 const ciToCc = ci => {
@@ -114,13 +139,6 @@ const ccToCi = ci => {
   return precisionRound(ci * 0.0610237, 4);
 };
 
-const ciToGals = ci => {
-  // input: number, output: either a number or undefined;
-  // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(ci)) return ;
-  return precisionRound(ci / 231, 4);
-};
-
 const galsToCf = gallons => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
@@ -128,80 +146,39 @@ const galsToCf = gallons => {
   return precisionRound(gallons * 0.133681, 4);
 };
 
-const lbsCfToKgM3 = lbsCf => {
+const cfToGals = cf => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(lbsCf)) return;
-  return precisionRound(lbsCf * 16.018463, 4);
-};
-
-const kgM3ToLbsCf = kgM3 => {
-  // input: number, output: either a number or undefined;
-  // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(kgM3)) return;
-  return precisionRound(kgM3 * 0.062428, 4);
+  if(!isPrimitiveNumber(cf)) return ;
+  return precisionRound(cf / 0.133681, 4);
 };
 
 const m3ToL = m3 => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
   if(!isPrimitiveNumber(m3)) return;
-  return precisionRound(m3 / 1000, 4);
+  return precisionRound(m3 * 1000, 4);
 };
 
 const lToM3 = l => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
   if(!isPrimitiveNumber(l)) return;
-  return precisionRound(l * 1000, 4);
+  return precisionRound(l / 1000, 4);
 };
 
-const galsToLbs = gallons => {
+const mlToL = ml => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(gallons)) return;
-  return precisionRound(gallons * 8.34, 4);
+  if(!isPrimitiveNumber(ml)) return;
+  return precisionRound(ml / 1000, 4);
 };
 
-const lbsToGals = lbs => {
+const lToMl = ml => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
-  if(!isPrimitiveNumber(lbs)) return;
-  return precisionRound(lbs / 8.34, 4);
-};
-
-const lM2ToGalSf = lM2 => {
-  if(!isPrimitiveNumber(lM2)) return;
-  return precisionRound(lM2 * 0.02454239, 4);
-};
-
-const galSfToLM2 = gsf => {
-  if(!isPrimitiveNumber(gsf)) return;
-  return precisionRound(gsf * 40.745833577571, 4);
-};
-
-const kgToL = kg => {
-  // input: number, output: either a number or undefined;
-  if(!isPrimitiveNumber(kg)) return ;
-  return kg;
-};
-
-const kgToMm = (kg, M2) =>{
-  if(!isPrimitiveNumber(kg)) return ;
-  if(!isPrimitiveNumber(M2)) return ;
-  // assumption 1 kg = 1 L
-  // assumption 1L / 1 M2 = 1mm
-  return precisionRound(kg/M2,4);
-};
-
-const kgToCc = kg => {
-  if(!isPrimitiveNumber(kg)) return ;
-  return precisionRound(kg * 1000, 4);
-};
-
-const ccToKg = cc => {
-  if(!isPrimitiveNumber(cc)) return ;
-  return precisionRound(cc / 1000, 4);
+  if(!isPrimitiveNumber(ml)) return;
+  return precisionRound(ml * 1000, 4);
 };
 
 const ccToL = cc => {
@@ -217,6 +194,11 @@ const lToCc = L => {
 const ccToCf = cc => {
   if(!isPrimitiveNumber(cc)) return ;
   return precisionRound(cc * 0.0000353147, 4);
+};
+
+const cfToCc = cf => {
+  if(!isPrimitiveNumber(cf)) return ;
+  return precisionRound(cf / 0.0000353147, 4);
 };
 
 const lToCf = L => {
@@ -243,6 +225,131 @@ const m3ToCf = m3 => {
   if(!isPrimitiveNumber(m3)) return;
   return precisionRound(m3 * 35.3147, 4);
 };
+
+const cfToM3 = cf => {
+  if(!isPrimitiveNumber(cf)) return;
+  return precisionRound(cf / 35.3147, 4);
+};
+
+const galsToM3 = gals => {
+  if(!isPrimitiveNumber(gals)) return;
+  return precisionRound(gals * 0.00378541, 8);
+};
+
+const m3ToGals = m3 => {
+  if(!isPrimitiveNumber(m3)) return;
+  return precisionRound(m3 * 264.172, 4);
+};
+
+const galsToL = gals => {
+  if(!isPrimitiveNumber(gals)) return;
+  return precisionRound(gals * 3.78541, 4);
+};
+
+const lToGals = l => {
+  if(!isPrimitiveNumber(l)) return;
+  return precisionRound(l * 0.264172, 4);
+};
+
+// @@@@@@@@@@ VOLUME DEPTH, AREA @@@@@@@@@
+
+const galsToInches = (gallons, sf) => {
+  // input: numbers, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(gallons) || !isPrimitiveNumber(sf)) return;
+  if(sf === 0) return 0;
+  const si = sf * 144;
+  const ci = gallons * 231;
+  return precisionRound(ci / si, 4);
+}; 
+
+const inchesToGals = (inches, sf) => {
+  // input: numbers, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(inches) || !isPrimitiveNumber(sf)) return;
+  if(sf === 0) return 0;
+  const si = sf * 144;
+  const ci = si * inches;
+  return ciToGals(ci);
+}; 
+
+const mmToL = (mm, m2) => {
+  if(!isPrimitiveNumber(mm) || !isPrimitiveNumber(m2)) return;
+  return precisionRound(mm * m2, 4);
+};
+
+const lToMm = (l, m2) => {
+  if(!isPrimitiveNumber(l) || !isPrimitiveNumber(m2)) return;
+  return precisionRound(l/m2, 4);
+};
+
+const kgToMm = (kg, m2) =>{
+  if(!isPrimitiveNumber(kg)) return ;
+  if(!isPrimitiveNumber(m2)) return ;
+  // assumption 1 kg = 1 L
+  // assumption 1L / 1 M2 = 1mm
+  return precisionRound(kg/m2,4);
+};
+
+const mmToKg = (mm, m2) =>{
+  if(!isPrimitiveNumber(mm)) return ;
+  if(!isPrimitiveNumber(m2)) return ;
+  // assumption 1 kg = 1 L
+  // assumption 1L / 1 M2 = 1mm
+  return precisionRound(mm*m2,4);
+};
+
+// @@@@@@@@@@@ VOLUME COMPOUND UNITS @@@@@@@@@@
+
+const lM2ToGalSf = lM2 => {
+  if(!isPrimitiveNumber(lM2)) return;
+  return precisionRound(lM2 * 0.02454239, 4);
+};
+
+const galSfToLM2 = gsf => {
+  if(!isPrimitiveNumber(gsf)) return;
+  return precisionRound(gsf * 40.745833577571, 4);
+};
+
+// @@@@@@@@@@@@@ VOLUME DENSITY OF WATER @@@@@@@@@@@@
+
+const galsToLbs = gallons => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(gallons)) return;
+  return precisionRound(gallons * 8.34, 4);
+};
+
+const lbsToGals = lbs => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(lbs)) return;
+  return precisionRound(lbs / 8.34, 4);
+};
+
+const kgToL = kg => {
+  // input: number, output: either a number or undefined;
+  if(!isPrimitiveNumber(kg)) return ;
+  return kg;
+};
+
+const lToKg = l => {
+  // input: number, output: either a number or undefined;
+  if(!isPrimitiveNumber(l)) return ;
+  return l;
+};
+
+const kgToCc = kg => {
+  if(!isPrimitiveNumber(kg)) return ;
+  return precisionRound(kg * 1000, 4);
+};
+
+const ccToKg = cc => {
+  if(!isPrimitiveNumber(cc)) return ;
+  return precisionRound(cc / 1000, 4);
+};
+
+// @@@@@@@@@@@@@@@@ VWC @@@@@@@@@@@@@@@@
 
 const _convertToCf = (units, qty) => {
   const cf = 
@@ -301,12 +408,115 @@ const calcVwc = (volume, water) => {
 
 const cfSAcToLSHa = cfSAc => {
   if(!isPrimitiveNumber(cfSAc)) return;
-  return precisionRound(cfSAc * 69.9724518, 4);
+  const lSAc = cfToL(cfSAc);
+  return haToAc(lSAc);
+  // return precisionRound(cfSAc * 69.9724518, 4);
 };
 
 const lSHaToCfSAc = lSHa => {
   if(!isPrimitiveNumber(lSHa)) return;
-  return precisionRound(lSHa * 0.0142913386, 4);
+  const cfsHa = lToCf(lSHa);
+  return acToHa(cfsHa);
+  // return precisionRound(lSHa * 0.0142913386, 4);
+};
+
+const gpmToM3S = gpm => {
+  if(!isPrimitiveNumber(gpm)) return;
+  const gpS = gpm / 60;
+  return galsToM3(gpS);
+};
+
+const m3SToGpm = m3s => {
+  if(!isPrimitiveNumber(m3s)) return;
+  const m3Min = m3s * 60;
+  return m3ToGals(m3Min);
+};
+
+const gpmToLS = gpm => {
+  if(!isPrimitiveNumber(gpm)) return;
+  const gpS = gpm / 60;
+  return galsToL(gpS);
+};
+
+const lSToGpm = lS => {
+  if(!isPrimitiveNumber(lS)) return;
+  const lMin = lS * 60;
+  return lToGals(lMin);
+};
+
+// @@@@@@@@@@ FLOW RATE OVER FLOW LENGTH @@@@@@@@@
+
+const gpmFtToM3SM = gpmFt => {
+  if(!isPrimitiveNumber(gpmFt)) return;
+  const gpSFt = gpmFt / 60;
+  const m3SFt = galsToM3(gpSFt);
+  return metersToFeet(m3SFt, 8);
+};
+
+const m3SMToGpmFt = m3SM => {
+  if(!isPrimitiveNumber(m3SM)) return;
+  const m3MinM = m3SM * 60;
+  const m3SFt = feetToMeters(m3MinM);
+  return m3ToGals(m3SFt);
+};
+
+const gpmFtToLSM = gpmFt => {
+  if(!isPrimitiveNumber(gpmFt)) return;
+  const gpSFt = gpmFt / 60;
+  const gpSM = metersToFeet(gpSFt, 8);
+  return galsToL(gpSM);
+};
+
+const lSMToGpmFt = lSM => {
+  if(!isPrimitiveNumber(lSM)) return;
+  const lMinM = lSM * 60;
+  const lMinFt = feetToMeters(lMinM, 8);
+  return lToGals(lMinFt);
+};
+
+// @@@@@@@@@@ FLOW RATE, AREA @@@@@@@@@
+
+const gpmToInchesHr = (gpm, sf) => {
+  if(!isPrimitiveNumber(gpm)) return;
+  if(!isPrimitiveNumber(sf)) return;
+  const gpHr = gpm * 60;
+  return galsToInches(gpHr, sf);
+};
+
+const inchesHrToGpm = (inchesHr, sf) => {
+  if(!isPrimitiveNumber(inchesHr)) return;
+  if(!isPrimitiveNumber(sf)) return;
+  const inchesMin = inchesHr / 60;
+  return inchesToGals(inchesMin, sf);
+};
+
+const lMinToMmHr = (lMin, m2) => {
+  if(!isPrimitiveNumber(lMin)) return;
+  if(!isPrimitiveNumber(m2)) return;
+  const lHr = lMin * 60;
+  return lToMm(lHr, m2);
+};
+
+const mmHrToLMin = (mmHr, m2) => {
+  if(!isPrimitiveNumber(mmHr)) return;
+  if(!isPrimitiveNumber(m2)) return;
+  const mmMin = mmHr / 60;
+  return mmToL(mmMin, m2);
+};
+
+const lSToMmHr = (lS, m2) => {
+  if(!isPrimitiveNumber(lS)) return;
+  if(!isPrimitiveNumber(m2)) return;
+  const lHr = lS * 3600;
+  return lToMm(lHr, m2);
+};
+
+const mmHrToLS = (mmHr, m2) => {
+  if(!isPrimitiveNumber(mmHr)) return;
+  if(!isPrimitiveNumber(m2)) return;
+  const mmMin = mmHr / 60;
+  const mmS = mmMin / 60;
+  return mmToL(mmS, m2);
 };
 
 // @@@@@@@@@@ MASS / WEIGHT @@@@@@@@@
@@ -323,16 +533,18 @@ const kgToLbs = kg => {
 
 // @@@@@@@@@@ DENSITY @@@@@@@@@
 
-const psfToKM2 = psf => {
-  console.warn('psfToKM2 is deprecated use psfToKgM2');
-  if(!isPrimitiveNumber(psf)) return;
-  return precisionRound(psf * 4.88243, 4);
+const lbsCfToKgM3 = lbsCf => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(lbsCf)) return;
+  return precisionRound(lbsCf * 16.018463, 4);
 };
 
-const kM2ToPsf = kM2 => {
-  console.warn('kM2ToPsf is deprecated use kgM2ToPsf');
-  if(!isPrimitiveNumber(kM2)) return;
-  return precisionRound(kM2 * 0.204816, 4);
+const kgM3ToLbsCf = kgM3 => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(kgM3)) return;
+  return precisionRound(kgM3 * 0.062428, 4);
 };
 
 const psfToKgM2 = psf => {
@@ -345,9 +557,24 @@ const kgM2ToPsf = kM2 => {
   return precisionRound(kM2 * 0.204816, 4);
 };
 
+const psfToKM2 = psf => {
+  console.warn('psfToKM2 is deprecated use psfToKgM2');
+  return psfToKgM2(psf);
+};
+
+const kM2ToPsf = kM2 => {
+  console.warn('kM2ToPsf is deprecated use kgM2ToPsf');
+  return kgM2ToPsf(kM2);
+};
+
 // @@@@@@@@@@ TEMPERATURE @@@@@@@@@
 
-const celsiusToKelvin = celsius => {
+const celsiusToKelvin = c => {
+  console.warn('celsiusToKelvin is deprecated use cToK');
+  return cToK(c);
+};
+
+const cToK = c => {
   /*
     Convert temperature in degrees Celsius to degrees Kelvin.
 
@@ -355,10 +582,31 @@ const celsiusToKelvin = celsius => {
     :return: Degrees Kelvin
     :rtype: float
     */
-  return celsius + 273.15;
+  return c + 273.15;
 };
 
-const celsiusToF = celsius => {
+const kelvinToCelsius = k => {
+  console.warn('kelvinToCelsius is deprecated use kToC');
+  return kToC( k);
+};
+
+const kToC = k => {
+  /*
+    Convert temperature in degrees Kelvin to degrees Celsius.
+
+    :param kelvin: Degrees Kelvin
+    :return: Degrees Celsius
+    :rtype: float
+    */
+  return k - 273.15;
+};
+
+const celsiusToF = c => {
+  console.warn('celsiusToF is deprecated use cToF');
+  return cToF(c);
+};
+
+const cToF = c => {
   /*
     Convert temperature in degrees Celsius to degrees Kelvin.
 
@@ -366,10 +614,15 @@ const celsiusToF = celsius => {
     :return: Degrees Fahrenheit
     :rtype: float
     */
-  return (celsius * 1.8 ) + 32;
+  return (c * 1.8 ) + 32;
 };
 
 const fToCelsius = f => {
+  console.warn('fToCelsius is deprecated use fToC');
+  return fToC(f);
+};
+
+const fToC = f => {
   /*
     Convert temperature in degrees Celsius to degrees Kelvin.
 
@@ -380,17 +633,7 @@ const fToCelsius = f => {
   return (f - 32) / 1.8;
 };
 
-
-const kelvinToCelsius =kelvin => {
-  /*
-    Convert temperature in degrees Kelvin to degrees Celsius.
-
-    :param kelvin: Degrees Kelvin
-    :return: Degrees Celsius
-    :rtype: float
-    */
-  return kelvin - 273.15;
-};
+// @@@@@@@@@@@@@@ DEW POINT @@@@@@@@@@@@@@@
 
 const getDewPointC = (t_air_c, rel_humidity) => {
   // Compute the dew point in degrees Celsius
@@ -516,65 +759,166 @@ const solarKwM2DayToUvProxy = kwM2 => {
 };
 
 module.exports = {
+  // @@@@@@@@@@ DISTANCE @@@@@@@@@
   mmToInches,
   inchesToMm,
+
   feetToMeters,
   metersToFeet,
-  ciToCf,
-  galsToInches,
-  inchesToGals,
-  mmToL,
-  lToMm,
-  galsToCi,
-  ciToCc,
-  ccToCi,
-  ciToGals,
-  ccToCf,
+  
+  // @@@@@@@@@@ AREA @@@@@@@@@
   sfToM2,
   m2ToSf,
+
+  sfToAc,
+  acToSf,
+
+  acToHa,
+  haToAc,
+
+  m2ToHa,
+  haToM2,
+  
+  // @@@@@@@@@@ VOLUME @@@@@@@@@
+  ciToCf,
+  cfToCi,
+  
+  galsToCi,
+  ciToGals,
+  
+  ciToCc,
+  ccToCi,
+  
   galsToCf,
-  lbsCfToKgM3,
-  kgM3ToLbsCf,
+  cfToGals,
+
   m3ToL,
   lToM3,
-  galsToLbs,
-  lbsToGals,
-  lM2ToGalSf,
-  galSfToLM2,
-  kgToL,
-  kgToMm,
-  kgToCc,
-  ccToKg,
-  _convertToCf,
-  calcVwc,
+
+  mlToL,
+  lToMl,
+  
   ccToL,
-  ccToM3,
-  m3ToCc,
   lToCc,
+  
+  ccToCf,
+  cfToCc,
+
   lToCf,
   cfToL,
-  lbsToKg,
-  kgToLbs,
+
+  ccToM3,
+  m3ToCc,
+
+  m3ToCf,
+  cfToM3,
+
+  galsToM3,
+  m3ToGals,
+
+  galsToL,
+  lToGals,
+
+  // @@@@@@@@@@ VOLUME DEPTH, AREA @@@@@@@@@
+  galsToInches,
+  inchesToGals,
+
+  mmToL,
+  lToMm,
+  
+  kgToMm,
+  mmToKg,
+
+  // @@@@@@@@@@@ VOLUME COMPOUND UNITS @@@@@@@@@@
+  lM2ToGalSf,
+  galSfToLM2,
+
+  // @@@@@@@@@@@@@ VOLUME DENSITY OF WATER @@@@@@@@@@@@
+  galsToLbs,
+  lbsToGals,
+
+  kgToL,
+  lToKg,
+
+  kgToCc,
+  ccToKg,
+
+  // @@@@@@@@@@@@@@@@ VWC @@@@@@@@@@@@@@@@
+  _convertToCf,
+  calcVwc,
+
+  // @@@@@@@@@@ FLOW RATE @@@@@@@@@
   cfSAcToLSHa,
   lSHaToCfSAc,
+
+  gpmToM3S,
+  m3SToGpm,
+
+  gpmToLS,
+  lSToGpm,
+
+  // @@@@@@@@@@ FLOW RATE OVER FLOW LENGTH @@@@@@@@@
+  gpmFtToM3SM,
+  m3SMToGpmFt,
+
+  gpmFtToLSM,
+  lSMToGpmFt,
+
+  // @@@@@@@@@@ FLOW RATE, AREA @@@@@@@@@
+
+  gpmToInchesHr,
+  inchesHrToGpm,
+
+  lMinToMmHr,
+  mmHrToLMin,
+
+  lSToMmHr,
+  mmHrToLS,
+
+  // @@@@@@@@@@ MASS / WEIGHT @@@@@@@@@
+  lbsToKg,
+  kgToLbs,
+
+  // @@@@@@@@@@ DENSITY @@@@@@@@@
+  lbsCfToKgM3,
+  kgM3ToLbsCf,
+
   psfToKM2,
   kM2ToPsf,
+
   psfToKgM2,
   kgM2ToPsf,
+  
+  // @@@@@@@@@@ TEMPERATURE @@@@@@@@@
   celsiusToKelvin,
+  kelvinToCelsius,
+  cToK,
+  kToC,
+
   celsiusToF,
   fToCelsius,
-  kelvinToCelsius,
+  cToF,
+  fToC,
+
+  // @@@@@@@@@@@@@@ DEW POINT @@@@@@@@@@@@@@@
   getDewPointC,
   getFrostPointC,
+  
+  // @@@@@@@@@@ SLOPE @@@@@@@@@
   pctToDeg,
   degToPct,
+  
+  // @@@@@@@@@@ ANGLES @@@@@@@@@
   degToRad,
   radToDeg,
+  
+  // @@@@@@@@@@ SPEED @@@@@@@@@
   msToKph,
   kphToMs,
   msToMph,
   mphToKph,
   kphToMph,
+  
+  // @@@@@@@@@@ SOLAR IRRADIATION @@@@@@@@@
   solarKwM2DayToUvProxy,
 };
