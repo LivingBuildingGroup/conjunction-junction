@@ -8,6 +8,9 @@ const {
   mmToInches,
   inchesToMm,
  
+  mmToFt,
+  ftToMm,
+  
   feetToMeters,
   metersToFeet,
    

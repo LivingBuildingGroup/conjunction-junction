@@ -23,6 +23,16 @@ var inchesToMm = function inchesToMm(inches) {
   return precisionRound(inches * 25.4, 4);
 };
 
+var mmToFt = function mmToFt(mm) {
+  if (!isPrimitiveNumber(mm)) return;
+  return precisionRound(mm * 0.00328084, 4);
+};
+
+var ftToMm = function ftToMm(ft) {
+  if (!isPrimitiveNumber(ft)) return;
+  return precisionRound(ft * 304.8, 4);
+};
+
 var feetToMeters = function feetToMeters(feet) {
   var round = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 4;
 
@@ -795,6 +805,9 @@ module.exports = {
   // @@@@@@@@@@ DISTANCE @@@@@@@@@
   mmToInches: mmToInches,
   inchesToMm: inchesToMm,
+
+  mmToFt: mmToFt,
+  ftToMm: ftToMm,
 
   feetToMeters: feetToMeters,
   metersToFeet: metersToFeet,
