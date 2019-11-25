@@ -64,20 +64,18 @@ var formatTimestampForSql = function formatTimestampForSql(value) {
 
 // ADD QUESTION MARKS
 var escapeSpecial = function escapeSpecial(data) {
-  var single = data.split('\'');
+  var double = data.split('"');
+  var noDouble = double.join('');
+  var single = noDouble.split('\'');
   var noSingle = single.join('\'\'');
-  var double = noSingle.split('"');
-  var noDouble = double.join('""');
-  return noDouble;
+  return noSingle;
 };
 
 // ADD QUESTION MARKS
 var unEscapeSpecial = function unEscapeSpecial(data) {
   var splitSingle = data.split('\'\'');
   var single = splitSingle.join('\'');
-  var splitDouble = single.split('""');
-  var double = splitDouble.join('"');
-  return double;
+  return single;
 };
 
 var formatDataForSql = function formatDataForSql(data, key) {

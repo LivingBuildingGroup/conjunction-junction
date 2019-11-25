@@ -56,20 +56,18 @@ const formatTimestampForSql = (value, sqlOption={type:'raw'}) => {
 
 // ADD QUESTION MARKS
 const escapeSpecial = data => {
-  const single = data.split('\'');
+  const double   = data.split('"');
+  const noDouble = double.join('');
+  const single   = noDouble.split('\'');
   const noSingle = single.join('\'\'');
-  const double = noSingle.split('"');
-  const noDouble = double.join('""');
-  return noDouble;
+  return noSingle;
 };
 
 // ADD QUESTION MARKS
 const unEscapeSpecial = data => {
   const splitSingle = data.split('\'\'');
   const single = splitSingle.join('\'');
-  const splitDouble = single.split('""');
-  const double = splitDouble.join('"');
-  return double;
+  return single;
 };
 
 const formatDataForSql = (data, key, option={type:'raw'}) => {
