@@ -108,6 +108,9 @@ const {
  
   gpmFtToLSM,
   lSMToGpmFt,
+
+  lMinMToM3SM,
+  m3SMToLMinM,
  
   // @@@@@@@@@@ FLOW RATE, AREA @@@@@@@@@
  
@@ -1062,6 +1065,20 @@ describe('conjunction-junction conversions', () => {
     const val = 1;
     const expectedResult = 4.8312; // 4.83117849
     const result = lSMToGpmFt(val);
+    expect(result).to.equal(expectedResult); 
+  });
+
+  it('lMinMToM3SM', () => { 
+    const val = 60000;
+    const expectedResult = 1;
+    const result = lMinMToM3SM(val);
+    expect(result).to.equal(expectedResult); 
+  });
+
+  it('m3SMToLMinM', () => { 
+    const val = 1;
+    const expectedResult = 60000;
+    const result = m3SMToLMinM(val);
     expect(result).to.equal(expectedResult); 
   });
 

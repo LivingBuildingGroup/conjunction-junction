@@ -474,6 +474,18 @@ const lSMToGpmFt = lSM => {
   return lToGals(lMinFt);
 };
 
+const lMinMToM3SM = lMinM => {
+  if(!isPrimitiveNumber(lMinM)) return;
+  const lSM = lMinM / 60;
+  return lToM3(lSM, 8);
+};
+
+const m3SMToLMinM = m3SM => {
+  if(!isPrimitiveNumber(m3SM)) return;
+  const m3MinM = m3SM * 60;
+  return m3ToL(m3MinM);
+};
+
 // @@@@@@@@@@ FLOW RATE, AREA @@@@@@@@@
 
 const gpmToInchesHr = (gpm, sf) => {
@@ -899,6 +911,9 @@ module.exports = {
 
   gpmFtToLSM,
   lSMToGpmFt,
+
+  lMinMToM3SM,
+  m3SMToLMinM,
 
   // @@@@@@@@@@ FLOW RATE, AREA @@@@@@@@@
 

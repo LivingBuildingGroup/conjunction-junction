@@ -464,6 +464,18 @@ var lSMToGpmFt = function lSMToGpmFt(lSM) {
   return lToGals(lMinFt);
 };
 
+var lMinMToM3SM = function lMinMToM3SM(lMinM) {
+  if (!isPrimitiveNumber(lMinM)) return;
+  var lSM = lMinM / 60;
+  return lToM3(lSM, 8);
+};
+
+var m3SMToLMinM = function m3SMToLMinM(m3SM) {
+  if (!isPrimitiveNumber(m3SM)) return;
+  var m3MinM = m3SM * 60;
+  return m3ToL(m3MinM);
+};
+
 // @@@@@@@@@@ FLOW RATE, AREA @@@@@@@@@
 
 var gpmToInchesHr = function gpmToInchesHr(gpm, sf) {
@@ -884,6 +896,9 @@ module.exports = {
 
   gpmFtToLSM: gpmFtToLSM,
   lSMToGpmFt: lSMToGpmFt,
+
+  lMinMToM3SM: lMinMToM3SM,
+  m3SMToLMinM: m3SMToLMinM,
 
   // @@@@@@@@@@ FLOW RATE, AREA @@@@@@@@@
 
