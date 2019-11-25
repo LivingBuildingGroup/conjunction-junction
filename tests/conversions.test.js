@@ -119,6 +119,12 @@ const {
  
   lSToMmHr,
   mmHrToLS,
+
+  gpmToMmHr,
+  mmHrToGpm,
+
+  m3sToMmHr,
+  mmHrToM3S,
  
   // @@@@@@@@@@ MASS / WEIGHT @@@@@@@@@
   lbsToKg,
@@ -1137,6 +1143,72 @@ describe('conjunction-junction conversions', () => {
     // 15 mmHr = 0.00416667 mm/s * 3 m2 = 0.0125
     const expectedResult = 0.0125;
     const result = mmHrToLS(mmHr, m2);
+    expect(result).to.equal(expectedResult); 
+  });
+
+  it('gpmToMmHr', () => { 
+    const gpm = 1;
+    const sf = 10.7639; // 1 m2
+    const expectedResult = 227.1243; // 227.125
+    const result = gpmToMmHr(gpm, sf);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('gpmToMmHr 13', () => { 
+    const gpm = 13;
+    const sf = 10.7639; // 1 m2
+    const expectedResult = 2952.623; // 2952.625
+    const result = gpmToMmHr(gpm, sf);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('gpmToMmHr 17', () => { 
+    const gpm = 1;
+    const sf = 182.986; // 17 m2 = 182.986
+    const expectedResult = 13.3604;
+    const result = gpmToMmHr(gpm, sf);
+    expect(result).to.equal(expectedResult); 
+  });
+
+  it('mmHrToGpm', () => { 
+    const mmHr = 1;
+    const m2 = 1;
+    const expectedResult = 0.0044; // 0.00440287
+    const result = mmHrToGpm(mmHr, m2);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('mmHrToGpm 11', () => { 
+    const mmHr = 11;
+    const m2 = 1;
+    const expectedResult = 0.0484; // 0.0484315
+    const result = mmHrToGpm(mmHr, m2);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('mmHrToGpm 7', () => { 
+    const mmHr = 1;
+    const m2 = 7;
+    const expectedResult = 0.0308; // 0.0308201
+    const result = mmHrToGpm(mmHr, m2);
+    expect(result).to.equal(expectedResult); 
+  });
+
+  it('m3sToMmHr', () => { 
+    const m3s = 1;
+    const m2 = 1;
+    // 1 m3s = 1,000 l
+    // 1 hr = 3,600 s
+    // 1000 * 3600
+    const expectedResult = 3600000;
+    const result = m3sToMmHr(m3s, m2);
+    expect(result).to.equal(expectedResult); 
+  });
+
+  it('mmHrToM3S', () => { 
+    const mmHr = 3600;
+    const m2 = 1;
+    // 1 mm over 1 m2 = 1 l
+    // 3600 l / hr = 1 l/s
+    // 1 l = 0.001 m3
+    const expectedResult = 0.001;
+    const result = mmHrToM3S(mmHr, m2);
     expect(result).to.equal(expectedResult); 
   });
 

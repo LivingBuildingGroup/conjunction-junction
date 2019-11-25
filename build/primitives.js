@@ -88,7 +88,7 @@ var formatForPrint = function formatForPrint(data, options) {
     nan: 'NaN',
     triggerSize: 999999
   };
-  var o = isObjectLiteral(options) ? Object.assign({}, options, defaultOptions) : defaultOptions;
+  var o = isObjectLiteral(options) ? Object.assign({}, defaultOptions, options) : defaultOptions;
   var trueValue = typeof o.trueValue === 'string' ? o.trueValue : 'true';
   var falseValue = typeof o.falseValue === 'string' ? o.falseValue : 'false';
   var undefinedValue = typeof o.undefinedValue === 'string' ? o.undefinedValue : 'undefined';

@@ -519,6 +519,42 @@ const mmHrToLS = (mmHr, m2) => {
   return mmToL(mmS, m2);
 };
 
+const gpmToMmHr = (gpm, sf) => {
+  if(!isPrimitiveNumber(gpm)) return;
+  if(!isPrimitiveNumber(sf)) return;
+  const inchesHr = gpmToInchesHr(gpm, sf);
+  const mmHr = inchesToMm(inchesHr);
+  return mmHr;
+};
+
+const mmHrToGpm = (mmHr, m2) => {
+  if(!isPrimitiveNumber(mmHr)) return;
+  if(!isPrimitiveNumber(m2)) return;
+  const lMin = mmHrToLMin(mmHr, m2);
+  const gpm = lToGals(lMin);
+  return gpm;
+};
+
+
+const m3sToMmHr = (m3s, m2) => {
+  if(!isPrimitiveNumber(m3s)) return;
+  if(!isPrimitiveNumber(m2)) return;
+  const m3Hr = m3s * 3600;
+  const lHr = m3ToL(m3Hr);
+  const mmHr = lToMm(lHr, m2);
+  return mmHr;
+};
+
+const mmHrToM3S = (mmHr, m2) => {
+  if(!isPrimitiveNumber(mmHr)) return;
+  if(!isPrimitiveNumber(m2)) return;
+  const mmS = mmHr / 3600;
+  const lS = mmToL(mmS, m2);
+  const m3s = lToM3(lS);
+  return m3s;
+};
+
+
 // @@@@@@@@@@ MASS / WEIGHT @@@@@@@@@
 
 const lbsToKg = lbs => {
@@ -874,6 +910,12 @@ module.exports = {
 
   lSToMmHr,
   mmHrToLS,
+
+  gpmToMmHr,
+  mmHrToGpm,
+
+  m3sToMmHr,
+  mmHrToM3S,
 
   // @@@@@@@@@@ MASS / WEIGHT @@@@@@@@@
   lbsToKg,

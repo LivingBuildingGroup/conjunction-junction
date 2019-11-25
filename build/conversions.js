@@ -509,6 +509,40 @@ var mmHrToLS = function mmHrToLS(mmHr, m2) {
   return mmToL(mmS, m2);
 };
 
+var gpmToMmHr = function gpmToMmHr(gpm, sf) {
+  if (!isPrimitiveNumber(gpm)) return;
+  if (!isPrimitiveNumber(sf)) return;
+  var inchesHr = gpmToInchesHr(gpm, sf);
+  var mmHr = inchesToMm(inchesHr);
+  return mmHr;
+};
+
+var mmHrToGpm = function mmHrToGpm(mmHr, m2) {
+  if (!isPrimitiveNumber(mmHr)) return;
+  if (!isPrimitiveNumber(m2)) return;
+  var lMin = mmHrToLMin(mmHr, m2);
+  var gpm = lToGals(lMin);
+  return gpm;
+};
+
+var m3sToMmHr = function m3sToMmHr(m3s, m2) {
+  if (!isPrimitiveNumber(m3s)) return;
+  if (!isPrimitiveNumber(m2)) return;
+  var m3Hr = m3s * 3600;
+  var lHr = m3ToL(m3Hr);
+  var mmHr = lToMm(lHr, m2);
+  return mmHr;
+};
+
+var mmHrToM3S = function mmHrToM3S(mmHr, m2) {
+  if (!isPrimitiveNumber(mmHr)) return;
+  if (!isPrimitiveNumber(m2)) return;
+  var mmS = mmHr / 3600;
+  var lS = mmToL(mmS, m2);
+  var m3s = lToM3(lS);
+  return m3s;
+};
+
 // @@@@@@@@@@ MASS / WEIGHT @@@@@@@@@
 
 var lbsToKg = function lbsToKg(lbs) {
@@ -861,6 +895,12 @@ module.exports = {
 
   lSToMmHr: lSToMmHr,
   mmHrToLS: mmHrToLS,
+
+  gpmToMmHr: gpmToMmHr,
+  mmHrToGpm: mmHrToGpm,
+
+  m3sToMmHr: m3sToMmHr,
+  mmHrToM3S: mmHrToM3S,
 
   // @@@@@@@@@@ MASS / WEIGHT @@@@@@@@@
   lbsToKg: lbsToKg,

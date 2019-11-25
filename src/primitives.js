@@ -86,7 +86,7 @@ const formatForPrint = (data, options) => {    //plan to deprecate this, continu
     triggerSize: 999999,
   };
   const o = isObjectLiteral(options) ?
-    Object.assign({},options, defaultOptions) : 
+    Object.assign({},defaultOptions, options) : 
     defaultOptions ;
   const trueValue     = typeof o.trueValue    === 'string' ? o.trueValue    : 'true' ;
   const falseValue    = typeof o.falseValue   === 'string' ? o.falseValue   : 'false' ;
