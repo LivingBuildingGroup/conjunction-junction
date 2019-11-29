@@ -16,11 +16,25 @@ var mmToInches = function mmToInches(mm) {
   return precisionRound(mm * 0.0393701, 4);
 };
 
+var mmToInchesRound = function mmToInchesRound(mm) {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if (!isPrimitiveNumber(mm)) return;
+  return precisionRound(mm / 25, 0);
+};
+
 var inchesToMm = function inchesToMm(inches) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
   if (!isPrimitiveNumber(inches)) return;
   return precisionRound(inches * 25.4, 4);
+};
+
+var inchesToMmRound = function inchesToMmRound(inches) {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if (!isPrimitiveNumber(inches)) return;
+  return precisionRound(inches * 25, 0);
 };
 
 var mmToFt = function mmToFt(mm) {
@@ -804,7 +818,9 @@ var solarKwM2DayToUvProxy = function solarKwM2DayToUvProxy(kwM2) {
 module.exports = {
   // @@@@@@@@@@ DISTANCE @@@@@@@@@
   mmToInches: mmToInches,
+  mmToInchesRound: mmToInchesRound,
   inchesToMm: inchesToMm,
+  inchesToMmRound: inchesToMmRound,
 
   mmToFt: mmToFt,
   ftToMm: ftToMm,

@@ -16,11 +16,25 @@ const mmToInches = mm => {
   return precisionRound(mm  * 0.0393701, 4);
 };
 
+const mmToInchesRound = mm => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(mm)) return ;
+  return precisionRound(mm  / 25, 0);
+};
+
 const inchesToMm = inches => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
   if(!isPrimitiveNumber(inches)) return ;
   return precisionRound(inches * 25.4, 4);
+};
+
+const inchesToMmRound = inches => {
+  // input: number, output: either a number or undefined;
+  // precision: 4 decimal places, set here
+  if(!isPrimitiveNumber(inches)) return ;
+  return precisionRound(inches * 25, 0);
 };
 
 const mmToFt = mm => {
@@ -64,7 +78,7 @@ const m2ToSf = m2 => {
 };
 
 const sfToAc = sf => {
-    // input: number, output: either a number or undefined;
+  // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
   if(!isPrimitiveNumber(sf)) return ;
   return precisionRound(sf / 43560, 4);
@@ -73,8 +87,8 @@ const sfToAc = sf => {
 const acToSf = ac => {
   // input: number, output: either a number or undefined;
 // precision: 4 decimal places, set here
-if(!isPrimitiveNumber(ac)) return ;
-return precisionRound(ac * 43560, 4);
+  if(!isPrimitiveNumber(ac)) return ;
+  return precisionRound(ac * 43560, 4);
 };
 
 const acToHa = ac => {
@@ -819,7 +833,9 @@ const solarKwM2DayToUvProxy = kwM2 => {
 module.exports = {
   // @@@@@@@@@@ DISTANCE @@@@@@@@@
   mmToInches,
+  mmToInchesRound,
   inchesToMm,
+  inchesToMmRound,
 
   mmToFt,
   ftToMm,
