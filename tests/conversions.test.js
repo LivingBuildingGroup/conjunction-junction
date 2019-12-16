@@ -261,6 +261,11 @@ describe('conjunction-junction conversions', () => {
     const result = inchesToMmRound('input');
     expect(result).to.equal(expectedResult); 
   });
+  it('inchesToMmRound 0.5 = 12', () => {
+    const expectedResult = 12;
+    const result = inchesToMmRound(0.5, 1);
+    expect(result).to.equal(expectedResult); 
+  });
   it('inchesToMmRound 1 = 25', () => {
     const expectedResult = 25;
     const result = inchesToMmRound(1);
@@ -274,6 +279,16 @@ describe('conjunction-junction conversions', () => {
   it('inchesToMmRound 2.1 = 50', () => {
     const expectedResult = 50;
     const result = inchesToMmRound(2.1);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('inchesToMmRound 3.3 = 75', () => {
+    const expectedResult = 75;
+    const result = inchesToMmRound(3.3);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('inchesToMmRound 3.6 = 100', () => {
+    const expectedResult = 100;
+    const result = inchesToMmRound(3.6);
     expect(result).to.equal(expectedResult); 
   });
   it('inchesToMmRound 4.8 = 125', () => {
@@ -291,6 +306,7 @@ describe('conjunction-junction conversions', () => {
     const result = inchesToMmRound(5.1);
     expect(result).to.equal(expectedResult); 
   });
+
     
   it('feetToMeters converts feet to meters', () => {
     const expectedResult = 6.096;

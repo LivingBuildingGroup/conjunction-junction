@@ -30,12 +30,14 @@ const inchesToMm = inches => {
   return precisionRound(inches * 25.4, 4);
 };
 
-const inchesToMmRound = inches => {
+const inchesToMmRound = (inches, round=0) => {
   // input: number, output: either a number or undefined;
-  // precision: 4 decimal places, set here
   if(!isPrimitiveNumber(inches)) return ;
-  const mm = inches * 25;
-  const _inches = precisionRound(mm/25, 0);
+  const mm = Math.floor(inches * 25);
+  if(inches < 1) {
+    return mm;
+  }
+  const _inches = precisionRound(mm/25, round);
   return precisionRound(_inches * 25, 0);
 };
 

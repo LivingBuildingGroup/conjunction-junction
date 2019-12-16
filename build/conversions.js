@@ -31,11 +31,15 @@ var inchesToMm = function inchesToMm(inches) {
 };
 
 var inchesToMmRound = function inchesToMmRound(inches) {
+  var round = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
   // input: number, output: either a number or undefined;
-  // precision: 4 decimal places, set here
   if (!isPrimitiveNumber(inches)) return;
-  var mm = inches * 25;
-  var _inches = precisionRound(mm / 25, 0);
+  var mm = Math.floor(inches * 25);
+  if (inches < 1) {
+    return mm;
+  }
+  var _inches = precisionRound(mm / 25, round);
   return precisionRound(_inches * 25, 0);
 };
 
