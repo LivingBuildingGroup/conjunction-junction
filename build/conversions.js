@@ -34,7 +34,9 @@ var inchesToMmRound = function inchesToMmRound(inches) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
   if (!isPrimitiveNumber(inches)) return;
-  return precisionRound(inches * 25, 0);
+  var mm = inches * 25;
+  var _inches = precisionRound(mm / 25, 0);
+  return precisionRound(_inches * 25, 0);
 };
 
 var mmToFt = function mmToFt(mm) {

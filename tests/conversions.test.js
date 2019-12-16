@@ -6,7 +6,9 @@ const expect = chai.expect;
 const { 
   // @@@@@@@@@@ DISTANCE @@@@@@@@@
   mmToInches,
+  mmToInchesRound,
   inchesToMm,
+  inchesToMmRound,
  
   mmToFt,
   ftToMm,
@@ -207,6 +209,42 @@ describe('conjunction-junction conversions', () => {
     expect(result).to.equal(expectedResult); 
   });
 
+  it('mmToInchesRound returns error message if input is not a number', () => {
+    const expectedResult = undefined;
+    const result = mmToInchesRound('input');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('mmToInchesRound 25 = 1', () => {
+    const expectedResult = 1;
+    const result = mmToInchesRound(25);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('mmToInchesRound 50 = 2', () => {
+    const expectedResult = 2;
+    const result = mmToInchesRound(50);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('mmToInchesRound 53 = 2', () => {
+    const expectedResult = 2;
+    const result = mmToInchesRound(53);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('mmToInchesRound 102 = 4', () => {
+    const expectedResult = 4;
+    const result = mmToInchesRound(102);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('mmToInchesRound 115 = 4', () => {
+    const expectedResult = 4;
+    const result = mmToInchesRound(102);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('mmToInchesRound 123 = 5', () => {
+    const expectedResult = 5;
+    const result = mmToInchesRound(123);
+    expect(result).to.equal(expectedResult); 
+  });
+
   it('inchesToMm converts inches to millimeters', () => {
     const expectedResult = 304.8;
     const result = inchesToMm(12);
@@ -215,6 +253,42 @@ describe('conjunction-junction conversions', () => {
   it('inchesToMm returns error message if input is not a number', () => {
     const expectedResult = undefined;
     const result = inchesToMm('input');
+    expect(result).to.equal(expectedResult); 
+  });
+
+  it('inchesToMmRound returns error message if input is not a number', () => {
+    const expectedResult = undefined;
+    const result = inchesToMmRound('input');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('inchesToMmRound 1 = 25', () => {
+    const expectedResult = 25;
+    const result = inchesToMmRound(1);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('inchesToMmRound 2 = 50', () => {
+    const expectedResult = 50;
+    const result = inchesToMmRound(2);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('inchesToMmRound 2.1 = 50', () => {
+    const expectedResult = 50;
+    const result = inchesToMmRound(2.1);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('inchesToMmRound 4.8 = 125', () => {
+    const expectedResult = 125;
+    const result = inchesToMmRound(4.8);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('inchesToMmRound 3.3 = 75', () => {
+    const expectedResult = 75;
+    const result = inchesToMmRound(3.3);
+    expect(result).to.equal(expectedResult); 
+  });
+  it('inchesToMmRound 5.1 = 125', () => {
+    const expectedResult = 125;
+    const result = inchesToMmRound(5.1);
     expect(result).to.equal(expectedResult); 
   });
     
