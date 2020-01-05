@@ -56,20 +56,26 @@ const formatTimestampForSql = (value, sqlOption={type:'raw'}) => {
 
 // ADD QUESTION MARKS
 const escapeSpecial = data => {
-  const double   = data.split('"');
-  const noDouble = double.join('\'');
-  const single   = noDouble.split('\'');
-  const noSingle = single.join('\'\'');
-  return noSingle;
+  if(typeof data === 'string'){
+    const double   = data.split('"');
+    const noDouble = double.join('\'');
+    const single   = noDouble.split('\'');
+    const noSingle = single.join('\'\'');
+    return noSingle;
+  }
+  return data;
 };
 
 // ADD QUESTION MARKS
 const unEscapeSpecial = data => {
-  const splitSingle = data.split('\'\'');
-  const single = splitSingle.join('\'');
-  const splitQ = single.split('$1');
-  const question = splitQ.join('?');
-  return question;
+  if(typeof data === 'string'){
+    const splitSingle = data.split('\'\'');
+    const single = splitSingle.join('\'');
+    const splitQ = single.split('$1');
+    const question = splitQ.join('?');
+    return question;
+  }
+  return data;
 };
 
 const formatDataForSql = (data, key, option={type:'raw'}) => {
@@ -297,7 +303,7 @@ const createSqlFetchTableKeys = input => {
       `${matchingKey}_${joinToTail}` :            // e.g. id_profile if current table is profiles, and joining down
       `${matchingKey}_${joinFromTail}` ;          // e.g. id_cassette if current table is profiles, and joining up to cassette
     const joinArrangement = joinDir === 'down' ?  // i.e. key is to the left
-    `${joinFrom}.${joinKey} = ${joinTo}.${matchingKey}` :   // e.g. cassettes.id_profile = profiles.id
+      `${joinFrom}.${joinKey} = ${joinTo}.${matchingKey}` :   // e.g. cassettes.id_profile = profiles.id
       `${joinFrom}.${matchingKey} = ${joinTo}.${joinKey}` ; // e.g. coinuses.id_profile = profiles.id
     const joinType = joinTypes[i];
     return `${joinType} join ${joinTo} on ${joinArrangement}`;
