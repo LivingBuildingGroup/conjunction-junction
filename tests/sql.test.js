@@ -96,9 +96,16 @@ describe('conjunction-junction db', ()=> {
     const result = escapeSpecial(word);
     expect(result).to.equal(expectedResult);
   });
-  it('escapeSpecial double quote', ()=> { 
+  it('unEscapeSpecial single quotes', ()=> { 
+    const word = '"un-escape \'\'single\'\' quotes (")';
+    const expectedResult = '"un-escape \'single\' quotes (")';
+    const result = unEscapeSpecial(word);
+    expect(result).to.equal(expectedResult);
+  });
+
+  it('escapeSpecial double quote " to single', ()=> { 
     const word = 'escape double quotes (")';
-    const expectedResult = 'escape double quotes ("")';
+    const expectedResult = 'escape double quotes (\')';
     const result = escapeSpecial(word);
     expect(result).to.equal(expectedResult);
   });
@@ -121,12 +128,7 @@ describe('conjunction-junction db', ()=> {
     const result = unEscapeSpecial(word);
     expect(result).to.equal(expectedResult);
   });
-  it('unEscapeSpecial single quotes', ()=> { 
-    const word = '"un-escape \'\'single\'\' quotes (")';
-    const expectedResult = '"un-escape \'single\' quotes (")';
-    const result = unEscapeSpecial(word);
-    expect(result).to.equal(expectedResult);
-  });
+
   it('unEscapeSpecial mult single quotes', ()=> { 
     const word = '"un-escape \'\'\'single\'\' quotes (\'\')';
     const expectedResult = '"un-escape \'\'single\' quotes (\')';
@@ -148,6 +150,19 @@ describe('conjunction-junction db', ()=> {
   it('unEscapeSpecial many single quotes', ()=> { 
     const word = '"un-escape """single"""""")';
     const expectedResult = '"un-escape ""single""")';
+    const result = unEscapeSpecial(word);
+    expect(result).to.equal(expectedResult);
+  });
+
+  it('escapeSpecial question mark', ()=> { 
+    const word = 'Brad?';
+    const expectedResult = 'Brad?'; // SQL does this anyway
+    const result = escapeSpecial(word);
+    expect(result).to.equal(expectedResult);
+  });
+  it('unEscapeSpecial question mark', ()=> { 
+    const word = 'will this $1 be replaced$1';
+    const expectedResult = 'will this ? be replaced?';
     const result = unEscapeSpecial(word);
     expect(result).to.equal(expectedResult);
   });

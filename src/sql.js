@@ -58,7 +58,7 @@ const formatTimestampForSql = (value, sqlOption={type:'raw'}) => {
 const escapeSpecial = data => {
   if(typeof data === 'string'){
     const double   = data.split('"');
-    const noDouble = double.join('\'');
+    const noDouble = double.join('');
     const single   = noDouble.split('\'');
     const noSingle = single.join('\'\'');
     return noSingle;
@@ -71,9 +71,7 @@ const unEscapeSpecial = data => {
   if(typeof data === 'string'){
     const splitSingle = data.split('\'\'');
     const single = splitSingle.join('\'');
-    const splitQ = single.split('$1');
-    const question = splitQ.join('?');
-    return question;
+    return single;
   }
   return data;
 };

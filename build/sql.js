@@ -66,7 +66,7 @@ var formatTimestampForSql = function formatTimestampForSql(value) {
 var escapeSpecial = function escapeSpecial(data) {
   if (typeof data === 'string') {
     var double = data.split('"');
-    var noDouble = double.join('\'');
+    var noDouble = double.join('');
     var single = noDouble.split('\'');
     var noSingle = single.join('\'\'');
     return noSingle;
@@ -79,9 +79,7 @@ var unEscapeSpecial = function unEscapeSpecial(data) {
   if (typeof data === 'string') {
     var splitSingle = data.split('\'\'');
     var single = splitSingle.join('\'');
-    var splitQ = single.split('$1');
-    var question = splitQ.join('?');
-    return question;
+    return single;
   }
   return data;
 };
