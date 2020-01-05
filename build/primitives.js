@@ -242,6 +242,12 @@ var convertScToSpace = function convertScToSpace(word) {
   var split = word.split('_');
   return split.join(' ');
 };
+var isValidEmail = function isValidEmail(mail) {
+  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+    return true;
+  }
+  return false;
+};
 
 module.exports = {
   // types
@@ -260,5 +266,6 @@ module.exports = {
   convertScToCc: convertScToCc,
   convertCcToSc: convertCcToSc,
   convertCcToSpace: convertCcToSpace,
-  convertScToSpace: convertScToSpace
+  convertScToSpace: convertScToSpace,
+  isValidEmail: isValidEmail
 };

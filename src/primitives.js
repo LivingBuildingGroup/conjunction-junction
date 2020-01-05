@@ -243,6 +243,12 @@ const convertScToSpace = word => {
   const split = word.split('_');
   return split.join(' ');
 };
+const isValidEmail = mail => {
+  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)){
+    return true;
+  }
+  return false;
+};
 
 module.exports = { 
   // types
@@ -262,4 +268,5 @@ module.exports = {
   convertCcToSc,
   convertCcToSpace,
   convertScToSpace,
+  isValidEmail,
 };
