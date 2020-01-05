@@ -64,18 +64,26 @@ var formatTimestampForSql = function formatTimestampForSql(value) {
 
 // ADD QUESTION MARKS
 var escapeSpecial = function escapeSpecial(data) {
-  var double = data.split('"');
-  var noDouble = double.join('');
-  var single = noDouble.split('\'');
-  var noSingle = single.join('\'\'');
-  return noSingle;
+  if (typeof data === 'string') {
+    var double = data.split('"');
+    var noDouble = double.join('\'');
+    var single = noDouble.split('\'');
+    var noSingle = single.join('\'\'');
+    return noSingle;
+  }
+  return data;
 };
 
 // ADD QUESTION MARKS
 var unEscapeSpecial = function unEscapeSpecial(data) {
-  var splitSingle = data.split('\'\'');
-  var single = splitSingle.join('\'');
-  return single;
+  if (typeof data === 'string') {
+    var splitSingle = data.split('\'\'');
+    var single = splitSingle.join('\'');
+    var splitQ = single.split('$1');
+    var question = splitQ.join('?');
+    return question;
+  }
+  return data;
 };
 
 var formatDataForSql = function formatDataForSql(data, key) {
