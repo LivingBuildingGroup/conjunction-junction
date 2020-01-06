@@ -71,7 +71,9 @@ const unEscapeSpecial = data => {
   if(typeof data === 'string'){
     const splitSingle = data.split('\'\'');
     const single = splitSingle.join('\'');
-    return single;
+    const noQ = single.split('$1');
+    const withQ = noQ.join('?');
+    return withQ;
   }
   return data;
 };
