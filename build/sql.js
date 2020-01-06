@@ -79,7 +79,9 @@ var unEscapeSpecial = function unEscapeSpecial(data) {
   if (typeof data === 'string') {
     var splitSingle = data.split('\'\'');
     var single = splitSingle.join('\'');
-    return single;
+    var noQ = single.split('$1');
+    var withQ = noQ.join('?');
+    return withQ;
   }
   return data;
 };
