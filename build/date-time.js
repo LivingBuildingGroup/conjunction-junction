@@ -11,6 +11,32 @@ var _require = require('./basic'),
     precisionRound = _require.precisionRound,
     isObjectLiteral = _require.isObjectLiteral;
 
+var asHours = function asHours(mins) {
+  var decimal = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+  if (!isPrimitiveNumber(mins)) {
+    return;
+  }
+  if (isPrimitiveNumber(decimal)) {
+    return precisionRound(mins / 60, decimal);
+  } else {
+    return Math.ceil(mins / 60);
+  }
+};
+
+var asMinutes = function asMinutes(hours) {
+  var decimal = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
+  if (!isPrimitiveNumber(hours)) {
+    return;
+  }
+  if (decimal === null) {
+    return Math.floor(hours * 60);
+  }
+  var rnd = isPrimitiveNumber(decimal) ? decimal : 0;
+  return precisionRound(hours * 60, rnd);
+};
+
 // @@@@@@@@@@@@@@ VALIDATION @@@@@@@@@@@@
 
 var isValidDate = function isValidDate(date) {
@@ -691,6 +717,8 @@ var rangeIsIncluded = function rangeIsIncluded(eventStartIn, eventEndIn, rangeSt
 
 
 module.exports = {
+  asHours: asHours,
+  asMinutes: asMinutes,
   isValidDate: isValidDate,
   calcDayOfYearFromTimestamp: calcDayOfYearFromTimestamp,
   calcDayOfYearFromIntegers: calcDayOfYearFromIntegers,

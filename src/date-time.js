@@ -7,6 +7,28 @@ const { isPrimitiveNumber,
   precisionRound, 
   isObjectLiteral } = require('./basic');
 
+const asHours = (mins, decimal=null) => {
+  if(!isPrimitiveNumber(mins)){
+    return;
+  }
+  if(isPrimitiveNumber(decimal)){
+    return precisionRound(mins/60,decimal);
+  } else {
+    return Math.ceil(mins / 60);
+  }
+};
+
+const asMinutes = (hours, decimal=0) => {
+  if(!isPrimitiveNumber(hours)){
+    return;
+  }
+  if(decimal === null){
+    return Math.floor(hours * 60);
+  }
+  const rnd = isPrimitiveNumber(decimal) ? decimal : 0 ;
+  return precisionRound(hours * 60, rnd);
+};
+  
 // @@@@@@@@@@@@@@ VALIDATION @@@@@@@@@@@@
 
 const isValidDate = date => {
@@ -816,6 +838,8 @@ const rangeIsIncluded = (eventStartIn, eventEndIn, rangeStartIn, rangeEndIn) => 
 
 
 module.exports = {
+  asHours,
+  asMinutes,
   isValidDate,
   calcDayOfYearFromTimestamp,
   calcDayOfYearFromIntegers,

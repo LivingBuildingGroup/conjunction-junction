@@ -76,6 +76,14 @@ var numberToModNumber = function numberToModNumber(value, consolidateBy) {
   return value;
 };
 
+var asNum = function asNum(num, def) {
+  if (isPrimitiveNumber(num)) {
+    return num;
+  }
+  var defResult = isPrimitiveNumber(def) ? def : null;
+  return defResult;
+};
+
 // @@@@@@@@@@@@@@@ MIXED TYPES @@@@@@@@@@@@@@@@
 
 var formatForPrint = function formatForPrint(data, options) {
@@ -256,6 +264,7 @@ module.exports = {
   generateRandomNumber: generateRandomNumber,
   numberToModNumber: numberToModNumber,
   printNumber: printNumber,
+  asNum: asNum,
   // mixed types
   formatForPrint: formatForPrint,
   print: print,
