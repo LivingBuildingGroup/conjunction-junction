@@ -97,59 +97,59 @@ describe('conjunction-junction db', ()=> {
     expect(result).to.equal(expectedResult);
   });
   it('unEscapeSpecial single quotes', ()=> { 
-    const word = '"un-escape \'\'single\'\' quotes (")';
-    const expectedResult = '"un-escape \'single\' quotes (")';
+    const word =           '"un-escape \'\'single\'\' quotes (")';
+    const expectedResult = '\'un-escape \'single\' quotes (\')';
     const result = unEscapeSpecial(word);
     expect(result).to.equal(expectedResult);
   });
 
   it('escapeSpecial double quote " to single', ()=> { 
-    const word = 'escape double quotes (")';
-    const expectedResult = 'escape double quotes (\')';
+    const word =           'escape double quotes (")';
+    const expectedResult = 'escape double quotes (\'\')';
     const result = escapeSpecial(word);
     expect(result).to.equal(expectedResult);
   });
   it('escapeSpecial both quotes', ()=> { 
-    const word = 'escape both\' quotes (")';
-    const expectedResult = 'escape both\'\' quotes ("")';
+    const word =           'escape both\' quotes (")';
+    const expectedResult = 'escape both\'\' quotes (\'\')';
     const result = escapeSpecial(word);
     expect(result).to.equal(expectedResult);
   });
   it('escapeSpecial mixed quotes', ()=> { 
-    const word = '"escape "mixed\'" quotes (\'")';
-    const expectedResult = '""escape ""mixed\'\'"" quotes (\'\'"")';
+    const word =           '"escape "mixed\'" quotes (\'")';
+    const expectedResult = '\'\'escape \'\'mixed\'\'\'\' quotes (\'\'\'\')';
     const result = escapeSpecial(word);
     expect(result).to.equal(expectedResult);
   });
 
   it('unEscapeSpecial double quotes', ()=> { 
-    const word = '"un-escape ""double"" quotes (")';
-    const expectedResult = '"un-escape "double" quotes (")';
+    const word =           '"un-escape ""double"" quotes (")';
+    const expectedResult = '\'un-escape \'double\' quotes (\')';
     const result = unEscapeSpecial(word);
     expect(result).to.equal(expectedResult);
   });
 
   it('unEscapeSpecial mult single quotes', ()=> { 
-    const word = '"un-escape \'\'\'single\'\' quotes (\'\')';
-    const expectedResult = '"un-escape \'\'single\' quotes (\')';
+    const word =           '"un-escape \'\'\'single\'\' quotes (\'\')';
+    const expectedResult = '\'un-escape \'\'single\' quotes (\')';
     const result = unEscapeSpecial(word);
     expect(result).to.equal(expectedResult);
   });
   it('unEscapeSpecial many single quotes', ()=> { 
-    const word = '"un-escape \'\'\'single\'\'\'\'\'\')';
-    const expectedResult = '"un-escape \'\'single\'\'\')';
+    const word =           '"un-escape \'\'\'single\'\'\'\'\'\')';
+    const expectedResult = '\'un-escape \'\'single\'\'\')';
     const result = unEscapeSpecial(word);
     expect(result).to.equal(expectedResult);
   });
   it('unEscapeSpecial mult single quotes', ()=> { 
-    const word = '"un-escape """single"" quotes ("")';
-    const expectedResult = '"un-escape ""single" quotes (")';
+    const word =           '"un-escape """single"" quotes ("")';
+    const expectedResult = '\'un-escape \'\'single\' quotes (\')';
     const result = unEscapeSpecial(word);
     expect(result).to.equal(expectedResult);
   });
   it('unEscapeSpecial many single quotes', ()=> { 
-    const word = '"un-escape """single"""""")';
-    const expectedResult = '"un-escape ""single""")';
+    const word =           '"un-escape """single"""""")';
+    const expectedResult = '\'un-escape \'\'single\'\'\')';
     const result = unEscapeSpecial(word);
     expect(result).to.equal(expectedResult);
   });
@@ -250,26 +250,27 @@ describe('conjunction-junction db', ()=> {
     expect(result).to.equal(expectedResult);
   });
   it('formatDataForSql string raw mixed quotes', ()=> { 
-    const value = '"escape "mixed\'" quotes (\'")';
-    const escapedValue = '""escape ""mixed\'\'"" quotes (\'\'"")';
+    const value =        '"escape "mixed\'" quotes (\'")';
+    const escapedValue = '\'\'escape \'\'mixed\'\'\'\' quotes (\'\'\'\')';
     const option = {type:'raw'};
     const result = formatDataForSql(value,'key', option);
     const expectedResult = `'${escapedValue}'`;
     expect(result).to.equal(expectedResult);
   });
+  it('formatDataForSql string knex mixed quotes', ()=> { 
+    const value =        '"escape "mixed\'" quotes (\'")';
+    const escapedValue = '\'\'escape \'\'mixed\'\'\'\' quotes (\'\'\'\')';
+    const option = {type:'knex'};
+    const result = formatDataForSql(value,'key', option);
+    const expectedResult = escapedValue;
+    expect(result).to.equal(expectedResult);
+  });
+
   it('formatDataForSql string knex', ()=> { 
     const value = 'a string';
     const option = {type:'knex'};
     const result = formatDataForSql(value,'key', option);
     const expectedResult = value;
-    expect(result).to.equal(expectedResult);
-  });
-  it('formatDataForSql string knex mixed quotes', ()=> { 
-    const value = '"escape "mixed\'" quotes (\'")';
-    const escapedValue = '""escape ""mixed\'\'"" quotes (\'\'"")';
-    const option = {type:'knex'};
-    const result = formatDataForSql(value,'key', option);
-    const expectedResult = escapedValue;
     expect(result).to.equal(expectedResult);
   });
   it('formatDataForSql number raw', ()=> { 

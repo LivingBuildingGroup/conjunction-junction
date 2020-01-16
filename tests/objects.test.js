@@ -2837,11 +2837,24 @@ describe('conjunction-junction objects', () => {
     const array = [
       1,2,3,4,5
     ];
-    const itemToUpdate = 3;
+    const itemToUpdate = 9;
     const expectedResult = [
-      3,2,3,4,5
+      9,2,3,4,5
     ];
     const result = immutableArrayInsert(index, array, itemToUpdate);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('immutableArrayInsert inserts before index 0, primitives', () => {
+    const index = 0;
+    const array = [
+      1,2,3,4,5
+    ];
+    const itemToUpdate = 9;
+    const expectedResult = [
+      9,1,2,3,4,5
+    ];
+    const replace = false;
+    const result = immutableArrayInsert(index, array, itemToUpdate, replace);
     expect(result).to.deep.equal(expectedResult);
   });
   it('immutableArrayInsert replaces index middle, primitives', () => {
@@ -2849,11 +2862,24 @@ describe('conjunction-junction objects', () => {
     const array = [
       1,2,3,4,5
     ];
-    const itemToUpdate = 3;
+    const itemToUpdate = 9;
     const expectedResult = [
-      1,3,3,4,5
+      1,9,3,4,5
     ];
     const result = immutableArrayInsert(index, array, itemToUpdate);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('immutableArrayInsert inserts before index 1, primitives', () => {
+    const index = 1;
+    const array = [
+      1,2,3,4,5
+    ];
+    const itemToUpdate = 9;
+    const expectedResult = [
+      1,9,2,3,4,5
+    ];
+    const replace = false;
+    const result = immutableArrayInsert(index, array, itemToUpdate, replace);
     expect(result).to.deep.equal(expectedResult);
   });
   it('immutableArrayInsert replaces index last, primitives', () => {
@@ -2866,6 +2892,71 @@ describe('conjunction-junction objects', () => {
       1,2,3,4,3
     ];
     const result = immutableArrayInsert(index, array, itemToUpdate);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('immutableArrayInsert inserts before index last, primitives', () => {
+    const index = 4;
+    const array = [
+      1,2,3,4,5
+    ];
+    const itemToUpdate = 8;
+    const expectedResult = [
+      1,2,3,4,8,5
+    ];
+    const replace = false;
+    const result = immutableArrayInsert(index, array, itemToUpdate, replace);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('immutableArrayInsert adds to end index=length no replace, primitives', () => {
+    const index = 5;
+    const array = [
+      1,2,3,4,5
+    ];
+    const itemToUpdate = 8;
+    const expectedResult = [
+      1,2,3,4,5,8
+    ];
+    const replace = false;
+    const result = immutableArrayInsert(index, array, itemToUpdate, replace);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('immutableArrayInsert adds to end index>length no replace, primitives', () => {
+    const index = 95;
+    const array = [
+      1,2,3,4,5
+    ];
+    const itemToUpdate = 8;
+    const expectedResult = [
+      1,2,3,4,5,8
+    ];
+    const replace = false;
+    const result = immutableArrayInsert(index, array, itemToUpdate, replace);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('immutableArrayInsert replace end index=length with replace, primitives', () => {
+    const index = 5;
+    const array = [
+      1,2,3,4,5
+    ];
+    const itemToUpdate = 8;
+    const expectedResult = [
+      1,2,3,4,8
+    ];
+    const replace = true;
+    const result = immutableArrayInsert(index, array, itemToUpdate, replace);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('immutableArrayInsert replace end index>length with replace, primitives', () => {
+    const index = 55;
+    const array = [
+      1,2,3,4,5
+    ];
+    const itemToUpdate = 8;
+    const expectedResult = [
+      1,2,3,4,8
+    ];
+    const replace = true;
+    const result = immutableArrayInsert(index, array, itemToUpdate, replace);
     expect(result).to.deep.equal(expectedResult);
   });
   it('immutableArrayInsert prepends on null, primitives', () => {

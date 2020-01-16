@@ -766,27 +766,30 @@ const deltaArray = (array1, array2) => {
   return arrayOfDeltas;
 };
 
-const immutableArrayInsert = (index, array, itemToUpdate) => {
+const immutableArrayInsert = (index, array, itemToUpdate, replace=true) => {
   // input: index: integer to replace in array.
   // input: array: existing array to edit
   // input: itemToUpdate: what to put into the array: can be any data type
   // output: new array with item added (prepended, appended, replaced, based on index)
   // invalid index defaults to prepend
+  // REPLACE if true will replace the item at the existing index
+  // if replace is false, itemToUpdate will be inserted BEFORE the index in question
   if(!Array.isArray(array))      return [];
   if(itemToUpdate === undefined) return array;
   if (!isPrimitiveNumber(index)) return [itemToUpdate, ...array];
   if (index <= 0){
-    const remainder = array.slice(1,array.length);
+    const remainder = replace ? array.slice(1,array.length) : array ;
     const newArray = [itemToUpdate, ...remainder];
     return newArray;
   }
-  if (index >= array.length -1){
+  if (index >= array.length -1 && replace){
     const remainder = array.slice(0,array.length-1);
     const newArray =  [...remainder, itemToUpdate];
     return newArray;
   }
   const remainderFront = array.slice(0,index);
-  const remainderBack = array.slice(index+1,array.length);
+  const backIndex = replace ? index+1 : index;
+  const remainderBack = array.slice(backIndex,array.length);
   const newArray = [...remainderFront, itemToUpdate, ...remainderBack];
   return newArray;
 };

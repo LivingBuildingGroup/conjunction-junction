@@ -58,7 +58,7 @@ const formatTimestampForSql = (value, sqlOption={type:'raw'}) => {
 const escapeSpecial = data => {
   if(typeof data === 'string'){
     const double   = data.split('"');
-    const noDouble = double.join('');
+    const noDouble = double.join('\'');
     const single   = noDouble.split('\'');
     const noSingle = single.join('\'\'');
     return noSingle;
@@ -69,7 +69,9 @@ const escapeSpecial = data => {
 // ADD QUESTION MARKS
 const unEscapeSpecial = data => {
   if(typeof data === 'string'){
-    const splitSingle = data.split('\'\'');
+    const splitDouble = data.split('"');
+    const double = splitDouble.join('\'');
+    const splitSingle = double.split('\'\'');
     const single = splitSingle.join('\'');
     const noQ = single.split('$1');
     const withQ = noQ.join('?');

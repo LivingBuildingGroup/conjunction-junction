@@ -798,26 +798,31 @@ var deltaArray = function deltaArray(array1, array2) {
 };
 
 var immutableArrayInsert = function immutableArrayInsert(index, array, itemToUpdate) {
+  var replace = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+
   // input: index: integer to replace in array.
   // input: array: existing array to edit
   // input: itemToUpdate: what to put into the array: can be any data type
   // output: new array with item added (prepended, appended, replaced, based on index)
   // invalid index defaults to prepend
+  // REPLACE if true will replace the item at the existing index
+  // if replace is false, itemToUpdate will be inserted BEFORE the index in question
   if (!Array.isArray(array)) return [];
   if (itemToUpdate === undefined) return array;
   if (!isPrimitiveNumber(index)) return [itemToUpdate].concat(_toConsumableArray(array));
   if (index <= 0) {
-    var remainder = array.slice(1, array.length);
+    var remainder = replace ? array.slice(1, array.length) : array;
     var _newArray3 = [itemToUpdate].concat(_toConsumableArray(remainder));
     return _newArray3;
   }
-  if (index >= array.length - 1) {
+  if (index >= array.length - 1 && replace) {
     var _remainder = array.slice(0, array.length - 1);
     var _newArray4 = [].concat(_toConsumableArray(_remainder), [itemToUpdate]);
     return _newArray4;
   }
   var remainderFront = array.slice(0, index);
-  var remainderBack = array.slice(index + 1, array.length);
+  var backIndex = replace ? index + 1 : index;
+  var remainderBack = array.slice(backIndex, array.length);
   var newArray = [].concat(_toConsumableArray(remainderFront), [itemToUpdate], _toConsumableArray(remainderBack));
   return newArray;
 };
