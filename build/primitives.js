@@ -84,6 +84,11 @@ var asNum = function asNum(num, def) {
   return defResult;
 };
 
+var parseFloatInput = function parseFloatInput(value) {
+  var revisedValue = value === '0' || value === '.' || value === '0.' || value === '.0' || value === '.00' || value === '0.0' || value === '0.00' ? value : parseFloat(value);
+  return revisedValue;
+};
+
 // @@@@@@@@@@@@@@@ MIXED TYPES @@@@@@@@@@@@@@@@
 
 var formatForPrint = function formatForPrint(data, options) {
@@ -265,6 +270,7 @@ module.exports = {
   numberToModNumber: numberToModNumber,
   printNumber: printNumber,
   asNum: asNum,
+  parseFloatInput: parseFloatInput,
   // mixed types
   formatForPrint: formatForPrint,
   print: print,

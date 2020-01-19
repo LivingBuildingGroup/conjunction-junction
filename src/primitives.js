@@ -82,6 +82,20 @@ const asNum = (num,def) => {
   return defResult;
 };
 
+const parseFloatInput = value => {
+  const revisedValue = 
+    value === '0'   || 
+    value ===  '.'  || 
+    value === '0.'  || 
+    value ===  '.0' || 
+    value ===  '.00'|| 
+    value === '0.0' || 
+    value === '0.00' ?
+      value :
+      parseFloat(value);
+  return revisedValue;
+};
+
 // @@@@@@@@@@@@@@@ MIXED TYPES @@@@@@@@@@@@@@@@
 
 const formatForPrint = (data, options) => {    //plan to deprecate this, continue function but rename
@@ -266,6 +280,7 @@ module.exports = {
   numberToModNumber,
   printNumber,
   asNum,
+  parseFloatInput,
   // mixed types
   formatForPrint,
   print,
