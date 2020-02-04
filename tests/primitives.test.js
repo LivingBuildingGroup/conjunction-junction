@@ -188,6 +188,22 @@ describe('conjunction-junction primitives', () => {
       expect(result).to.equal('');
     });
   });
+  it('convertScToCc works on slashes', ()=>{
+    const strings = [
+      'rainTotalMm/s', 'rainTotalMm/h', 'rainTotalMmh',
+      'runoffSheetL/s/ha', 'runoff_sheet_l/s/ha', 'targetMaxdrCfs/ac',
+      'just some words case'
+    ];
+    const expectedResult = [
+      'rainTotalMmS', 'rainTotalMmH', 'rainTotalMmh',
+      'runoffSheetLSHa', 'runoff_sheet_lSHa', 'targetMaxdrCfsAc',
+      'just some words case'
+    ];
+    strings.forEach((s,i)=>{
+      const result = convertScToCc(s, '/');
+      expect(result).to.equal(expectedResult[i]);
+    });
+  });
 
   it('convertCcToSc converts on valid input', () => { 
     const words           = ['theWord' ,'123 4 Happy' ,'camelCase', 'snake_case', 'mixed-up_case_Cases' ,'case 3', 'case4'];

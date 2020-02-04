@@ -193,17 +193,19 @@ const lowerCaseWord = word => {
   return `${front.toLowerCase()}${end}`;
 };
 
-const convertScToCc = word => {
+const convertScToCc = (word, divider='_') => {
   // input: string in snake_case
   // disregards any other type of formatting, such as spaces and hyphens
   if(isPrimitiveNumber(word)) return `${word}`;
   if(typeof word !== 'string') return '';
-  const array = word.split('_');
+  const array = word.split(divider);
   const first = array[0];
   const others = array.slice(1,array.length);
   const othersCamel = others.map(word=>titleCaseWord(word));
   return `${first}${othersCamel.join('')}`;
 };
+
+const caps  = {A:true,B:true,C:true,D:true,E:true,F:true,G:true,H:true,I:true,J:true,K:true,L:true,M:true,N:true,O:true,P:true,Q:true,R:true,S:true,T:true,U:true,V:true,W:true,X:true,Y:true,Z:true};
 
 const convertCcToSc = (word, divider, options={}) => {
   // Future efficiency improvement needed
@@ -214,7 +216,6 @@ const convertCcToSc = (word, divider, options={}) => {
   const _divider = isPrimitiveNumber(divider) || typeof divider === 'string' ?
     divider : '_';
   let newWord = '';
-  const caps  = {A:true,B:true,C:true,D:true,E:true,F:true,G:true,H:true,I:true,J:true,K:true,L:true,M:true,N:true,O:true,P:true,Q:true,R:true,S:true,T:true,U:true,V:true,W:true,X:true,Y:true,Z:true};
   let numbers;
   if(options.numbers){
     numbers = {};
@@ -242,22 +243,6 @@ const convertCcToSc = (word, divider, options={}) => {
 const convertCcToSpace = word => {
   console.warn('convertCcToSpace is deprecated, use convertCcToSc(word, " ")');
   return convertCcToSc(word, ' ');
-  // input: string in camelCase
-  // disregards any other type of formatting, such as spaces and hyphens
-  // if(isPrimitiveNumber(word)) return `${word}`;
-  // if(typeof word !== 'string') return '';
-  // // const theWord = 'theWord';
-  // let newWord = '';
-  // const caps  = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-  // const lower = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']; 
-  // for(let i=0; i<= word.length; i++ ) {
-  //   const char =
-  //     caps.includes(word.charAt(i)) ?
-  //       ` ${lower[caps.findIndex(letter=>letter===word.charAt(i))]}`
-  //       : word.charAt(i);
-  //   newWord += char;
-  // }
-  // return newWord;
 };
 
 const convertScToSpace = word => {

@@ -186,11 +186,13 @@ var lowerCaseWord = function lowerCaseWord(word) {
 };
 
 var convertScToCc = function convertScToCc(word) {
+  var divider = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '_';
+
   // input: string in snake_case
   // disregards any other type of formatting, such as spaces and hyphens
   if (isPrimitiveNumber(word)) return '' + word;
   if (typeof word !== 'string') return '';
-  var array = word.split('_');
+  var array = word.split(divider);
   var first = array[0];
   var others = array.slice(1, array.length);
   var othersCamel = others.map(function (word) {
@@ -198,6 +200,8 @@ var convertScToCc = function convertScToCc(word) {
   });
   return '' + first + othersCamel.join('');
 };
+
+var caps = { A: true, B: true, C: true, D: true, E: true, F: true, G: true, H: true, I: true, J: true, K: true, L: true, M: true, N: true, O: true, P: true, Q: true, R: true, S: true, T: true, U: true, V: true, W: true, X: true, Y: true, Z: true };
 
 var convertCcToSc = function convertCcToSc(word, divider) {
   var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -209,7 +213,6 @@ var convertCcToSc = function convertCcToSc(word, divider) {
   if (typeof word !== 'string') return '';
   var _divider = isPrimitiveNumber(divider) || typeof divider === 'string' ? divider : '_';
   var newWord = '';
-  var caps = { A: true, B: true, C: true, D: true, E: true, F: true, G: true, H: true, I: true, J: true, K: true, L: true, M: true, N: true, O: true, P: true, Q: true, R: true, S: true, T: true, U: true, V: true, W: true, X: true, Y: true, Z: true };
   var numbers = void 0;
   if (options.numbers) {
     numbers = {};
@@ -232,22 +235,6 @@ var convertCcToSc = function convertCcToSc(word, divider) {
 var convertCcToSpace = function convertCcToSpace(word) {
   console.warn('convertCcToSpace is deprecated, use convertCcToSc(word, " ")');
   return convertCcToSc(word, ' ');
-  // input: string in camelCase
-  // disregards any other type of formatting, such as spaces and hyphens
-  // if(isPrimitiveNumber(word)) return `${word}`;
-  // if(typeof word !== 'string') return '';
-  // // const theWord = 'theWord';
-  // let newWord = '';
-  // const caps  = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-  // const lower = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']; 
-  // for(let i=0; i<= word.length; i++ ) {
-  //   const char =
-  //     caps.includes(word.charAt(i)) ?
-  //       ` ${lower[caps.findIndex(letter=>letter===word.charAt(i))]}`
-  //       : word.charAt(i);
-  //   newWord += char;
-  // }
-  // return newWord;
 };
 
 var convertScToSpace = function convertScToSpace(word) {
