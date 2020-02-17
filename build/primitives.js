@@ -239,10 +239,11 @@ var convertCcToSpace = function convertCcToSpace(word) {
 
 var convertScToSpace = function convertScToSpace(word) {
   var divider = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '_';
+  var replacer = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ' ';
 
   if (typeof word !== 'string') return '';
   var split = word.split(divider);
-  return split.join(' ');
+  return split.join(replacer);
 };
 var isValidEmail = function isValidEmail(mail) {
   if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {

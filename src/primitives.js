@@ -245,10 +245,10 @@ const convertCcToSpace = word => {
   return convertCcToSc(word, ' ');
 };
 
-const convertScToSpace = (word, divider='_') => {
+const convertScToSpace = (word, divider='_', replacer=' ') => {
   if(typeof word !== 'string') return '';
   const split = word.split(divider);
-  return split.join(' ');
+  return split.join(replacer);
 };
 const isValidEmail = mail => {
   if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)){
