@@ -245,9 +245,9 @@ const convertCcToSpace = word => {
   return convertCcToSc(word, ' ');
 };
 
-const convertScToSpace = word => {
+const convertScToSpace = (word, divider='_') => {
   if(typeof word !== 'string') return '';
-  const split = word.split('_');
+  const split = word.split(divider);
   return split.join(' ');
 };
 const isValidEmail = mail => {

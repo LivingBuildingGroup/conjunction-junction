@@ -238,8 +238,10 @@ var convertCcToSpace = function convertCcToSpace(word) {
 };
 
 var convertScToSpace = function convertScToSpace(word) {
+  var divider = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '_';
+
   if (typeof word !== 'string') return '';
-  var split = word.split('_');
+  var split = word.split(divider);
   return split.join(' ');
 };
 var isValidEmail = function isValidEmail(mail) {
