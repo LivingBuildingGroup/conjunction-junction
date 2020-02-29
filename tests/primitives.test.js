@@ -8,6 +8,10 @@ const {
   correctInputType, // do not do a test for this yet
   // numbers
   generateRandomNumber,
+  numberToModNumber,
+  printNumber,
+  asNum,
+  parseFloatInput,
   // mixed types
   formatForPrint,
   print,
@@ -18,6 +22,7 @@ const {
   convertScToCc,
   convertCcToSc,
   convertScToSpace,
+  isValidEmail,
 } = require('../index');
 
 const {
@@ -36,7 +41,7 @@ const {
   hour2, 
   hour3 }   = require('./helper-data');
 
-describe('conjunction-junction primitives', () => { 
+describe.only('conjunction-junction primitives', () => { 
 
   it('correctInputType',()=>{
 
@@ -46,7 +51,6 @@ describe('conjunction-junction primitives', () => {
     const lower = 5;
     const upper = 23;
     const result = generateRandomNumber(lower, upper);
-    console.log('result', result);
     expect(result).to.be.greaterThan(lower);
     expect(result).to.be.within(lower,upper);
   });
@@ -54,6 +58,90 @@ describe('conjunction-junction primitives', () => {
   it('print',()=>{
     const result = print(1.687777,'word');
     expect(result).to.equal(1.6878);
+  });
+
+  const trailingZeros = {
+    '0'     : true, 
+    '00'    : true, 
+    '000'   : true, 
+    '0000'  : true, 
+    '00000' : true, 
+  };
+  
+  const leadingDecimals = {
+    '.'      : true, 
+    '.0'     : true, 
+    '.00'    : true, 
+    '.000'   : true, 
+    '.0000'  : true, 
+    '.00000' : true, 
+    '0'      : true, 
+    '0.'     : true, 
+    '0.0'    : true, 
+    '0.00'   : true,
+    '0.000'  : true,
+    '0.0000' : true,
+    '0.00000': true,
+    ''       : true,
+  };
+
+  it('parseFloatInput leading decimal ok',()=>{
+    for(let num in leadingDecimals){
+      const result = parseFloatInput(num);
+      expect(result).to.equal(num);
+    }
+  });
+  it('parseFloatInput returns empty string',()=>{
+    const nonleadingDecimals = {
+      'a'   : true, 
+      '.a'  : true, 
+    };
+    for(let num in nonleadingDecimals){
+      const result = parseFloatInput(num);
+      expect(result).to.equal('');
+    }
+  });
+  it('parseFloatInput 0.',()=>{
+    const nonleadingDecimals = {
+      'a.'  : true, 
+      'some words.'  : true, 
+    };
+    for(let num in nonleadingDecimals){
+      const result = parseFloatInput(num);
+      expect(result).to.equal('0.');
+    }
+  });
+  it('parseFloatInput removes leading zero',()=>{
+    const leadingDecimals = {
+      '04'    : 4, 
+      '0.4'   : 0.4, 
+      '0080'  : 80, 
+      '8'     : 8, 
+      '8.'    : '8.', 
+      '8.0'   : '8.0', 
+      '08.0'  : '8.0', 
+      '008.0' : '8.0', 
+      '0740'  : 740, 
+    };
+    for(let num in leadingDecimals){
+      const result = parseFloatInput(num);
+      expect(result).to.equal(leadingDecimals[num]);
+    }
+  });
+  it('parseFloatInput keeps trailing zeroes',()=>{
+    for(let num in trailingZeros){
+      const expectedResult = `7.${num}`;
+      const result = parseFloatInput(expectedResult);
+      expect(result).to.equal(expectedResult);
+    }
+  });
+  it('parseFloatInput keeps trailing zeroes but removes leading zeroes',()=>{
+    for(let num in trailingZeros){
+      const expectedResult = `7.${num}`;
+      const rawNum = `0${expectedResult}`;
+      const result = parseFloatInput(rawNum);
+      expect(result).to.equal(expectedResult);
+    }
   });
 
   it('formatForPrint if data input variable is input',()=>{

@@ -82,22 +82,47 @@ const asNum = (num,def) => {
   return defResult;
 };
 
-const floatValues = {
-  '0'   : true, 
-  '.'   : true, 
-  '0.'  : true, 
-  '.0'  : true, 
-  '.00' : true, 
-  '0.0' : true, 
-  '0.00': true,
+const trailingZeros = {
+  ''      : true, 
+  '0'     : true, 
+  '00'    : true, 
+  '000'   : true, 
+  '0000'  : true, 
+  '00000' : true, 
+};
+
+const leadingDecimals = {
+  '.'      : true, 
+  '.0'     : true, 
+  '.00'    : true, 
+  '.000'   : true, 
+  '.0000'  : true, 
+  '.00000' : true, 
+  '0'      : true, 
+  '0.'     : true, 
+  '0.0'    : true, 
+  '0.00'   : true,
+  '0.000'  : true,
+  '0.0000' : true,
+  '0.00000': true,
+  ''       : true,
 };
 
 const parseFloatInput = value => {
-  const revisedValue = 
-    floatValues[value] ?
-      value :
-      parseFloat(value);
-  return revisedValue;
+  if(leadingDecimals[value]){
+    return value;
+  }
+  if(typeof value === 'string'){
+    const arr = value.split('.');
+    if(arr.length >= 1){
+      const num = parseFloat(value) || 0;
+      if(trailingZeros[arr[1]]){
+        return `${num}.${arr[1]}`;
+      }
+    }
+  }
+  const newVal = parseFloat(value);
+  return isNaN(newVal) ? '' : newVal;
 };
 
 // @@@@@@@@@@@@@@@ MIXED TYPES @@@@@@@@@@@@@@@@

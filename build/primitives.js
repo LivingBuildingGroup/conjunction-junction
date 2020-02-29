@@ -84,19 +84,47 @@ var asNum = function asNum(num, def) {
   return defResult;
 };
 
-var floatValues = {
+var trailingZeros = {
+  '': true,
   '0': true,
+  '00': true,
+  '000': true,
+  '0000': true,
+  '00000': true
+};
+
+var leadingDecimals = {
   '.': true,
-  '0.': true,
   '.0': true,
   '.00': true,
+  '.000': true,
+  '.0000': true,
+  '.00000': true,
+  '0': true,
+  '0.': true,
   '0.0': true,
-  '0.00': true
+  '0.00': true,
+  '0.000': true,
+  '0.0000': true,
+  '0.00000': true,
+  '': true
 };
 
 var parseFloatInput = function parseFloatInput(value) {
-  var revisedValue = floatValues[value] ? value : parseFloat(value);
-  return revisedValue;
+  if (leadingDecimals[value]) {
+    return value;
+  }
+  if (typeof value === 'string') {
+    var arr = value.split('.');
+    if (arr.length >= 1) {
+      var num = parseFloat(value) || 0;
+      if (trailingZeros[arr[1]]) {
+        return num + '.' + arr[1];
+      }
+    }
+  }
+  var newVal = parseFloat(value);
+  return isNaN(newVal) ? '' : newVal;
 };
 
 // @@@@@@@@@@@@@@@ MIXED TYPES @@@@@@@@@@@@@@@@
