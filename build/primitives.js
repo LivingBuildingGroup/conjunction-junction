@@ -84,8 +84,18 @@ var asNum = function asNum(num, def) {
   return defResult;
 };
 
+var floatValues = {
+  '0': true,
+  '.': true,
+  '0.': true,
+  '.0': true,
+  '.00': true,
+  '0.0': true,
+  '0.00': true
+};
+
 var parseFloatInput = function parseFloatInput(value) {
-  var revisedValue = value === '0' || value === '.' || value === '0.' || value === '.0' || value === '.00' || value === '0.0' || value === '0.00' ? value : parseFloat(value);
+  var revisedValue = floatValues[value] ? value : parseFloat(value);
   return revisedValue;
 };
 

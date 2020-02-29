@@ -82,15 +82,19 @@ const asNum = (num,def) => {
   return defResult;
 };
 
+const floatValues = {
+  '0'   : true, 
+  '.'   : true, 
+  '0.'  : true, 
+  '.0'  : true, 
+  '.00' : true, 
+  '0.0' : true, 
+  '0.00': true,
+};
+
 const parseFloatInput = value => {
   const revisedValue = 
-    value === '0'   || 
-    value ===  '.'  || 
-    value === '0.'  || 
-    value ===  '.0' || 
-    value ===  '.00'|| 
-    value === '0.0' || 
-    value === '0.00' ?
+    floatValues[value] ?
       value :
       parseFloat(value);
   return revisedValue;
