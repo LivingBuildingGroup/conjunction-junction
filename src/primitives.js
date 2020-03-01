@@ -125,6 +125,14 @@ const parseFloatInput = value => {
   return isNaN(newVal) ? '' : newVal;
 };
 
+const parseEvent = event => {
+  const value = !event ? null :
+    !event.target ? event :
+      event.target.value ? event.target.value :
+        event;
+  return value;
+};
+
 // @@@@@@@@@@@@@@@ MIXED TYPES @@@@@@@@@@@@@@@@
 
 const formatForPrint = (data, options) => {    //plan to deprecate this, continue function but rename
@@ -295,6 +303,7 @@ module.exports = {
   printNumber,
   asNum,
   parseFloatInput,
+  parseEvent,
   // mixed types
   formatForPrint,
   print,

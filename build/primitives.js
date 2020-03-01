@@ -127,6 +127,11 @@ var parseFloatInput = function parseFloatInput(value) {
   return isNaN(newVal) ? '' : newVal;
 };
 
+var parseEvent = function parseEvent(event) {
+  var value = !event ? null : !event.target ? event : event.target.value ? event.target.value : event;
+  return value;
+};
+
 // @@@@@@@@@@@@@@@ MIXED TYPES @@@@@@@@@@@@@@@@
 
 var formatForPrint = function formatForPrint(data, options) {
@@ -299,6 +304,7 @@ module.exports = {
   printNumber: printNumber,
   asNum: asNum,
   parseFloatInput: parseFloatInput,
+  parseEvent: parseEvent,
   // mixed types
   formatForPrint: formatForPrint,
   print: print,
