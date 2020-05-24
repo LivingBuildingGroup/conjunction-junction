@@ -1141,9 +1141,9 @@ describe('conjunction-junction conversions', () => {
   });
   
   it('m3SMToGpmFt', () => { 
-    const val = 1;
+    const m3SM = 1;
     const expectedResult = 4831.1775; // 4831.17849
-    const result = m3SMToGpmFt(val);
+    const result = m3SMToGpmFt(m3SM);
     expect(result).to.equal(expectedResult); 
   });
 

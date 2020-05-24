@@ -41,7 +41,7 @@ const {
   hour2, 
   hour3 }   = require('./helper-data');
 
-describe.only('conjunction-junction primitives', () => { 
+describe('conjunction-junction primitives', () => { 
 
   it('correctInputType',()=>{
 
