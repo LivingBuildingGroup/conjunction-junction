@@ -67,7 +67,7 @@ const numberToModNumber = (value, consolidateBy) => {
       precisionRound(Math.floor(value/consolidateBy) * consolidateBy, 2);
   }
   if(isObjectLiteral(consolidateBy)){
-    return consolidateBy.hasOwnProperty(value) ?
+    return typeof consolidateBy[value] !== 'undefined' ?
       consolidateBy[value] :
       value;
   }

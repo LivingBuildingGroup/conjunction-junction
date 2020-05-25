@@ -16,6 +16,9 @@ const {
   feetToMeters,
   metersToFeet,
    
+  kmToMi,
+  miToKm,
+
   // @@@@@@@@@@ AREA @@@@@@@@@
   sfToM2,
   m2ToSf,
@@ -328,6 +331,9 @@ describe('conjunction-junction conversions', () => {
     const result = metersToFeet('input');
     expect(result).to.equal(expectedResult); 
   });
+
+  // kmToMi,
+  // miToKm,
 
   // @@@@@@@@@@ AREA @@@@@@@@@
 

@@ -71,6 +71,20 @@ var metersToFeet = function metersToFeet(meters) {
   return precisionRound(meters * 3.28084, round);
 };
 
+var kmToMi = function kmToMi(km) {
+  var round = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
+
+  if (!isPrimitiveNumber(km)) return;
+  return precisionRound(km * 0.621371, round);
+};
+
+var miToKm = function miToKm(mi) {
+  var round = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
+
+  if (!isPrimitiveNumber(mi)) return;
+  return precisionRound(mi * 1.60934, round);
+};
+
 // @@@@@@@@@@ AREA @@@@@@@@@
 
 var sfToM2 = function sfToM2(sf) {
@@ -833,6 +847,9 @@ module.exports = {
 
   feetToMeters: feetToMeters,
   metersToFeet: metersToFeet,
+
+  kmToMi: kmToMi,
+  miToKm: miToKm,
 
   // @@@@@@@@@@ AREA @@@@@@@@@
   sfToM2: sfToM2,

@@ -71,7 +71,7 @@ var numberToModNumber = function numberToModNumber(value, consolidateBy) {
     return consolidateBy === 0 ? 0 : precisionRound(Math.floor(value / consolidateBy) * consolidateBy, 2);
   }
   if (isObjectLiteral(consolidateBy)) {
-    return consolidateBy.hasOwnProperty(value) ? consolidateBy[value] : value;
+    return typeof consolidateBy[value] !== 'undefined' ? consolidateBy[value] : value;
   }
   return value;
 };

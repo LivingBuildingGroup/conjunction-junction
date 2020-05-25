@@ -65,6 +65,16 @@ const metersToFeet = (meters, round=4) => {
   return precisionRound(meters * 3.28084, round);
 };
 
+const kmToMi = (km, round=2) => {
+  if(!isPrimitiveNumber(km)) return ;
+  return precisionRound(km * 0.621371, round);
+};
+
+const miToKm = (mi, round=2) => {
+  if(!isPrimitiveNumber(mi)) return ;
+  return precisionRound(mi * 1.60934, round);
+};
+
 // @@@@@@@@@@ AREA @@@@@@@@@
 
 const sfToM2 = sf => {
@@ -847,6 +857,9 @@ module.exports = {
   feetToMeters,
   metersToFeet,
   
+  kmToMi,
+  miToKm,
+
   // @@@@@@@@@@ AREA @@@@@@@@@
   sfToM2,
   m2ToSf,
