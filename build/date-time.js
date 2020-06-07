@@ -354,6 +354,7 @@ var _convertTimestampToStringInner = function _convertTimestampToStringInner(ts,
   if (f === 'date') return y + '-' + m0 + '-' + d0;
   if (f === 'yyyy-mm-dd') return y + '-' + m0 + '-' + d0;
   if (f === 'yyyy-mm-dd') return y + '-' + m0 + '-' + d0;
+  if (f === 'yyyy-mm-dd-hh-mm') return y + '-' + m0 + '-' + d0 + '-' + h0 + '-' + min0;
   if (f === 'd t noz') return y + '-' + m0 + '-' + d0 + ' ' + h0 + ':' + min0 + ':' + seconds0;
   if (f === 'd t z') return y + '-' + m0 + '-' + d0 + ' ' + h0 + ':' + min0 + ':' + seconds0 + ' ' + offsetFormattedNoColon;
   if (f === 'numeric') return '' + y + m0 + d0 + h0 + min0 + seconds0;
