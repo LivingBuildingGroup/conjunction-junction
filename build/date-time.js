@@ -280,6 +280,45 @@ var parseTimestampString = function parseTimestampString(string) {
   };
 };
 
+var months = {
+  january: 0,
+  february: 1,
+  march: 2,
+  april: 3,
+  may: 4,
+  june: 5,
+  july: 6,
+  august: 7,
+  september: 8,
+  october: 9,
+  november: 10,
+  december: 11
+};
+
+var convertSimpleDateToTimestamp = function convertSimpleDateToTimestamp(string) {
+  if (typeof string !== 'string') {
+    return;
+  }
+  var arr = string.split(' ');
+  // ['december','21,','2019']
+  if (arr.length !== 3) {
+    return;
+  }
+  var month = months[arr[0].toLowerCase()];
+  if (!month) {
+    return;
+  }
+  var day = parseInt(arr[1], 10);
+  if (!day || day > 31) {
+    return;
+  }
+  var year = parseInt(arr[2], 10);
+  if (!year || year < 1900) {
+    return;
+  }
+  return new Date(year, month, day);
+};
+
 var convertStringToTimestamp = function convertStringToTimestamp(rawString) {
   if (rawString instanceof Date) return rawString;
   // input: string in ISO 8601 format; 
@@ -352,7 +391,6 @@ var _convertTimestampToStringInner = function _convertTimestampToStringInner(ts,
   var meridien = typeof hour === 'string' ? // midnight or noon
   '' : o.hour === 24 ? '' : h >= 12 ? 'PM' : 'AM';
   if (f === 'date') return y + '-' + m0 + '-' + d0;
-  if (f === 'yyyy-mm-dd') return y + '-' + m0 + '-' + d0;
   if (f === 'yyyy-mm-dd') return y + '-' + m0 + '-' + d0;
   if (f === 'yyyy-mm-dd-hh-mm') return y + '-' + m0 + '-' + d0 + '-' + h0 + '-' + min0;
   if (f === 'd t noz') return y + '-' + m0 + '-' + d0 + ' ' + h0 + ':' + min0 + ':' + seconds0;
@@ -732,6 +770,7 @@ module.exports = {
   removeSpacesFromString: removeSpacesFromString,
   parseTimestampString: parseTimestampString,
   convertStringToTimestamp: convertStringToTimestamp,
+  convertSimpleDateToTimestamp: convertSimpleDateToTimestamp,
   convertTimestampToString: convertTimestampToString,
   convertLocalStringTimestampToZuluStringTimestamp: convertLocalStringTimestampToZuluStringTimestamp,
   dropZoneFromTimestamp: dropZoneFromTimestamp,

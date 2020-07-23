@@ -302,6 +302,45 @@ const parseTimestampString = string => {
   };
 };
 
+const months = {
+  january: 0,
+  february: 1,
+  march: 2,
+  april: 3,
+  may: 4,
+  june: 5,
+  july: 6,
+  august: 7,
+  september: 8,
+  october: 9,
+  november: 10,
+  december: 11,
+};
+
+const convertSimpleDateToTimestamp = string => {
+  if(typeof string !== 'string'){
+    return;
+  }
+  const arr = string.split(' ');
+  // ['december','21,','2019']
+  if(arr.length !== 3){
+    return;
+  }
+  const month = months[arr[0].toLowerCase()];
+  if(!month){
+    return;
+  }
+  const day = parseInt(arr[1],10);
+  if(!day || day > 31){
+    return;
+  }
+  const year = parseInt(arr[2], 10);
+  if(!year || year < 1900){
+    return;
+  }
+  return new Date(year, month, day);
+};
+
 const convertStringToTimestamp = rawString => {
   if(rawString instanceof Date) return rawString;
   // input: string in ISO 8601 format; 
@@ -409,7 +448,6 @@ const _convertTimestampToStringInner = (ts, option) => {
           'AM' ;
   if(f === 'date')        return `${y}-${m0}-${d0}`;
   if(f === 'yyyy-mm-dd')  return `${y}-${m0}-${d0}`;
-  if(f === 'yyyy-mm-dd')  return `${y}-${m0}-${d0}`;
   if(f === 'yyyy-mm-dd-hh-mm')  return `${y}-${m0}-${d0}-${h0}-${min0}`;
   if(f === 'd t noz')     return `${y}-${m0}-${d0} ${h0}:${min0}:${seconds0}`;
   if(f === 'd t z')       return `${y}-${m0}-${d0} ${h0}:${min0}:${seconds0} ${offsetFormattedNoColon}`;
@@ -441,7 +479,7 @@ const convertTimestampToString = (timestamp, option) => {
   // WHY USE?  Be in full control of the string. Don't send timestamps to the database, and let the database decide how to convert. Convert here, and avoid time zone conversion problems.
   // option is optional. 'date' = date, 'time' = time; anything else = full timestamp.
   
-  if (isValidDate(timestamp)) {
+  if(isValidDate(timestamp)) {
     return _convertTimestampToStringInner(timestamp, option);
   } else if(typeof timestamp === 'string') {
     const date = convertStringToTimestamp(timestamp);
@@ -853,6 +891,7 @@ module.exports = {
   removeSpacesFromString,
   parseTimestampString,
   convertStringToTimestamp,
+  convertSimpleDateToTimestamp,
   convertTimestampToString,
   convertLocalStringTimestampToZuluStringTimestamp,
   dropZoneFromTimestamp,
