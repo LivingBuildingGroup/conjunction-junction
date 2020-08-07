@@ -630,7 +630,7 @@ describe('conjunction-junction conversions', () => {
   it('cfToM3', () => { 
     const val = 1;
     const expectedResult = 0.0283;
-    const result = cfToM3(val);
+    const result = cfToM3(val, 4);
     expect(result).to.equal(expectedResult);  
   });
 
@@ -1107,13 +1107,13 @@ describe('conjunction-junction conversions', () => {
   it('gpmToM3S', () => { 
     const val = 1;
     const expectedResult = 0.00006309; //0000630902
-    const result = gpmToM3S(val);
+    const result = gpmToM3S(val, 8);
     expect(result).to.equal(expectedResult); 
   });
   it('gpmToM3S 100', () => { 
     const val = 100;
     const expectedResult = 0.00630902; //0.00630902
-    const result = gpmToM3S(val);
+    const result = gpmToM3S(val, 8);
     expect(result).to.equal(expectedResult); 
   });
   it('m3SToGpm', () => { 
@@ -1460,7 +1460,7 @@ describe('conjunction-junction conversions', () => {
     const ambientTemp = 60;
     const dewPoint = 0.25;
     const expectedResult = 13.33;
-    const result = getDewPointC(ambientTemp,dewPoint);
+    const result = getFrostPointC(ambientTemp,dewPoint);
     expect(result).to.equal(expectedResult); 
   });
 
@@ -1517,19 +1517,19 @@ describe('conjunction-junction conversions', () => {
   });
   it('degToRad -90', () => {
     const expectedResult = -1.5707963268;
-    const result = degToRad(-90);
+    const result = degToRad(-90, 20);
     const delta = Math.abs(expectedResult - result);
     expect(delta).to.be.lessThan(0.000000001);
   });
   it('degToRad 90', () => {
     const expectedResult = 1.5707963268;
-    const result = degToRad(90);
+    const result = degToRad(90, 20);
     const delta = Math.abs(expectedResult - result);
     expect(delta).to.be.lessThan(0.000000001);  
   });
   it('degToRad 360', () => {
     const expectedResult = 6.2831853072;
-    const result = degToRad(360);
+    const result = degToRad(360, 20);
     const delta = Math.abs(expectedResult - result);
     expect(delta).to.be.lessThan(0.000000001);
   });
@@ -1568,7 +1568,7 @@ describe('conjunction-junction conversions', () => {
 
   it('kphToMs, converts km/h to m/s (5 decimal points)', () => {
     const expectedResult = 8.33334;
-    const result = precisionRound(kphToMs(30),5);
+    const result = kphToMs(30,5);
     expect(result).to.equal(expectedResult); 
   });
 
@@ -1580,13 +1580,13 @@ describe('conjunction-junction conversions', () => {
 
   it('mphToKph, converts miles/hour to km/h (5 decimal points)', () => {
     const expectedResult = 4.34522;
-    const result = precisionRound(mphToKph(2.7),5);
+    const result = mphToKph(2.7,5);
     expect(result).to.equal(expectedResult); 
   });
 
   it('kphToMph, converts miles/hour to km/h (5 decimal points)', () => {
     const expectedResult = 1.98839;
-    const result = precisionRound(kphToMph(3.2),5);
+    const result = kphToMph(3.2,5);
     expect(result).to.equal(expectedResult); 
   });
 
