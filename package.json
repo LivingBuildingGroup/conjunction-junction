@@ -1,6 +1,6 @@
 {
   "name": "conjunction-junction",
-  "version": "3.13.52",
+  "version": "3.13.53",
   "description": "JavaScript pure helper functions",
   "main": "index.js",
   "scripts": {
