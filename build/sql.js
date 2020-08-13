@@ -10,6 +10,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 var dateTime = require('./date-time');
 
 var _require = require('./basic'),
+    isPrimitiveNumber = _require.isPrimitiveNumber,
     isObjectLiteral = _require.isObjectLiteral;
 
 var _require2 = require('./primitives'),
@@ -86,6 +87,28 @@ var unEscapeSpecial = function unEscapeSpecial(data) {
     return withQ;
   }
   return data;
+};
+
+var unEscapeObject = function unEscapeObject(o) {
+  if (typeof o === 'string') {
+    return unEscapeSpecial(o);
+  }
+  if (isPrimitiveNumber(o)) {
+    return o;
+  }
+  if (Array.isArray(o)) {
+    return o.map(function (subO) {
+      return unEscapeObject(subO);
+    });
+  }
+  if (isObjectLiteral(o)) {
+    var newO = Object.assign({}, o);
+    for (var key in newO) {
+      newO[key] = unEscapeObject(newO[key]);
+    }
+    return newO;
+  }
+  return o;
 };
 
 var formatDataForSql = function formatDataForSql(data, key) {
@@ -366,6 +389,7 @@ module.exports = {
   formatTimestampForSql: formatTimestampForSql,
   escapeSpecial: escapeSpecial,
   unEscapeSpecial: unEscapeSpecial,
+  unEscapeObject: unEscapeObject,
   formatDataForSql: formatDataForSql,
   formatObjectForKnex: formatObjectForKnex,
   formatReqBodyForKnex: formatReqBodyForKnex,

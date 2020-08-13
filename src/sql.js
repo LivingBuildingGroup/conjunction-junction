@@ -5,8 +5,8 @@
 
 'use strict';
 const dateTime        = require('./date-time');
-
 const {
+  isPrimitiveNumber,
   isObjectLiteral }   = require('./basic');
 const {
   titleCaseWord, 
@@ -78,6 +78,26 @@ const unEscapeSpecial = data => {
     return withQ;
   }
   return data;
+};
+
+const unEscapeObject = o => {
+  if(typeof o === 'string'){
+    return unEscapeSpecial(o);
+  }
+  if(isPrimitiveNumber(o)){
+    return o;
+  }
+  if(Array.isArray(o)){
+    return o.map(subO=>unEscapeObject(subO));
+  }
+  if(isObjectLiteral(o)){
+    const newO = Object.assign({},o);
+    for(let key in newO){
+      newO[key] = unEscapeObject(newO[key]);
+    }
+    return newO;
+  }
+  return o;
 };
 
 const formatDataForSql = (data, key, option={type:'raw'}) => {
@@ -334,6 +354,7 @@ module.exports = {
   formatTimestampForSql,
   escapeSpecial,
   unEscapeSpecial,
+  unEscapeObject,
   formatDataForSql,
   formatObjectForKnex, 
   formatReqBodyForKnex,
