@@ -66,11 +66,11 @@ var formatTimestampForSql = function formatTimestampForSql(value) {
 // ADD QUESTION MARKS
 var escapeSpecial = function escapeSpecial(data) {
   if (typeof data === 'string') {
-    var double = data.split('"');
-    var noDouble = double.join('\'');
-    var single = noDouble.split('\'');
-    var noSingle = single.join('\'\'');
-    return noSingle;
+    // const double   = data.split('"');
+    // const noDouble = double.join('\'');
+    var single = data.split('\'').join('\'\'');
+    var question = single.split('?').join('$1');
+    return question;
   }
   return data;
 };
@@ -78,13 +78,11 @@ var escapeSpecial = function escapeSpecial(data) {
 // ADD QUESTION MARKS
 var unEscapeSpecial = function unEscapeSpecial(data) {
   if (typeof data === 'string') {
-    var splitDouble = data.split('"');
-    var double = splitDouble.join('\'');
-    var splitSingle = double.split('\'\'');
-    var single = splitSingle.join('\'');
-    var noQ = single.split('$1');
-    var withQ = noQ.join('?');
-    return withQ;
+    // const splitDouble = data.split('"');
+    // const double = splitDouble.join('\'');
+    var single = data.split('\'\'').join('\'');
+    var question = single.split('$1').join('?');
+    return question;
   }
   return data;
 };
@@ -167,7 +165,7 @@ var formatDataForSql = function formatDataForSql(data, key) {
           return 'null';
         }
         // for raw SQL, add quotes to strings, which we'll check for as non-timestamps and non-numbers.
-        return '"' + prefix + item + suffix + '"'; // arrays of strings should have all strings in double quotes
+        return '"' + prefix + escapeSpecial(item) + suffix + '"'; // arrays of strings should have all strings in double quotes
       }
       return '' + prefix + item + suffix;
     });

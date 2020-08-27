@@ -57,11 +57,11 @@ const formatTimestampForSql = (value, sqlOption={type:'raw'}) => {
 // ADD QUESTION MARKS
 const escapeSpecial = data => {
   if(typeof data === 'string'){
-    const double   = data.split('"');
-    const noDouble = double.join('\'');
-    const single   = noDouble.split('\'');
-    const noSingle = single.join('\'\'');
-    return noSingle;
+    // const double   = data.split('"');
+    // const noDouble = double.join('\'');
+    const single   = data.split('\'').join('\'\'');
+    const question = single.split('?').join('$1');
+    return question;
   }
   return data;
 };
@@ -69,13 +69,11 @@ const escapeSpecial = data => {
 // ADD QUESTION MARKS
 const unEscapeSpecial = data => {
   if(typeof data === 'string'){
-    const splitDouble = data.split('"');
-    const double = splitDouble.join('\'');
-    const splitSingle = double.split('\'\'');
-    const single = splitSingle.join('\'');
-    const noQ = single.split('$1');
-    const withQ = noQ.join('?');
-    return withQ;
+    // const splitDouble = data.split('"');
+    // const double = splitDouble.join('\'');
+    const single = data.split('\'\'').join('\'');
+    const question = single.split('$1').join('?');
+    return question;
   }
   return data;
 };
@@ -150,7 +148,7 @@ const formatDataForSql = (data, key, option={type:'raw'}) => {
           return 'null' ;
         }
         // for raw SQL, add quotes to strings, which we'll check for as non-timestamps and non-numbers.
-        return `"${prefix}${item}${suffix}"`; // arrays of strings should have all strings in double quotes
+        return `"${prefix}${escapeSpecial(item)}${suffix}"`; // arrays of strings should have all strings in double quotes
       }
       return `${prefix}${item}${suffix}`;
     });
