@@ -15,6 +15,7 @@ const {
   shiftObjectKeysColumn,
   getKeyArray,
   limitObjectKeys,  } = require('./objects');
+const { isValidDate } = require('./date-time');
 
 const formatTimestampForSql = (value, sqlOption={type:'raw'}) => {
   // input: a primitive value or a date that SHOULD be a timestamp
@@ -87,6 +88,9 @@ const unEscapeObject = o => {
   }
   if(Array.isArray(o)){
     return o.map(subO=>unEscapeObject(subO));
+  }
+  if(isValidDate(o)){
+    return o;
   }
   if(isObjectLiteral(o)){
     const newO = Object.assign({},o);
