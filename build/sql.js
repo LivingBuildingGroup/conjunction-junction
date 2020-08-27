@@ -22,6 +22,9 @@ var _require3 = require('./objects'),
     getKeyArray = _require3.getKeyArray,
     limitObjectKeys = _require3.limitObjectKeys;
 
+var _require4 = require('./date-time'),
+    isValidDate = _require4.isValidDate;
+
 var formatTimestampForSql = function formatTimestampForSql(value) {
   var sqlOption = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { type: 'raw' };
 
@@ -98,6 +101,9 @@ var unEscapeObject = function unEscapeObject(o) {
     return o.map(function (subO) {
       return unEscapeObject(subO);
     });
+  }
+  if (isValidDate(o)) {
+    return o;
   }
   if (isObjectLiteral(o)) {
     var newO = Object.assign({}, o);
