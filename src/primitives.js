@@ -287,6 +287,13 @@ const convertScToSpace = (word, divider='_', replacer=' ') => {
   const split = word.split(divider);
   return split.join(replacer);
 };
+
+const convertSpaceToDash = word => {
+  if(typeof word !== 'string') return '';
+  const corrected = word.split(' ').join('-');
+  return corrected.toLowerCase();
+};
+
 const isValidEmail = mail => {
   if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)){
     return true;
@@ -315,5 +322,6 @@ module.exports = {
   convertCcToSc,
   convertCcToSpace,
   convertScToSpace,
+  convertSpaceToDash,
   isValidEmail,
 };

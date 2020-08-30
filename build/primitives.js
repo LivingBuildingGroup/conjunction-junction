@@ -288,6 +288,13 @@ var convertScToSpace = function convertScToSpace(word) {
   var split = word.split(divider);
   return split.join(replacer);
 };
+
+var convertSpaceToDash = function convertSpaceToDash(word) {
+  if (typeof word !== 'string') return '';
+  var corrected = word.split(' ').join('-');
+  return corrected.toLowerCase();
+};
+
 var isValidEmail = function isValidEmail(mail) {
   if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
     return true;
@@ -316,5 +323,6 @@ module.exports = {
   convertCcToSc: convertCcToSc,
   convertCcToSpace: convertCcToSpace,
   convertScToSpace: convertScToSpace,
+  convertSpaceToDash: convertSpaceToDash,
   isValidEmail: isValidEmail
 };
