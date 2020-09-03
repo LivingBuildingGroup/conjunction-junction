@@ -289,8 +289,14 @@ const convertScToSpace = (word, divider='_', replacer=' ') => {
 };
 
 const convertSpaceToDash = word => {
+  console.warn('convertSpaceToDash is deprecated, use convertPhraseToPath instead');
+  return convertPhraseToPath(word);
+};
+
+const convertPhraseToPath = word => {
   if(typeof word !== 'string') return '';
-  const corrected = word.split(' ').join('-');
+  const noSpace = word.split(' ').join('-');
+  const corrected = noSpace.replace(/[^a-z0-9-]/g, '');
   return corrected.toLowerCase();
 };
 
@@ -323,5 +329,6 @@ module.exports = {
   convertCcToSpace,
   convertScToSpace,
   convertSpaceToDash,
+  convertPhraseToPath,
   isValidEmail,
 };

@@ -290,8 +290,14 @@ var convertScToSpace = function convertScToSpace(word) {
 };
 
 var convertSpaceToDash = function convertSpaceToDash(word) {
+  console.warn('convertSpaceToDash is deprecated, use convertPhraseToPath instead');
+  return convertPhraseToPath(word);
+};
+
+var convertPhraseToPath = function convertPhraseToPath(word) {
   if (typeof word !== 'string') return '';
-  var corrected = word.split(' ').join('-');
+  var noSpace = word.split(' ').join('-');
+  var corrected = noSpace.replace(/[^a-z0-9-]/g, '');
   return corrected.toLowerCase();
 };
 
@@ -324,5 +330,6 @@ module.exports = {
   convertCcToSpace: convertCcToSpace,
   convertScToSpace: convertScToSpace,
   convertSpaceToDash: convertSpaceToDash,
+  convertPhraseToPath: convertPhraseToPath,
   isValidEmail: isValidEmail
 };
