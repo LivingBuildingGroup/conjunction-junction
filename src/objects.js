@@ -358,7 +358,7 @@ const convertArrayToObject = (array, key='id')=>{
   if (Array.isArray(array)) {
     array.forEach(obj=>{
       if(isObjectLiteral(obj)){
-        newObject[obj[key]] = obj;
+        newObject[`${obj[key]}`] = obj;
       }
     });
     return newObject;

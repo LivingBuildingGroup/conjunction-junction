@@ -424,7 +424,7 @@ const calcVwc = (volume, water, round=4) => {
     water.units.toLowerCase() :
     null ;
   if(volumeUnits === waterUnits){
-    return precisionRound(water.qty/(volume.qty));
+    return precisionRound(water.qty/volume.qty);
   }
   if(volumeUnits === 'cc' && waterUnits === 'l'){
     return precisionRound(water.qty/(volume.qty/1000));

@@ -380,7 +380,7 @@ var convertArrayToObject = function convertArrayToObject(array) {
   if (Array.isArray(array)) {
     array.forEach(function (obj) {
       if (isObjectLiteral(obj)) {
-        newObject[obj[key]] = obj;
+        newObject['' + obj[key]] = obj;
       }
     });
     return newObject;
