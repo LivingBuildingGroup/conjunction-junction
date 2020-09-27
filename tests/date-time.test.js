@@ -33,7 +33,7 @@ const {
 } = require('../index');
 const {
   datez, date0,date1,date2,date3,date4,date5,date6,date7,date8,date9,
-  date1String_d_t_z, date1String_d_t_noz, date1StringDtz, date1StringDtzDef, date1StringDtmsz, date1String, date1TimeString,
+  date1String_d_t_z, date1String_d_t_noz, date1String_d_T_noz, date1StringDtz, date1StringDtzDef, date1StringDtmsz, date1String, date1TimeString,
   numbers, 
   nonNumbers, 
   nonObjects,
@@ -736,6 +736,11 @@ describe('conjunction-junction date-time', () => {
     // 2018-05-17 13:01:00
     const result = convertTimestampToString(date1, 'd t noz');
     expect(result).to.equal(date1String_d_t_noz);
+  });
+  it('convertTimestampToString d t noz', () => {
+    // 2018-05-17T13:01:00
+    const result = convertTimestampToString(date1, 'd T noz');
+    expect(result).to.equal(date1String_d_T_noz);
   });
   it('convertTimestampToString d t z', () => {
     // 2018-05-17 13:01:00 -0400

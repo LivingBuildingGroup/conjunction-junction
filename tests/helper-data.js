@@ -101,6 +101,7 @@ const hour21 = new Date(hr21);
 const date1String       = '2018-05-17';
 const date1TimeString   = '13:01:00';
 const date1String_d_t_noz='2018-05-17 13:01:00';
+const date1String_d_T_noz='2018-05-17T13:01:00';
 const date1String_d_t_z = '2018-05-17 13:01:00 -0400';
 const date1StringDtzDef = '2018-05-17T13:01:00-04:00';
 // not created via convertTimestampToString
@@ -168,6 +169,7 @@ module.exports = {
   date1StringDtzDef,
   date1String_d_t_z,
   date1String_d_t_noz,
+  date1String_d_T_noz,
   date1StringDtz,
   date1StringDtmsz,
   date1p,
