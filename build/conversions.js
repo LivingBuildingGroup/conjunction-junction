@@ -43,6 +43,11 @@ var inchesToMmRound = function inchesToMmRound(inches) {
   if (inches < 1) {
     return mm;
   }
+  if (round === 'half') {
+    var _inches2 = mm / 25;
+    var halves = precisionRound(_inches2 / 0.5, 0);
+    return precisionRound(halves * 0.5, 1);
+  }
   var _inches = precisionRound(mm / 25, round);
   return precisionRound(_inches * 25, 0);
 };

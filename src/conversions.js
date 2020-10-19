@@ -37,6 +37,11 @@ const inchesToMmRound = (inches, round=0) => {
   if(inches < 1) {
     return mm;
   }
+  if(round === 'half'){
+    const _inches = mm/25;
+    const halves = precisionRound(_inches/0.5, 0);
+    return precisionRound(halves * 0.5, 1);
+  }
   const _inches = precisionRound(mm/25, round);
   return precisionRound(_inches * 25, 0);
 };
