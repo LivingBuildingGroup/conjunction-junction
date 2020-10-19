@@ -83,7 +83,7 @@ var unEscapeSpecial = function unEscapeSpecial(data) {
   if (typeof data === 'string') {
     // const splitDouble = data.split('"');
     // const double = splitDouble.join('\'');
-    var single = data.split('\'\'').join('\'');
+    var single = data.split('\'\'').join('\'').split('\'\'').join('\'').split('\'\'').join('\'');
     var question = single.split('$1').join('?');
     return question;
   }

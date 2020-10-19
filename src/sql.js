@@ -72,7 +72,7 @@ const unEscapeSpecial = data => {
   if(typeof data === 'string'){
     // const splitDouble = data.split('"');
     // const double = splitDouble.join('\'');
-    const single = data.split('\'\'').join('\'');
+    const single = data.split('\'\'').join('\'').split('\'\'').join('\'').split('\'\'').join('\'');
     const question = single.split('$1').join('?');
     return question;
   }

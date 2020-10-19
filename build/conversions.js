@@ -39,14 +39,14 @@ var inchesToMmRound = function inchesToMmRound(inches) {
 
   // input: number, output: either a number or undefined;
   if (!isPrimitiveNumber(inches)) return;
+  if (round === 'half') {
+    var halves = precisionRound(inches / 0.5, 0);
+    return Math.floor(halves * 0.5 * 25);
+  }
+
   var mm = Math.floor(inches * 25);
   if (inches < 1) {
     return mm;
-  }
-  if (round === 'half') {
-    var _inches2 = mm / 25;
-    var halves = precisionRound(_inches2 / 0.5, 0);
-    return precisionRound(halves * 0.5, 1);
   }
   var _inches = precisionRound(mm / 25, round);
   return precisionRound(_inches * 25, 0);

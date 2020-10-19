@@ -309,7 +309,41 @@ describe('conjunction-junction conversions', () => {
     const result = inchesToMmRound(5.1);
     expect(result).to.equal(expectedResult); 
   });
-
+  it('inchesToMmRound half 0.4 = 12', () => {
+    const expectedResult = 12;
+    const result = inchesToMmRound(0.4, 'half');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('inchesToMmRound half 0.9 = 25', () => {
+    const expectedResult = 25;
+    const result = inchesToMmRound(0.9, 'half');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('inchesToMmRound half 1.5 = 37', () => {
+    const expectedResult = 37;
+    const result = inchesToMmRound(1.5, 'half');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('inchesToMmRound half 2 = 50', () => {
+    const expectedResult = 50;
+    const result = inchesToMmRound(2, 'half');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('inchesToMmRound half 2.1 = 50', () => {
+    const expectedResult = 50;
+    const result = inchesToMmRound(2.1, 'half');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('inchesToMmRound half 2.4 = 62', () => {
+    const expectedResult = 62;
+    const result = inchesToMmRound(2.4, 'half');
+    expect(result).to.equal(expectedResult); 
+  });
+  it('inchesToMmRound half 2.8 = 75', () => {
+    const expectedResult = 75;
+    const result = inchesToMmRound(2.8, 'half');
+    expect(result).to.equal(expectedResult); 
+  });
     
   it('feetToMeters converts feet to meters', () => {
     const expectedResult = 6.096;
