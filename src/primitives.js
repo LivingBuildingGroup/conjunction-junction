@@ -143,6 +143,7 @@ const formatForPrint = (data, options) => {    //plan to deprecate this, continu
     object: ':(',
     nan: 'NaN',
     triggerSize: 999999,
+    timestampFormat: 'full',
   };
   const o = isObjectLiteral(options) ?
     Object.assign({},defaultOptions, options) : 
@@ -167,7 +168,7 @@ const formatForPrint = (data, options) => {    //plan to deprecate this, continu
     return printNumber(data, o.triggerSize, round, o.nan);
   }
   if(isValidDate(data)){
-    return convertTimestampToString(data);
+    return convertTimestampToString(data, options.timestampFormat);
   }
   if(Array.isArray(data)){
     if(o.arrays) {

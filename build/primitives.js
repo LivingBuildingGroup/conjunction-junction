@@ -142,7 +142,8 @@ var formatForPrint = function formatForPrint(data, options) {
     stringLength: 250,
     object: ':(',
     nan: 'NaN',
-    triggerSize: 999999
+    triggerSize: 999999,
+    timestampFormat: 'full'
   };
   var o = isObjectLiteral(options) ? Object.assign({}, defaultOptions, options) : defaultOptions;
   var trueValue = typeof o.trueValue === 'string' ? o.trueValue : 'true';
@@ -164,7 +165,7 @@ var formatForPrint = function formatForPrint(data, options) {
     return printNumber(data, o.triggerSize, round, o.nan);
   }
   if (isValidDate(data)) {
-    return convertTimestampToString(data);
+    return convertTimestampToString(data, options.timestampFormat);
   }
   if (Array.isArray(data)) {
     if (o.arrays) {
