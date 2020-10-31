@@ -165,7 +165,7 @@ var formatForPrint = function formatForPrint(data, options) {
     return printNumber(data, o.triggerSize, round, o.nan);
   }
   if (isValidDate(data)) {
-    return convertTimestampToString(data, options.timestampFormat);
+    return convertTimestampToString(data, o.timestampFormat);
   }
   if (Array.isArray(data)) {
     if (o.arrays) {

@@ -168,7 +168,7 @@ const formatForPrint = (data, options) => {    //plan to deprecate this, continu
     return printNumber(data, o.triggerSize, round, o.nan);
   }
   if(isValidDate(data)){
-    return convertTimestampToString(data, options.timestampFormat);
+    return convertTimestampToString(data, o.timestampFormat);
   }
   if(Array.isArray(data)){
     if(o.arrays) {
