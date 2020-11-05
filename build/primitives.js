@@ -144,8 +144,15 @@ var formatForPrint = function formatForPrint(data, options) {
     nan: 'NaN',
     triggerSize: 999999,
     timestampFormat: 'full'
+    // trueValue
+    // falseValue
+    // undefinedValue
+    // nullValue
+    // dateOptions
+    // timestampFormat
   };
   var o = isObjectLiteral(options) ? Object.assign({}, defaultOptions, options) : defaultOptions;
+  o.round = isPrimitiveNumber(o.round) ? o.round : defaultOptions.round;
   var trueValue = typeof o.trueValue === 'string' ? o.trueValue : 'true';
   var falseValue = typeof o.falseValue === 'string' ? o.falseValue : 'false';
   var undefinedValue = typeof o.undefinedValue === 'string' ? o.undefinedValue : 'undefined';
@@ -161,8 +168,7 @@ var formatForPrint = function formatForPrint(data, options) {
     return data;
   }
   if (typeof data === 'number') {
-    var round = isPrimitiveNumber(o.round) ? o.round : defaultOptions.round;
-    return printNumber(data, o.triggerSize, round, o.nan);
+    return printNumber(data, o.triggerSize, o.round, o.nan);
   }
   if (isValidDate(data)) {
     return convertTimestampToString(data, o.timestampFormat);

@@ -1,10 +1,12 @@
 'use strict';
-const { convertStringToTimestamp,
+const { 
+  convertStringToTimestamp,
   convertTimestampToString,
   isValidDate }       = require('./date-time');
-const { isPrimitiveNumber,
+const { 
+  isPrimitiveNumber,
   precisionRound,
-  isObjectLiteral } = require('./basic');
+  isObjectLiteral }   = require('./basic');
 
 // @@@@@@@@@@@@@@@ TYPES @@@@@@@@@@@@@@@@
 
@@ -144,10 +146,17 @@ const formatForPrint = (data, options) => {    //plan to deprecate this, continu
     nan: 'NaN',
     triggerSize: 999999,
     timestampFormat: 'full',
+    // trueValue
+    // falseValue
+    // undefinedValue
+    // nullValue
+    // dateOptions
+    // timestampFormat
   };
   const o = isObjectLiteral(options) ?
     Object.assign({},defaultOptions, options) : 
     defaultOptions ;
+  o.round = isPrimitiveNumber(o.round) ? o.round : defaultOptions.round;
   const trueValue     = typeof o.trueValue    === 'string' ? o.trueValue    : 'true' ;
   const falseValue    = typeof o.falseValue   === 'string' ? o.falseValue   : 'false' ;
   const undefinedValue= typeof o.undefinedValue==='string' ? o.undefinedValue:'undefined' ;
@@ -164,8 +173,7 @@ const formatForPrint = (data, options) => {    //plan to deprecate this, continu
     return data;
   }
   if(typeof data === 'number') {
-    const round = isPrimitiveNumber(o.round) ? o.round : defaultOptions.round;
-    return printNumber(data, o.triggerSize, round, o.nan);
+    return printNumber(data, o.triggerSize, o.round, o.nan);
   }
   if(isValidDate(data)){
     return convertTimestampToString(data, o.timestampFormat);

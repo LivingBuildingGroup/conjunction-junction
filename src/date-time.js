@@ -385,7 +385,7 @@ const _convertTimestampToStringInner = (ts, option) => {
       option :
       !isObjectLiteral(option) ? 
         'print' :
-        option.format ?
+        typeof option.format === 'string' ?
           option.format : 
           'print' ;
   const o = isObjectLiteral(option) ? option : {} ;
@@ -460,7 +460,8 @@ const _convertTimestampToStringInner = (ts, option) => {
   if(f === 'M d')         return `${M} ${d}`;
   if(f === 'M d y')       return `${M} ${d}, ${y}`;
   if(f === 'm d h')       return `${m}/${d} ${hour}${meridien}`;
-  if(f === 'm d h m')     return `${m}/${d} ${hour}:${min}${meridien}`;
+  if(f === 'm d h m')     return `${m}/${d} ${hour}:${min0}${meridien}`;
+  if(f === 'y m d h m')   return `${y}/${m}/${d} ${hour}:${min0}${meridien}`;
   if(f === 'dow m d')     return `${dows[dow]} ${m}/${d}`;
   if(f === 'dow d h')     return `${dows[dow]} ${d} ${hour}${meridien}`;
   if(f === 'dow d h m')   return `${dows[dow]} ${d} ${hour}:${min}${meridien}`;
@@ -502,7 +503,7 @@ const printDate = (date, options) => {
       offset === -300 ? 'America/New_York' :
         'UTC' ;
   if(isObjectLiteral(options)){
-    if(options.hasOwnProperty('format')){
+    if(typeof options.format !== 'undefined'){
       return createTimestampLabel(date, options);
     }
   }
