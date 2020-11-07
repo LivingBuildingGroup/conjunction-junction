@@ -146,27 +146,24 @@ const formatForPrint = (data, options) => {    //plan to deprecate this, continu
     nan: 'NaN',
     triggerSize: 999999,
     timestampFormat: 'full',
-    // trueValue
-    // falseValue
-    // undefinedValue
-    // nullValue
+    trueValue: 'true',
+    falseValue: 'false',
+    undefinedValue: 'undefined',
+    nullValue: 'null',
     // dateOptions
-    // timestampFormat
   };
   const o = isObjectLiteral(options) ?
     Object.assign({},defaultOptions, options) : 
     defaultOptions ;
-  o.round = isPrimitiveNumber(o.round) ? o.round : defaultOptions.round;
-  const trueValue     = typeof o.trueValue    === 'string' ? o.trueValue    : 'true' ;
-  const falseValue    = typeof o.falseValue   === 'string' ? o.falseValue   : 'false' ;
-  const undefinedValue= typeof o.undefinedValue==='string' ? o.undefinedValue:'undefined' ;
-  const nullValue     = typeof o.nullValue    === 'string' ? o.nullValue    : 'null' ;
+  o.round         = isPrimitiveNumber(o.round)         ? o.round         : defaultOptions.round ;
+  o.trueValue     = typeof o.trueValue    === 'string' ? o.trueValue     : defaultOptions.trueValue ;
+  o.falseValue    = typeof o.falseValue   === 'string' ? o.falseValue    : defaultOptions.falseValue ;
+  o.undefinedValue= typeof o.undefinedValue==='string' ? o.undefinedValue: defaultOptions.undefinedValue ;
+  o.nullValue     = typeof o.nullValue    === 'string' ? o.nullValue     : defaultOptions.nullValue ;
   if(typeof data === 'string') {
     const timestamp = convertStringToTimestamp(data);
     if(isValidDate(timestamp)){
-      const dateOptions = isObjectLiteral(o.dateOptions) ? 
-        o.dateOptions : null ;
-      return convertTimestampToString(timestamp, dateOptions);
+      return convertTimestampToString(timestamp, o.timestampFormat);
     } else if(typeof o.stringLength === 'number') {
       return data.slice(0, o.stringLength);
     }
@@ -191,22 +188,22 @@ const formatForPrint = (data, options) => {    //plan to deprecate this, continu
     return o.object;
   }
   if(typeof data === 'boolean'){
-    if(data) return trueValue;
-    return falseValue;
+    if(data) return o.trueValue;
+    return o.falseValue;
   }
   if(data === undefined) {
-    return undefinedValue;
+    return o.undefinedValue;
   }
   if(data === null){
-    return nullValue;
+    return o.nullValue;
   }
   return ':(';
 };
 
-const print = (data, options) => {
-  console.warn('The function print is deprecated, use formatForPrint instead');
-  return formatForPrint(data,options);
-};
+// const print = (data, options) => {
+//   console.warn('The function print is deprecated, use formatForPrint instead');
+//   return formatForPrint(data, options);
+// };
 
 const numberToLetter = (num) => {     //took out option that did wasn't used in function
   // 1-indexed, not 0-indexed, so subtract 1
@@ -286,10 +283,10 @@ const convertCcToSc = (word, divider, options={}) => {
   return newWord;
 };
 
-const convertCcToSpace = word => {
-  console.warn('convertCcToSpace is deprecated, use convertCcToSc(word, " ")');
-  return convertCcToSc(word, ' ');
-};
+// const convertCcToSpace = word => {
+//   console.warn('convertCcToSpace is deprecated, use convertCcToSc(word, " ")');
+//   return convertCcToSc(word, ' ');
+// };
 
 const convertScToSpace = (word, divider='_', replacer=' ') => {
   if(typeof word !== 'string') return '';
@@ -297,10 +294,10 @@ const convertScToSpace = (word, divider='_', replacer=' ') => {
   return split.join(replacer);
 };
 
-const convertSpaceToDash = word => {
-  console.warn('convertSpaceToDash is deprecated, use convertPhraseToPath instead');
-  return convertPhraseToPath(word);
-};
+// const convertSpaceToDash = word => {
+//   console.warn('convertSpaceToDash is deprecated, use convertPhraseToPath instead');
+//   return convertPhraseToPath(word);
+// };
 
 const convertPhraseToPath = word => {
   if(typeof word !== 'string') return '';
@@ -335,9 +332,9 @@ module.exports = {
   lowerCaseWord,
   convertScToCc,
   convertCcToSc,
-  convertCcToSpace,
+  // convertCcToSpace,
   convertScToSpace,
-  convertSpaceToDash,
+  // convertSpaceToDash,
   convertPhraseToPath,
   isValidEmail,
 };
