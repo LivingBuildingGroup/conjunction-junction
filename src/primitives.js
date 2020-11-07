@@ -325,7 +325,7 @@ module.exports = {
   parseEvent,
   // mixed types
   formatForPrint,
-  print,
+  // print,
   numberToLetter,
   // strings
   titleCaseWord, 
