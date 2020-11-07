@@ -88,7 +88,7 @@ const isInteger = number => {
   if(!isPrimitiveNumber(number)){
     return false;
   }
-  return number % 1 === number;
+  return number % 1 === 0;
 };
 
 const trailingZeros = {
