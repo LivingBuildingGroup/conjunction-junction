@@ -84,6 +84,13 @@ var asNum = function asNum(num, def) {
   return defResult;
 };
 
+var isInteger = function isInteger(number) {
+  if (!isPrimitiveNumber(number)) {
+    return false;
+  }
+  return number % 1 === number;
+};
+
 var trailingZeros = {
   '': true,
   '0': true,
@@ -321,6 +328,7 @@ module.exports = {
   numberToModNumber: numberToModNumber,
   printNumber: printNumber,
   asNum: asNum,
+  isInteger: isInteger,
   parseFloatInput: parseFloatInput,
   parseEvent: parseEvent,
   // mixed types
@@ -332,9 +340,7 @@ module.exports = {
   lowerCaseWord: lowerCaseWord,
   convertScToCc: convertScToCc,
   convertCcToSc: convertCcToSc,
-  // convertCcToSpace,
   convertScToSpace: convertScToSpace,
-  // convertSpaceToDash,
   convertPhraseToPath: convertPhraseToPath,
   isValidEmail: isValidEmail
 };
