@@ -1,5 +1,7 @@
 'use strict';
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 var _require = require('./basic'),
     precisionRound = _require.precisionRound;
 
@@ -91,7 +93,71 @@ var hexToRgb = function hexToRgb(hex) {
   return Object.assign({}, final, hsl);
 };
 
+var createColorsFullObject = function createColorsFullObject(colors) {
+  var colorsFull = {
+    allSorted: [],
+    arraysByGroup: {},
+    groups: {}
+  };
+  for (var color in colors) {
+    var rgb = hexToRgb(colors[color].slice(1, 7));
+    if (rgb) {
+      if (!Array.isArray(colorsFull.arraysByGroup[rgb.groupName])) {
+        colorsFull.arraysByGroup[rgb.groupName] = [];
+      }
+      if (!colorsFull.groups[rgb.groupName]) {
+        colorsFull.groups[rgb.groupName] = rgb.groupOrder;
+      }
+      var rgbString = 'rgb(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ')';
+      colorsFull.arraysByGroup[rgb.groupName].push(Object.assign({}, rgb, {
+        hex: colors[color],
+        rgbString: rgbString,
+        variableName: color
+      }));
+    }
+  }
+
+  for (var group in colorsFull.arraysByGroup) {
+    colorsFull.arraysByGroup[group].sort(function (a, b) {
+      if (a.luma < b.luma) {
+        return 1;
+      }
+      if (a.luma > b.luma) {
+        return -1;
+      }
+      return 0;
+    });
+  }
+
+  var allGroupsSorted = [];
+  for (var groupName in colorsFull.groups) {
+    allGroupsSorted.push({
+      groupName: groupName,
+      groupOrder: colorsFull.groups[groupName]
+    });
+  }
+  allGroupsSorted.sort(function (a, b) {
+    if (a.groupOrder < b.groupOrder) {
+      return 1;
+    }
+    if (a.groupOrder > b.groupOrder) {
+      return -1;
+    }
+    return 0;
+  });
+
+  allGroupsSorted.forEach(function (group) {
+    var _colorsFull$allSorted;
+
+    var groupName = group.groupName;
+    (_colorsFull$allSorted = colorsFull.allSorted).push.apply(_colorsFull$allSorted, _toConsumableArray(colorsFull.arraysByGroup[groupName]));
+  });
+
+  return colorsFull;
+};
+
 module.exports = {
   rgbToHex: rgbToHex,
-  hexToRgb: hexToRgb
+  hexToRgb: hexToRgb,
+  createColorsFullObject: createColorsFullObject
 };

@@ -103,7 +103,72 @@ const hexToRgb = hex => {
   );
 };
 
+const createColorsFullObject = colors => {
+  const colorsFull = {
+    allSorted: [],
+    arraysByGroup: {},
+    groups: {},
+  };
+  for(let color in colors){
+    const rgb = hexToRgb(colors[color].slice(1,7));
+    if(rgb){
+      if(!Array.isArray(colorsFull.arraysByGroup[rgb.groupName])){
+        colorsFull.arraysByGroup[rgb.groupName] = [];
+      }
+      if(!colorsFull.groups[rgb.groupName]){
+        colorsFull.groups[rgb.groupName] = rgb.groupOrder;
+      }
+      const rgbString = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+      colorsFull.arraysByGroup[rgb.groupName].push(Object.assign({},
+        rgb,
+        {
+          hex: colors[color],
+          rgbString,
+          variableName: color,
+        }
+      ));
+    }
+  }
+  
+  for(let group in colorsFull.arraysByGroup){
+    colorsFull.arraysByGroup[group].sort((a,b)=>{
+      if(a.luma < b.luma){
+        return 1;
+      }
+      if(a.luma > b.luma){
+        return -1;
+      }
+      return 0;
+    });
+  }
+  
+  const allGroupsSorted = [];
+  for(let groupName in colorsFull.groups){
+    allGroupsSorted.push({
+      groupName, 
+      groupOrder: colorsFull.groups[groupName]
+    });
+  }
+  allGroupsSorted.sort((a,b)=>{
+    if(a.groupOrder < b.groupOrder){
+      return 1;
+    }
+    if(a.groupOrder > b.groupOrder){
+      return -1;
+    }
+    return 0;
+  });
+  
+  allGroupsSorted.forEach(group=>{
+    const groupName = group.groupName;
+    colorsFull.allSorted.push(...colorsFull.arraysByGroup[groupName]);
+  });
+
+  return colorsFull;
+};
+
 module.exports = {
   rgbToHex,
   hexToRgb,
+  createColorsFullObject,
 };
