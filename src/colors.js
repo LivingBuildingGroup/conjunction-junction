@@ -1,5 +1,7 @@
 'use strict';
 
+const { precisionRound } = require('./basic');
+
 const componentToHex = c => {
   const hex = c.toString(16);
   return hex.length === 1 ? `0${hex}` : hex;
@@ -62,9 +64,9 @@ const convertRgbToHsl = rgb => {
   l = +(l * 100).toFixed(1);
 
   const group = 
-	l < 0.2 ? { groupName: 'Blacks', groupOrder: 9 } :
-	  l > 0.8 ?  { groupName: 'Whites', groupOrder: 1 } :
-	    s < 0.25 ? { groupName: 'Grays', groupOrder: 8 } :
+	l < 20 ? { groupName: 'Blacks', groupOrder: 9 } :
+	  l > 80 ?  { groupName: 'Whites', groupOrder: 1 } :
+	    s < 25 ? { groupName: 'Grays', groupOrder: 8 } :
 	      h < 30 ?   { groupName: 'Reds', groupOrder: 0 } :
 	        h < 90 ?   { groupName: 'Yellows', groupOrder: 2 } :
 	          h < 150 ?  { groupName: 'Greens', groupOrder: 3 } :
@@ -91,7 +93,7 @@ const hexToRgb = hex => {
     b: parseInt(result[3], 16)
   } : null;
   if(final){
-    final.luma = 0.2126 * final.r + 0.7152 * final.g + 0.0722 * final.b;
+    final.luma = precisionRound(0.2126 * final.r + 0.7152 * final.g + 0.0722 * final.b, 2);
   }
 	
   const hsl = final ? convertRgbToHsl(final) : {};

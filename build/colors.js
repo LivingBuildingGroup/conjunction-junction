@@ -1,5 +1,8 @@
 'use strict';
 
+var _require = require('./basic'),
+    precisionRound = _require.precisionRound;
+
 var componentToHex = function componentToHex(c) {
   var hex = c.toString(16);
   return hex.length === 1 ? '0' + hex : hex;
@@ -64,7 +67,7 @@ var convertRgbToHsl = function convertRgbToHsl(rgb) {
   s = +(s * 100).toFixed(1);
   l = +(l * 100).toFixed(1);
 
-  var group = l < 0.2 ? { groupName: 'Blacks', groupOrder: 9 } : l > 0.8 ? { groupName: 'Whites', groupOrder: 1 } : s < 0.25 ? { groupName: 'Grays', groupOrder: 8 } : h < 30 ? { groupName: 'Reds', groupOrder: 0 } : h < 90 ? { groupName: 'Yellows', groupOrder: 2 } : h < 150 ? { groupName: 'Greens', groupOrder: 3 } : h < 210 ? { groupName: 'Cyans', groupOrder: 4 } : h < 270 ? { groupName: 'Blues', groupOrder: 5 } : h < 330 ? { groupName: 'Magentas', groupOrder: 6 } : { groupName: 'Reds', groupOrder: 7 };
+  var group = l < 20 ? { groupName: 'Blacks', groupOrder: 9 } : l > 80 ? { groupName: 'Whites', groupOrder: 1 } : s < 25 ? { groupName: 'Grays', groupOrder: 8 } : h < 30 ? { groupName: 'Reds', groupOrder: 0 } : h < 90 ? { groupName: 'Yellows', groupOrder: 2 } : h < 150 ? { groupName: 'Greens', groupOrder: 3 } : h < 210 ? { groupName: 'Cyans', groupOrder: 4 } : h < 270 ? { groupName: 'Blues', groupOrder: 5 } : h < 330 ? { groupName: 'Magentas', groupOrder: 6 } : { groupName: 'Reds', groupOrder: 7 };
 
   return Object.assign({}, group, {
     h: h,
@@ -81,7 +84,7 @@ var hexToRgb = function hexToRgb(hex) {
     b: parseInt(result[3], 16)
   } : null;
   if (final) {
-    final.luma = 0.2126 * final.r + 0.7152 * final.g + 0.0722 * final.b;
+    final.luma = precisionRound(0.2126 * final.r + 0.7152 * final.g + 0.0722 * final.b, 2);
   }
 
   var hsl = final ? convertRgbToHsl(final) : {};
