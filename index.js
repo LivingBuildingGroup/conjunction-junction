@@ -6,6 +6,7 @@ const dateTime    = require('./build/date-time');
 const primitives  = require('./build/primitives');
 const objects     = require('./build/objects');
 const sql         = require('./build/sql');
+const colors      = require('./build/colors');
 
 module.exports = Object.assign({},
   basic,
@@ -13,5 +14,6 @@ module.exports = Object.assign({},
   dateTime,
   primitives,
   objects,
-  sql
+  sql,
+  colors
 );

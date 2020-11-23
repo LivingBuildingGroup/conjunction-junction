@@ -84,13 +84,6 @@ const asNum = (num,def) => {
   return defResult;
 };
 
-const isInteger = number => {
-  if(!isPrimitiveNumber(number)){
-    return false;
-  }
-  return number % 1 === 0;
-};
-
 const trailingZeros = {
   ''      : true, 
   '0'     : true, 
@@ -328,7 +321,6 @@ module.exports = {
   numberToModNumber,
   printNumber,
   asNum,
-  isInteger,
   parseFloatInput,
   parseEvent,
   // mixed types
