@@ -35,16 +35,16 @@ var convertRgbToHsl = function convertRgbToHsl(rgb) {
     h = 0;
   }
   // Red is max
-  else if (cmax === r) {
-      h = (g - b) / delta % 6;
+  else if (cmax === rFraction) {
+      h = (gFraction - bFraction) / delta % 6;
     }
     // Green is max
-    else if (cmax === g) {
-        h = (b - r) / delta + 2;
+    else if (cmax === gFraction) {
+        h = (bFraction - rFraction) / delta + 2;
       }
       // Blue is max
       else {
-          h = (r - g) / delta + 4;
+          h = (rFraction - gFraction) / delta + 4;
         }
 
   h = Math.round(h * 60);
@@ -84,7 +84,7 @@ var hexToRgb = function hexToRgb(hex) {
     final.luma = 0.2126 * final.r + 0.7152 * final.g + 0.0722 * final.b;
   }
 
-  var hsl = convertRgbToHsl(final);
+  var hsl = final ? convertRgbToHsl(final) : {};
   return Object.assign({}, final, hsl);
 };
 
