@@ -64,11 +64,13 @@ const convertRgbToHsl = rgb => {
   l = +(l * 100).toFixed(1);
 
   const group = 
-	l < 20 ? { groupName: 'Blacks', groupOrder: 9 } :
+	l < 20 && s < 30 ? { groupName: 'Blacks', groupOrder: 10 } :
+	  l < 20 && s < 50 ? { groupName: 'Browns', groupOrder: 9 } :
+
 	  l > 80 ?  { groupName: 'Whites', groupOrder: 1 } :
 	    s < 25 ? { groupName: 'Grays', groupOrder: 8 } :
 	      h < 30 ?   { groupName: 'Reds', groupOrder: 0 } :
-	        h < 90 ?   { groupName: 'Yellows', groupOrder: 2 } :
+	        h < 60 ?   { groupName: 'Yellows', groupOrder: 2 } :
 	          h < 150 ?  { groupName: 'Greens', groupOrder: 3 } :
 	            h < 210 ?  { groupName: 'Cyans', groupOrder: 4 } :
 	              h < 270 ?  { groupName: 'Blues', groupOrder: 5 } :
