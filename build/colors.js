@@ -137,10 +137,10 @@ var createColorsFullObject = function createColorsFullObject(colors) {
     });
   }
   allGroupsSorted.sort(function (a, b) {
-    if (a.groupOrder < b.groupOrder) {
+    if (a.groupOrder > b.groupOrder) {
       return 1;
     }
-    if (a.groupOrder > b.groupOrder) {
+    if (a.groupOrder < b.groupOrder) {
       return -1;
     }
     return 0;
