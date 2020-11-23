@@ -68,7 +68,7 @@ const convertRgbToHsl = rgb => {
 	    l < 20 && s < 50 ? { groupName: 'Browns', groupOrder: 9 } :
 	      h > 290 && s < 20 && l > 40 && l < 90 ?  { groupName: 'Lavendars', groupOrder: 5.5 } :
 	        h > 235 && s < 30 && s > 15 && l > 40 && l < 90 ?  { groupName: 'Lavendars', groupOrder: 5.5 } :
-	          h > 35 && h < 60 && s > 10 ? { groupName: 'Yellows', groupOrder: 2 } :
+	          h > 30 && h < 60 && s > 15 ? { groupName: 'Yellows', groupOrder: 2 } :
 	            h > 300 && s < 25 ? { groupName: 'Grays', groupOrder: 8 } :
 	              l > 80 ?  { groupName: 'Whites', groupOrder: 1 } :
 	                s < 5 ? { groupName: 'Grays', groupOrder: 8 } :
