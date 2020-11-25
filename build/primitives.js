@@ -21,21 +21,30 @@ var correctInputType = function correctInputType(value) {
   // Get data from input field and convert to a specified type
   var numberKeysSignatures = Array.isArray(options.numberSignatures) ? options.numberSignatures : ['number', 'Lbs', 'nessIn', 'Sf', 'Cf', 'idSlope'];
   var integerKeysSignatures = Array.isArray(options.integerSignatures) ? options.integerSignatures : ['integer', 'idComponent', 'idProfile', 'idCassette', 'idStorm', 'idTest', 'initialPlantHealth'];
+  var booleanKeysSignatures = Array.isArray(options.booleanSignatures) ? options.booleanSignatures : ['omit'];
   var isNumber = false;
   var isInteger = false;
-  numberKeysSignatures.forEach(function (sig) {
-    if (typeof key === 'string' && typeof key.includes === 'function' && key.includes(sig)) {
-      isNumber = true;
+  var isBoolean = false;
+  booleanKeysSignatures.forEach(function (sig) {
+    if (typeof key === 'string' && key.includes(sig)) {
+      isBoolean = true;
     }
   });
+  if (!isBoolean) {
+    numberKeysSignatures.forEach(function (sig) {
+      if (typeof key === 'string' && key.includes(sig)) {
+        isNumber = true;
+      }
+    });
+  }
   if (!isNumber) {
     integerKeysSignatures.forEach(function (sig) {
-      if (typeof key === 'string' && typeof key.includes === 'function' && key.includes(sig)) {
+      if (typeof key === 'string' && key.includes(sig)) {
         isInteger = true;
       }
     });
   }
-  var tryValue = isNumber ? parseFloat(value) : isInteger ? parseInt(value, 10) : value;
+  var tryValue = isBoolean && value === 'true' ? true : isBoolean && value === 'false' ? false : isNumber ? parseFloat(value) : isInteger ? parseInt(value, 10) : value;
   // the line below prevents converting 0.00 to 0
   var theValue = tryValue === value ? value : tryValue;
   return theValue;
