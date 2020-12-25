@@ -20,7 +20,8 @@ var _require2 = require('./primitives'),
 var _require3 = require('./objects'),
     shiftObjectKeysColumn = _require3.shiftObjectKeysColumn,
     getKeyArray = _require3.getKeyArray,
-    limitObjectKeys = _require3.limitObjectKeys;
+    limitObjectKeys = _require3.limitObjectKeys,
+    convertObjectKeyCase = _require3.convertObjectKeyCase;
 
 var _require4 = require('./date-time'),
     isValidDate = _require4.isValidDate;
@@ -377,7 +378,7 @@ var createSqlFetchTableKeys = function createSqlFetchTableKeys(input) {
   return { fetch: fetch, table: table, join: join };
 };
 
-var validateRawKnex = function validateRawKnex(data, label) {
+var validateRawKnex = function validateRawKnex(data, label, camel) {
   var flag = typeof label === 'string' ? label : 'raw fetch';
   // IMPROVE THIS AS AN ALL-PURPOSE FUNCTION
   // make sure data argument is Raw format (key of rows)
@@ -386,6 +387,9 @@ var validateRawKnex = function validateRawKnex(data, label) {
   if (!Array.isArray(data.rows)) return { message: flag + ' rows is not an array' };
   if (data.rows.length <= 0) return { message: flag + ' rows is empty, stopping' };
   if (!isObjectLiteral(data.rows[0])) return { message: flag + ' row 0 is not an object, stopping' };
+  if (camel) return data.rows.map(function (r) {
+    return convertObjectKeyCase(r, 'cC');
+  });
   return data.rows;
 };
 

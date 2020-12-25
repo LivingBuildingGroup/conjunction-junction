@@ -14,7 +14,8 @@ const {
 const { 
   shiftObjectKeysColumn,
   getKeyArray,
-  limitObjectKeys,  } = require('./objects');
+  limitObjectKeys,
+  convertObjectKeyCase,  } = require('./objects');
 const { isValidDate } = require('./date-time');
 
 const formatTimestampForSql = (value, sqlOption={type:'raw'}) => {
@@ -340,7 +341,7 @@ const createSqlFetchTableKeys = input => {
   return { fetch, table, join };
 };
 
-const validateRawKnex = (data, label) => {
+const validateRawKnex = (data, label, camel) => {
   const flag = typeof label === 'string' ? label : 'raw fetch';
   // IMPROVE THIS AS AN ALL-PURPOSE FUNCTION
   // make sure data argument is Raw format (key of rows)
@@ -349,6 +350,7 @@ const validateRawKnex = (data, label) => {
   if(!Array.isArray(data.rows))      return { message: `${flag} rows is not an array` };
   if(data.rows.length <= 0)          return { message: `${flag} rows is empty, stopping` };
   if(!isObjectLiteral(data.rows[0])) return { message: `${flag} row 0 is not an object, stopping` };
+  if(camel)                          return data.rows.map(r=>convertObjectKeyCase(r,'cC'));
   return data.rows;
 };
 
