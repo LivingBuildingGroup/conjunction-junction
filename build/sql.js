@@ -379,17 +379,64 @@ var createSqlFetchTableKeys = function createSqlFetchTableKeys(input) {
 };
 
 var validateRawKnex = function validateRawKnex(data, label, camel) {
+  var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+  // options: { returnFirst: undefined, returnInvalid: [] }
+  // options: { returnFirst: true,      returnInvalid: {} }
   var flag = typeof label === 'string' ? label : 'raw fetch';
   // IMPROVE THIS AS AN ALL-PURPOSE FUNCTION
   // make sure data argument is Raw format (key of rows)
-  if (!isObjectLiteral(data)) return { message: flag + ' is not an object' };
-  if (!data.rows) return { message: flag + ' does not include rows' };
-  if (!Array.isArray(data.rows)) return { message: flag + ' rows is not an array' };
-  if (data.rows.length <= 0) return { message: flag + ' rows is empty, stopping' };
-  if (!isObjectLiteral(data.rows[0])) return { message: flag + ' row 0 is not an object, stopping' };
-  if (camel) return data.rows.map(function (r) {
-    return convertObjectKeyCase(r, 'cC');
-  });
+  if (!isObjectLiteral(data)) {
+    if (options.invalidReturn !== undefined) {
+      return options.invalidReturn;
+    }
+    return { message: flag + ' is not an object' };
+  }
+  if (!data.rows) {
+    if (options.invalidReturn !== undefined) {
+      return options.invalidReturn;
+    }
+    return { message: flag + ' does not include rows' };
+  }
+  if (!Array.isArray(data.rows)) {
+    if (options.invalidReturn !== undefined) {
+      return options.invalidReturn;
+    }
+    return { message: flag + ' rows is not an array' };
+  }
+  if (data.rows.length <= 0) {
+    if (options.invalidReturn !== undefined) {
+      return options.invalidReturn;
+    }
+    return { message: flag + ' rows is empty, stopping' };
+  }
+  if (!isObjectLiteral(data.rows[0])) {
+    if (options.invalidReturn !== undefined) {
+      return options.invalidReturn;
+    }
+    return { message: flag + ' row 0 is not an object, stopping' };
+  }
+  if (camel) {
+    var camelObject = data.rows.map(function (r) {
+      return convertObjectKeyCase(r, 'cC');
+    });
+    if (options.returnFirst) {
+      if (!isObjectLiteral(camelObject[0])) {
+        if (options.invalidReturn) {
+          return options.invalidReturn;
+        }
+        return camelObject[0];
+      }
+    }
+  }
+  if (options.returnFirst) {
+    if (!isObjectLiteral(data.rows[0])) {
+      if (options.invalidReturn) {
+        return options.invalidReturn;
+      }
+      return data.rows[0];
+    }
+  }
   return data.rows;
 };
 
