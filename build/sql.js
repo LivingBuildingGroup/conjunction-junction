@@ -278,9 +278,10 @@ var prefixCommonKeys = function prefixCommonKeys(tableName, keys, common) {
   var a = options.alwaysPrefix === true ? true : false;
   var c = options.case === 'cC' ? 'cC' : 'Sc'; // limit to Cc or Sc
   var newKeys = keys.map(function (key) {
-    if (common.includes(key) || a) {
+    var isIncluded = common.includes(key);
+    if (isIncluded || a) {
       // something gets edited
-      if (common.includes(key)) {
+      if (isIncluded) {
         // COMMON: table gets dot prefix
         if (!p) {
           // common and child
@@ -428,14 +429,15 @@ var validateRawKnex = function validateRawKnex(data, label, camel) {
         return camelObject[0];
       }
     }
+    return camelObject;
   }
   if (options.returnFirst) {
     if (!isObjectLiteral(data.rows[0])) {
       if (options.invalidReturn) {
         return options.invalidReturn;
       }
-      return data.rows[0];
     }
+    return data.rows[0];
   }
   return data.rows;
 };

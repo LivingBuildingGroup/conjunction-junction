@@ -256,8 +256,9 @@ const prefixCommonKeys = (tableName, keys, common, options={}) => {
   const a = options.alwaysPrefix === true ? true : false ;
   const c = options.case === 'cC' ? 'cC' : 'Sc' ; // limit to Cc or Sc
   const newKeys = keys.map(key=>{
-    if(common.includes(key) || a){ // something gets edited
-      if(common.includes(key)){    // COMMON: table gets dot prefix
+    const isIncluded = common.includes(key);
+    if(isIncluded || a){ // something gets edited
+      if(isIncluded){    // COMMON: table gets dot prefix
         if(!p) {                   // common and child
           if(c==='cC'){
             return `${tableName}.${key} as ${tableName}${titleCaseWord(key, 'cC')}`;
@@ -387,14 +388,15 @@ const validateRawKnex = (data, label, camel, options={}) => {
         return camelObject[0];
       }
     }
+    return camelObject;
   }
   if(options.returnFirst){
     if(!isObjectLiteral(data.rows[0])){
       if(options.invalidReturn){
         return options.invalidReturn;
       }
-      return data.rows[0];
     }
+    return data.rows[0];
   }
   return data.rows;
 };
