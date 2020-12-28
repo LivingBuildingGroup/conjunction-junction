@@ -417,6 +417,7 @@ var validateRawKnex = function validateRawKnex(data, label, camel) {
     }
     return { message: flag + ' row 0 is not an object, stopping' };
   }
+  // passed, now move onto options
   if (camel) {
     var camelObject = data.rows.map(function (r) {
       return convertObjectKeyCase(r, 'cC');
@@ -429,7 +430,7 @@ var validateRawKnex = function validateRawKnex(data, label, camel) {
         return camelObject[0];
       }
     }
-    return camelObject;
+    return camelObject[0];
   }
   if (options.returnFirst) {
     if (!isObjectLiteral(data.rows[0])) {
