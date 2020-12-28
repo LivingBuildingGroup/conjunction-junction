@@ -430,7 +430,7 @@ var validateRawKnex = function validateRawKnex(data, label, camel) {
         return camelObject[0];
       }
     }
-    return camelObject[0];
+    return camelObject;
   }
   if (options.returnFirst) {
     if (!isObjectLiteral(data.rows[0])) {

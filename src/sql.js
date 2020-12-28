@@ -389,7 +389,7 @@ const validateRawKnex = (data, label, camel, options={}) => {
         return camelObject[0];
       }
     }
-    return camelObject[0];
+    return camelObject;
   }
   if(options.returnFirst){
     if(!isObjectLiteral(data.rows[0])){
