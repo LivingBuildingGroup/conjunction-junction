@@ -418,29 +418,27 @@ var validateRawKnex = function validateRawKnex(data, label, camel) {
     return { message: flag + ' row 0 is not an object, stopping' };
   }
   // passed, now move onto options
-  if (camel) {
-    var camelObject = data.rows.map(function (r) {
-      return convertObjectKeyCase(r, 'cC');
-    });
-    if (options.returnFirst) {
-      if (!isObjectLiteral(camelObject[0])) {
-        if (options.invalidReturn) {
-          return options.invalidReturn;
-        }
-        return camelObject[0];
-      }
-    }
-    return camelObject;
-  }
   if (options.returnFirst) {
-    if (!isObjectLiteral(data.rows[0])) {
+    var first = data.rows[0];
+    if (!isObjectLiteral(first)) {
       if (options.invalidReturn) {
         return options.invalidReturn;
       }
+      return Object.assign({}, first);
     }
-    return data.rows[0];
+
+    if (camel) {
+      return convertObjectKeyCase(first, 'cC');
+    }
+    return Object.assign({}, first);
   }
-  return data.rows;
+
+  if (camel) {
+    return data.rows.map(function (r) {
+      return convertObjectKeyCase(r, 'cC');
+    });
+  }
+  return [].concat(_toConsumableArray(data.rows));
 };
 
 module.exports = {

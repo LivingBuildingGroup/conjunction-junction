@@ -379,27 +379,25 @@ const validateRawKnex = (data, label, camel, options={}) => {
     return { message: `${flag} row 0 is not an object, stopping` };
   }
   // passed, now move onto options
-  if(camel){
-    const camelObject = data.rows.map(r=>convertObjectKeyCase(r,'cC'));
-    if(options.returnFirst){
-      if(!isObjectLiteral(camelObject[0])){
-        if(options.invalidReturn){
-          return options.invalidReturn;
-        }
-        return camelObject[0];
-      }
-    }
-    return camelObject;
-  }
   if(options.returnFirst){
-    if(!isObjectLiteral(data.rows[0])){
+    const first = data.rows[0];
+    if(!isObjectLiteral(first)){
       if(options.invalidReturn){
         return options.invalidReturn;
       }
+      return Object.assign({},first);
     }
-    return data.rows[0];
+
+    if(camel){
+      return convertObjectKeyCase(first,'cC');
+    }
+    return Object.assign({},first);
   }
-  return data.rows;
+
+  if(camel){
+    return data.rows.map(r=>convertObjectKeyCase(r,'cC'));
+  }
+  return [...data.rows];
 };
 
 module.exports = { 
