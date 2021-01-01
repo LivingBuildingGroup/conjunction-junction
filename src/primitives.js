@@ -217,9 +217,9 @@ const formatForPrint = (data, options) => {    //plan to deprecate this, continu
 // };
 
 const letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-const letterNumberHash = {};
+const letterToNumberHash = {};
 letters.forEach((l,i)=>{
-  letterNumberHash[`${i+1}`] = l;
+  letterToNumberHash[l] = i+1;
 });
 
 const numberToLetter = num => {     //took out option that did wasn't used in function
@@ -234,7 +234,7 @@ const numberToLetter = num => {     //took out option that did wasn't used in fu
 
 const letterToNumber = letter => {
   if(typeof letter !== 'string') return;
-  return letterNumberHash[letter.toUpperCase()];
+  return letterToNumberHash[letter.toUpperCase()];
 };
 
 // @@@@@@@@@@@@@@@ STRINGS @@@@@@@@@@@@@@@@
