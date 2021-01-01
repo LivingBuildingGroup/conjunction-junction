@@ -216,15 +216,25 @@ const formatForPrint = (data, options) => {    //plan to deprecate this, continu
 //   return formatForPrint(data, options);
 // };
 
-const numberToLetter = (num) => {     //took out option that did wasn't used in function
+const letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+const letterNumberHash = {};
+letters.forEach((l,i)=>{
+  letterNumberHash[`${i+1}`] = l;
+});
+
+const numberToLetter = num => {     //took out option that did wasn't used in function
   // 1-indexed, not 0-indexed, so subtract 1
   // move to conjunction-junction
   // make A if neg, Z if over
   // round number
   // exercise option for caps or lowercase
-  const letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
   const rawLetter = letters[num-1];
   return rawLetter;
+};
+
+const letterToNumber = letter => {
+  if(typeof letter !== 'string') return;
+  return letterNumberHash[letter.toUpperCase()];
 };
 
 // @@@@@@@@@@@@@@@ STRINGS @@@@@@@@@@@@@@@@
@@ -338,6 +348,7 @@ module.exports = {
   formatForPrint,
   // print,
   numberToLetter,
+  letterToNumber,
   // strings
   titleCaseWord, 
   lowerCaseWord,

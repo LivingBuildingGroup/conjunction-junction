@@ -210,6 +210,12 @@ var formatForPrint = function formatForPrint(data, options) {
 //   return formatForPrint(data, options);
 // };
 
+var letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+var letterNumberHash = {};
+letters.forEach(function (l, i) {
+  letterNumberHash['' + (i + 1)] = l;
+});
+
 var numberToLetter = function numberToLetter(num) {
   //took out option that did wasn't used in function
   // 1-indexed, not 0-indexed, so subtract 1
@@ -217,9 +223,13 @@ var numberToLetter = function numberToLetter(num) {
   // make A if neg, Z if over
   // round number
   // exercise option for caps or lowercase
-  var letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
   var rawLetter = letters[num - 1];
   return rawLetter;
+};
+
+var letterToNumber = function letterToNumber(letter) {
+  if (typeof letter !== 'string') return;
+  return letterNumberHash[letter.toUpperCase()];
 };
 
 // @@@@@@@@@@@@@@@ STRINGS @@@@@@@@@@@@@@@@
@@ -336,6 +346,7 @@ module.exports = {
   formatForPrint: formatForPrint,
   // print,
   numberToLetter: numberToLetter,
+  letterToNumber: letterToNumber,
   // strings
   titleCaseWord: titleCaseWord,
   lowerCaseWord: lowerCaseWord,

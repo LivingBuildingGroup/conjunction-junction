@@ -695,7 +695,7 @@ var filterSequentialItems = function filterSequentialItems(arr, options) {
     } else {
       if (!stop) {
         if (isObjectLiteral(o)) {
-          if (o.hasOwnProperty(key)) {
+          if (o[key] !== undefined) {
             var delta = key.includes(ks) ? dateDelta(o[key], arr[index][key], tsUnits) : o[key] - arr[index][key];
             var absDelta = Math.abs(delta);
             var stopValue = key.includes(ks) ? convertTimestampToString(o[key]) : o[key];
