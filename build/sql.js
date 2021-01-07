@@ -11,7 +11,8 @@ var dateTime = require('./date-time');
 
 var _require = require('./basic'),
     isPrimitiveNumber = _require.isPrimitiveNumber,
-    isObjectLiteral = _require.isObjectLiteral;
+    isObjectLiteral = _require.isObjectLiteral,
+    precisionRound = _require.precisionRound;
 
 var _require2 = require('./primitives'),
     titleCaseWord = _require2.titleCaseWord,
@@ -128,6 +129,7 @@ var formatDataForSql = function formatDataForSql(data, key) {
   var type = option.type === 'raw' ? 'raw' : 'knex';
   var prefix = typeof option.prefix === 'string' ? option.prefix : '';
   var suffix = typeof option.suffix === 'string' ? option.suffix : '';
+  var round = isPrimitiveNumber(option.round) ? option.round : null;
   var nullValues = ['NaN', 'NAN', null, undefined, ''];
   var isNull = void 0;
   nullValues.forEach(function (value) {
@@ -166,7 +168,12 @@ var formatDataForSql = function formatDataForSql(data, key) {
       }
       if (key.includes('imestamp')) return item; // this is already in single quotes
       if (isObjectLiteral(item)) return null; // not returning nested objects
-      if (typeof item === 'number') return item;
+      if (isPrimitiveNumber(item)) {
+        if (isPrimitiveNumber(round)) {
+          return precisionRound(item, round);
+        }
+        return item;
+      }
       if (type === 'raw') {
         if (item === null || item === undefined) {
           return 'null';

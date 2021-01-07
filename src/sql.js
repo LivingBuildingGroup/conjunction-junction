@@ -7,7 +7,8 @@
 const dateTime        = require('./date-time');
 const {
   isPrimitiveNumber,
-  isObjectLiteral }   = require('./basic');
+  isObjectLiteral, 
+  precisionRound}   = require('./basic');
 const {
   titleCaseWord, 
   convertScToCc,  } = require('./primitives');
@@ -115,6 +116,7 @@ const formatDataForSql = (data, key, option={type:'raw'}) => {
     option.prefix : '' ;
   const suffix = typeof option.suffix === 'string' ?
     option.suffix : '' ;  
+  const round = isPrimitiveNumber(option.round) ? option.round : null ;
   const nullValues = ['NaN', 'NAN', null, undefined, ''];
   let isNull;
   nullValues.forEach(value=>{
@@ -147,7 +149,12 @@ const formatDataForSql = (data, key, option={type:'raw'}) => {
       }
       if(key.includes('imestamp')) return item; // this is already in single quotes
       if(isObjectLiteral(item))    return null; // not returning nested objects
-      if(typeof item === 'number') return item;
+      if(isPrimitiveNumber(item)) {
+        if(isPrimitiveNumber(round)){
+          return precisionRound(item, round);
+        }
+        return item;
+      }
       if(type === 'raw'){
         if(item === null || item === undefined){
           return 'null' ;
