@@ -499,12 +499,14 @@ var createTimestampLabel = function createTimestampLabel(ts) {
 // @@@@@@@@@@@@@ ZONE CONVERSIONS @@@@@@@@@@@@@
 
 var convertLocalStringTimestampToZuluStringTimestamp = function convertLocalStringTimestampToZuluStringTimestamp(localStringTimestamp) {
+  var extraOffset = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
   // this works on: 1) valid timestamps, 2) string in the LOCAL zone with NO time zone
   // if the string HAS a timezone, use convertTimestampToString
   var localTimestamp = isValidDate(localStringTimestamp) ? localStringTimestamp : convertStringToTimestamp(localStringTimestamp);
   if (!isValidDate(localTimestamp)) return '';
   var msLocalTimestamp = localTimestamp.getTime();
-  var offset = getTheTimezoneOffset();
+  var offset = getTheTimezoneOffset() + extraOffset;
   var msOffset = offset * 1000 * 60;
   var msAdjusted = msLocalTimestamp - msOffset;
   var zuluTimestamp = new Date(msAdjusted);

@@ -570,7 +570,7 @@ const createTimestampLabel = (ts, option={format: 'm d h'}) => {
 
 // @@@@@@@@@@@@@ ZONE CONVERSIONS @@@@@@@@@@@@@
 
-const convertLocalStringTimestampToZuluStringTimestamp = (localStringTimestamp)  => { 
+const convertLocalStringTimestampToZuluStringTimestamp = (localStringTimestamp, extraOffset=0)  => { 
   // this works on: 1) valid timestamps, 2) string in the LOCAL zone with NO time zone
   // if the string HAS a timezone, use convertTimestampToString
   const localTimestamp = isValidDate(localStringTimestamp) ? 
@@ -578,7 +578,7 @@ const convertLocalStringTimestampToZuluStringTimestamp = (localStringTimestamp) 
     convertStringToTimestamp(localStringTimestamp);
   if(!isValidDate(localTimestamp)) return '';
   const msLocalTimestamp = localTimestamp.getTime();
-  const offset = getTheTimezoneOffset();
+  const offset = getTheTimezoneOffset() + extraOffset;
   const msOffset = offset * 1000 * 60;
   const msAdjusted = msLocalTimestamp - msOffset;
   const zuluTimestamp = new Date(msAdjusted);
