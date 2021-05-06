@@ -151,7 +151,7 @@ const formatDataForSql = (data, key, option={type:'raw'}) => {
       if(key.includes('imestamp')) return item; // this is already in single quotes
       if(isObjectLiteral(item)){
         if(allowJSON){
-          return JSON.stringify(item);
+          return `'${JSON.stringify(data)}'`;
         }
         return null; // not returning nested objects
       }
@@ -206,7 +206,7 @@ const formatDataForSql = (data, key, option={type:'raw'}) => {
   if(isObjectLiteral(data)) {
     if(type==='raw') {
       if(allowJSON){
-        return JSON.stringify(data);
+        return `'${JSON.stringify(data)}'`;
       }
       return 'null';
     } else {
