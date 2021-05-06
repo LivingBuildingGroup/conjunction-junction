@@ -735,7 +735,7 @@ var rangeIsIncluded = function rangeIsIncluded(eventStartIn, eventEndIn, rangeSt
   'same start ends earlier', // 3    |xx
   'exact match', // 4    |xxx|
   'same start ends later', // 5    |xxx|x
-  'subset', // 6     xxx
+  'subset', // 6      x
   'starts later same end', // 7      xx|
   'spans end', // 8      xx|x
   'entirely after', // 9         xxx

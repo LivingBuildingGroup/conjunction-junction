@@ -112,6 +112,7 @@ const formatDataForSql = (data, key, option={type:'raw'}) => {
   // key: the key in the object, which is used to detect certain things, like timestamps (if consistent naming conventions are used)
   // output: data
   const type = option.type === 'raw' ? 'raw' : 'knex' ;
+  const allowJSON = !!option.allowJSON;
   const prefix = typeof option.prefix === 'string' ?
     option.prefix : '' ;
   const suffix = typeof option.suffix === 'string' ?
@@ -148,7 +149,12 @@ const formatDataForSql = (data, key, option={type:'raw'}) => {
         }
       }
       if(key.includes('imestamp')) return item; // this is already in single quotes
-      if(isObjectLiteral(item))    return null; // not returning nested objects
+      if(isObjectLiteral(item)){
+        if(allowJSON){
+          return JSON.stringify(item);
+        }
+        return null; // not returning nested objects
+      }
       if(isPrimitiveNumber(item)) {
         if(isPrimitiveNumber(round)){
           return precisionRound(item, round);
@@ -199,6 +205,9 @@ const formatDataForSql = (data, key, option={type:'raw'}) => {
   // we are not sending nested objects to SQL
   if(isObjectLiteral(data)) {
     if(type==='raw') {
+      if(allowJSON){
+        return JSON.stringify(data);
+      }
       return 'null';
     } else {
       return null;

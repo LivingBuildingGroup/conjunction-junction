@@ -127,6 +127,7 @@ var formatDataForSql = function formatDataForSql(data, key) {
   // key: the key in the object, which is used to detect certain things, like timestamps (if consistent naming conventions are used)
   // output: data
   var type = option.type === 'raw' ? 'raw' : 'knex';
+  var allowJSON = !!option.allowJSON;
   var prefix = typeof option.prefix === 'string' ? option.prefix : '';
   var suffix = typeof option.suffix === 'string' ? option.suffix : '';
   var round = isPrimitiveNumber(option.round) ? option.round : null;
@@ -167,7 +168,12 @@ var formatDataForSql = function formatDataForSql(data, key) {
         }
       }
       if (key.includes('imestamp')) return item; // this is already in single quotes
-      if (isObjectLiteral(item)) return null; // not returning nested objects
+      if (isObjectLiteral(item)) {
+        if (allowJSON) {
+          return JSON.stringify(item);
+        }
+        return null; // not returning nested objects
+      }
       if (isPrimitiveNumber(item)) {
         if (isPrimitiveNumber(round)) {
           return precisionRound(item, round);
@@ -218,6 +224,9 @@ var formatDataForSql = function formatDataForSql(data, key) {
   // we are not sending nested objects to SQL
   if (isObjectLiteral(data)) {
     if (type === 'raw') {
+      if (allowJSON) {
+        return JSON.stringify(data);
+      }
       return 'null';
     } else {
       return null;
