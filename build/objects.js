@@ -686,7 +686,8 @@ var filterSequentialItems = function filterSequentialItems(arr, options) {
   var ks = typeof keySignature === 'string' ? keySignature : 'imestamp';
   var index = void 0,
       stop = void 0,
-      message = void 0;
+      message = void 0,
+      extraValues = {};
   var range = increment + tolerance;
   var tsUnits = key.includes(ks) && typeof timestampUnits === 'string' ? timestampUnits : key.includes(ks) ? 'minutes' : null;
   arr.forEach(function (o, i) {
@@ -703,6 +704,14 @@ var filterSequentialItems = function filterSequentialItems(arr, options) {
             if (absDelta > range) {
               stop = i;
               message = 'in filterSequentialItems() at record ' + i + ' exceeded range of ' + range + ' (value at last sequential index #' + index + '/' + id + ': ' + arr[index][id] + ': ' + lastValue + ', ' + id + ': ' + o[id] + ', delta: ' + delta + ', absolute: ' + absDelta + ', key: ' + key + ', value at ' + i + ': ' + stopValue + ')';
+              extraValues = {
+                priorValidIndex: index,
+                priorValidId: id,
+                priorValidValue: lastValue,
+                value: o[key],
+                delta: delta,
+                absDelta: absDelta
+              };
             } else if (absDelta === 0) {
               stop = i;
               message = 'at record ' + i + ' no sequentiality detected (value at last sequential index #' + index + '/' + id + ': ' + arr[index][id] + ': ' + lastValue + ', ' + id + ': ' + o[id] + ', delta: ' + delta + ', absolute: ' + absDelta + '), key: ' + key + ', value at ' + i + ': ' + stopValue;
@@ -711,22 +720,23 @@ var filterSequentialItems = function filterSequentialItems(arr, options) {
               index = i; // success!
             }
           } else {
+            // o[key] === undefined
             stop = i;
             message = 'at record ' + i + '/' + id + ': ' + o[id] + ' key of ' + key + ' not found.';
           }
         } else {
+          // o id not an object
           stop = i;
           message = 'at record ' + i + '/' + id + ': ' + o[id] + ' no sequentiality object found.';
         }
       }
     }
   });
-  return {
-    array: arr.slice(0, index + 1),
+  return Object.assign({}, extraValues, {
     index: index,
     stop: stop,
     message: message
-  };
+  });
 };
 
 // @@@@@@@@@@@@@@@ ARRAYS @@@@@@@@@@@@@@@@

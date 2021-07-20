@@ -713,6 +713,7 @@ const filterSequentialItems = (arr, options) => {
       message,
     }
   );
+};
 
 // @@@@@@@@@@@@@@@ ARRAYS @@@@@@@@@@@@@@@@
 
