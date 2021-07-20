@@ -708,7 +708,6 @@ const filterSequentialItems = (arr, options) => {
   return Object.assign({},
     extraValues,
     {
-      array: arr.slice(0, index + 1),
       index,
       stop,
       message,
