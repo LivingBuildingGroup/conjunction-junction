@@ -656,7 +656,7 @@ const filterSequentialItems = (arr, options) => {
   // validated
   const id = typeof extraLoggingKey === 'string' ? extraLoggingKey : 'id' ;
   const ks = typeof keySignature    === 'string' ? keySignature    : 'imestamp' ;
-  let index, stop, message;
+  let index, stop, message, extraValues = {};
   const range = increment + tolerance;
   const tsUnits = key.includes(ks) && typeof timestampUnits === 'string' ?
     timestampUnits :
@@ -674,11 +674,19 @@ const filterSequentialItems = (arr, options) => {
               dateDelta(o[key], arr[index][key], tsUnits) :
               o[key] - arr[index][key];
             const absDelta  = Math.abs(delta);
-            const stopValue = key.includes(ks) ? convertTimestampToString(o[key], 'd t z') : o[key];
+            const stopValue = key.includes(ks) ? convertTimestampToString(o[key]         , 'd t z') : o[key];
             const lastValue = key.includes(ks) ? convertTimestampToString(arr[index][key], 'd t z') : arr[index][key];
             if(absDelta > range){
               stop = i;
               message = `in filterSequentialItems() at record ${i} exceeded range of ${range} (value at last sequential index #${index}/${id}: ${arr[index][id]}: ${lastValue}, ${id}: ${o[id]}, delta: ${delta}, absolute: ${absDelta}, key: ${key}, value at ${i}: ${stopValue})`;
+              extraValues = {
+                priorValidIndex: index,
+                priorValidId: id,
+                priorValidValue: lastValue,
+                value: o[key],
+                delta,
+                absDelta,
+              };
             } else if (absDelta === 0){
               stop = i;
               message = `at record ${i} no sequentiality detected (value at last sequential index #${index}/${id}: ${arr[index][id]}: ${lastValue}, ${id}: ${o[id]}, delta: ${delta}, absolute: ${absDelta}), key: ${key}, value at ${i}: ${stopValue}`;
@@ -686,24 +694,26 @@ const filterSequentialItems = (arr, options) => {
               message = 'ok';
               index = i; // success!
             }
-          } else {
+          } else { // o[key] === undefined
             stop = i;
             message = `at record ${i}/${id}: ${o[id]} key of ${key} not found.`;
           }
-        } else {
+        } else { // o id not an object
           stop = i;
           message = `at record ${i}/${id}: ${o[id]} no sequentiality object found.`;
         }
       }
     }
   });
-  return {
-    array: arr.slice(0, index + 1),
-    index,
-    stop,
-    message,
-  };
-};
+  return Object.assign({},
+    extraValues,
+    {
+      array: arr.slice(0, index + 1),
+      index,
+      stop,
+      message,
+    }
+  );
 
 // @@@@@@@@@@@@@@@ ARRAYS @@@@@@@@@@@@@@@@
 
