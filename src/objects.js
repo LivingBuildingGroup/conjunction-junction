@@ -682,7 +682,7 @@ const filterSequentialItems = (arr, options) => {
               extraValues = {
                 priorValidIndex: index,
                 priorValidId: id,
-                priorValidValue: lastValue,
+                priorValidValue: arr[index][key],
                 value: o[key],
                 delta,
                 absDelta,

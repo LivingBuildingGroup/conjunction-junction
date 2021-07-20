@@ -707,7 +707,7 @@ var filterSequentialItems = function filterSequentialItems(arr, options) {
               extraValues = {
                 priorValidIndex: index,
                 priorValidId: id,
-                priorValidValue: lastValue,
+                priorValidValue: arr[index][key],
                 value: o[key],
                 delta: delta,
                 absDelta: absDelta
