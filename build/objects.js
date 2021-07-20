@@ -698,14 +698,14 @@ var filterSequentialItems = function filterSequentialItems(arr, options) {
           if (o[key] !== undefined) {
             var delta = key.includes(ks) ? dateDelta(o[key], arr[index][key], tsUnits) : o[key] - arr[index][key];
             var absDelta = Math.abs(delta);
-            var stopValue = key.includes(ks) ? convertTimestampToString(o[key]) : o[key];
-            var lastValue = key.includes(ks) ? convertTimestampToString(arr[index][key]) : arr[index][key];
+            var stopValue = key.includes(ks) ? convertTimestampToString(o[key], 'd t z') : o[key];
+            var lastValue = key.includes(ks) ? convertTimestampToString(arr[index][key], 'd t z') : arr[index][key];
             if (absDelta > range) {
               stop = i;
-              message = 'in filterSequentialItems() at record ' + i + ' exceeded range of ' + range + ' (' + id + ': ' + o[id] + ', delta: ' + delta + ', absolute: ' + absDelta + ', key: ' + key + ', value at ' + i + ': ' + stopValue + ', value at last sequential index #' + index + '/' + id + ': ' + arr[index][id] + ': ' + lastValue + ')';
+              message = 'in filterSequentialItems() at record ' + i + ' exceeded range of ' + range + ' (value at last sequential index #' + index + '/' + id + ': ' + arr[index][id] + ': ' + lastValue + ', ' + id + ': ' + o[id] + ', delta: ' + delta + ', absolute: ' + absDelta + ', key: ' + key + ', value at ' + i + ': ' + stopValue + ')';
             } else if (absDelta === 0) {
               stop = i;
-              message = 'at record ' + i + ' no sequentiality detected (' + id + ': ' + o[id] + ', delta: ' + delta + ', absolute: ' + absDelta + '), key: ' + key + ', value at ' + i + ': ' + stopValue + ', value at last sequential index #' + index + '/' + id + ': ' + arr[index][id] + ': ' + lastValue;
+              message = 'at record ' + i + ' no sequentiality detected (value at last sequential index #' + index + '/' + id + ': ' + arr[index][id] + ': ' + lastValue + ', ' + id + ': ' + o[id] + ', delta: ' + delta + ', absolute: ' + absDelta + '), key: ' + key + ', value at ' + i + ': ' + stopValue;
             } else {
               message = 'ok';
               index = i; // success!
