@@ -3,11 +3,11 @@
 const { precisionRound } = require('./basic');
 
 const componentToHex = c => {
-  const hex = c.toString(16);
+  const hex = c ? c.toString(16) : 0;
   return hex.length === 1 ? `0${hex}` : hex;
 };
 
-const rgbToHex = (r, g, b) => {
+const rgbToHex = (r=0, g=0, b=0) => {
   return `#${componentToHex(r)}${componentToHex(g)}${componentToHex(b)}`;
 };
 

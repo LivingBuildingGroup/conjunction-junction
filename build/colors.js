@@ -6,11 +6,15 @@ var _require = require('./basic'),
     precisionRound = _require.precisionRound;
 
 var componentToHex = function componentToHex(c) {
-  var hex = c.toString(16);
+  var hex = c ? c.toString(16) : 0;
   return hex.length === 1 ? '0' + hex : hex;
 };
 
-var rgbToHex = function rgbToHex(r, g, b) {
+var rgbToHex = function rgbToHex() {
+  var r = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+  var g = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  var b = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
   return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
 };
 
