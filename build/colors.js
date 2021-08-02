@@ -7,7 +7,7 @@ var _require = require('./basic'),
 
 var componentToHex = function componentToHex(c) {
   var hex = c ? c.toString(16) : 0;
-  return hex.length === 1 ? '0' + hex : hex;
+  return ('' + hex).length === 1 ? '0' + hex : hex;
 };
 
 var rgbToHex = function rgbToHex() {
