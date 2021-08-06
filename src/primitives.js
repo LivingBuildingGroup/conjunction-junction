@@ -263,7 +263,7 @@ const convertScToCc = (word, divider='_') => {
   if(isPrimitiveNumber(word)) return `${word}`;
   if(typeof word !== 'string') return '';
   const array = word.split(divider);
-  const first = array[0];
+  const first = array[0].toLowerCase();
   const others = array.slice(1,array.length);
   const othersCamel = others.map(word=>titleCaseWord(word));
   return `${first}${othersCamel.join('')}`;

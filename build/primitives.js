@@ -260,7 +260,7 @@ var convertScToCc = function convertScToCc(word) {
   if (isPrimitiveNumber(word)) return '' + word;
   if (typeof word !== 'string') return '';
   var array = word.split(divider);
-  var first = array[0];
+  var first = array[0].toLowerCase();
   var others = array.slice(1, array.length);
   var othersCamel = others.map(function (word) {
     return titleCaseWord(word);
