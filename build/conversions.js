@@ -66,6 +66,13 @@ var ftToMm = function ftToMm(ft) {
   return precisionRound(ft * 304.8, round);
 };
 
+var mmToFtInches = function mmToFtInches(mm) {
+  var inches = mmToInches(mm);
+  var ft = Math.floor(inches / 12);
+  var inchRemainderWidth = Math.round(inches - ft * 12);
+  return [ft, inchRemainderWidth];
+};
+
 var feetToMeters = function feetToMeters(feet) {
   var round = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 4;
 
@@ -1057,6 +1064,8 @@ module.exports = {
 
   mmToFt: mmToFt,
   ftToMm: ftToMm,
+
+  mmToFtInches: mmToFtInches,
 
   feetToMeters: feetToMeters,
   metersToFeet: metersToFeet,

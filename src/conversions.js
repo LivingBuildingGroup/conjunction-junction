@@ -56,6 +56,13 @@ const ftToMm = (ft, round=4) => {
   return precisionRound(ft * 304.8, round);
 };
 
+const mmToFtInches = mm => {
+  const inches = mmToInches(mm);
+  const ft = Math.floor(inches/12);
+  const inchRemainderWidth = Math.round(inches - (ft * 12));
+  return [ft,inchRemainderWidth];
+};
+
 const feetToMeters = (feet, round=4) => {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
@@ -863,6 +870,8 @@ module.exports = {
 
   mmToFt,
   ftToMm,
+  
+  mmToFtInches,
   
   feetToMeters,
   metersToFeet,
