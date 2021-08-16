@@ -7,6 +7,7 @@ const primitives  = require('./build/primitives');
 const objects     = require('./build/objects');
 const sql         = require('./build/sql');
 const colors      = require('./build/colors');
+const svgs        = require('./build/svgs');
 
 module.exports = Object.assign({},
   basic,
@@ -15,5 +16,6 @@ module.exports = Object.assign({},
   primitives,
   objects,
   sql,
-  colors
+  colors,
+  svgs
 );

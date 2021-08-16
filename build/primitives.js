@@ -332,6 +332,23 @@ var isValidEmail = function isValidEmail(mail) {
   return false;
 };
 
+var tryToMakeInputSafe = function tryToMakeInputSafe(input) {
+  var safeInput = JSON.parse(JSON.stringify(input));
+  if (Array.isArray(safeInput.answers)) {
+    safeInput.answers.forEach(function (a) {
+      if (typeof a.answer === 'string' && a.answer.includes('\'')) {
+        a.answer = a.answer.split('\'').join('');
+      }
+    });
+  }
+  ['name', 'company', 'email'].forEach(function (k) {
+    if (typeof safeInput[k] === 'string' && safeInput[k].includes('\'')) {
+      safeInput[k] = safeInput[k].split('\'').join('');
+    }
+  });
+  return safeInput;
+};
+
 module.exports = {
   // types
   correctInputType: correctInputType, // do not do a test for this yet
@@ -354,5 +371,6 @@ module.exports = {
   convertCcToSc: convertCcToSc,
   convertScToSpace: convertScToSpace,
   convertPhraseToPath: convertPhraseToPath,
-  isValidEmail: isValidEmail
+  isValidEmail: isValidEmail,
+  tryToMakeInputSafe: tryToMakeInputSafe
 };

@@ -334,6 +334,23 @@ const isValidEmail = mail => {
   return false;
 };
 
+const tryToMakeInputSafe = input => {
+  const safeInput = JSON.parse(JSON.stringify(input));
+  if(Array.isArray(safeInput.answers)){
+    safeInput.answers.forEach(a=>{
+      if(typeof a.answer === 'string' && a.answer.includes('\'')){
+        a.answer = a.answer.split('\'').join('');
+      }
+    });
+  }
+  ['name','company','email'].forEach(k=>{
+    if(typeof safeInput[k] === 'string' &&  safeInput[k].includes('\'')){
+      safeInput[k] =  safeInput[k].split('\'').join('');
+    }
+  });
+  return safeInput;
+};
+
 module.exports = { 
   // types
   correctInputType, // do not do a test for this yet
@@ -357,4 +374,5 @@ module.exports = {
   convertScToSpace,
   convertPhraseToPath,
   isValidEmail,
+  tryToMakeInputSafe,
 };
