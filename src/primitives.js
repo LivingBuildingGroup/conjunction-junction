@@ -17,9 +17,12 @@ const correctInputType = (value, key='', options={}) => {
   const numberKeysSignatures  = Array.isArray(options.numberSignatures)  ? options.numberSignatures  : ['number','Lbs','nessIn','Sf','Cf','idSlope'];
   const integerKeysSignatures = Array.isArray(options.integerSignatures) ? options.integerSignatures : ['integer','idComponent','idProfile','idCassette', 'idStorm','idTest','initialPlantHealth'];
   const booleanKeysSignatures = Array.isArray(options.booleanSignatures) ? options.booleanSignatures : ['omit'];
+  const lowercaseKeysSignatures = Array.isArray(options.lowercaseSignatures) ? options.lowercaseSignatures : [];
+
   let isNumber = false;
   let isInteger = false;
   let isBoolean = false;
+  let isLowercase = false;
   booleanKeysSignatures.forEach(sig=>{
     if(typeof key === 'string' && key.includes(sig)) {
       isBoolean = true;
@@ -32,10 +35,17 @@ const correctInputType = (value, key='', options={}) => {
       }
     });
   }
-  if(!isNumber){
+  if(!isNumber && !isBoolean){
     integerKeysSignatures.forEach(sig=>{
       if(typeof key === 'string' && key.includes(sig)) {
         isInteger = true;
+      }
+    });
+  }
+  if(!isNumber && !isBoolean && !isInteger){
+    lowercaseKeysSignatures.forEach(sig=>{
+      if(typeof key === 'string' && key.includes(sig)) {
+        isLowercase = true;
       }
     });
   }
@@ -43,10 +53,10 @@ const correctInputType = (value, key='', options={}) => {
     isBoolean && value === 'true' ? true :
       isBoolean && value === 'false' ? false :
         isNumber ? parseFloat(value)  :
-          isInteger ? parseInt(value, 10):
-            value ;
-  // the line below prevents converting 0.00 to 0
-  const theValue = tryValue === value ? value : tryValue;
+          isInteger ? parseInt(value, 10) :
+            isLowercase ? `${value}`.toLowerCase() :
+              value ;
+  const theValue = tryValue === value ? value : tryValue; // this prevents converting 0.00 to 0
   return theValue;
 };
 

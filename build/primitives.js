@@ -22,9 +22,12 @@ var correctInputType = function correctInputType(value) {
   var numberKeysSignatures = Array.isArray(options.numberSignatures) ? options.numberSignatures : ['number', 'Lbs', 'nessIn', 'Sf', 'Cf', 'idSlope'];
   var integerKeysSignatures = Array.isArray(options.integerSignatures) ? options.integerSignatures : ['integer', 'idComponent', 'idProfile', 'idCassette', 'idStorm', 'idTest', 'initialPlantHealth'];
   var booleanKeysSignatures = Array.isArray(options.booleanSignatures) ? options.booleanSignatures : ['omit'];
+  var lowercaseKeysSignatures = Array.isArray(options.lowercaseSignatures) ? options.lowercaseSignatures : [];
+
   var isNumber = false;
   var isInteger = false;
   var isBoolean = false;
+  var isLowercase = false;
   booleanKeysSignatures.forEach(function (sig) {
     if (typeof key === 'string' && key.includes(sig)) {
       isBoolean = true;
@@ -37,16 +40,22 @@ var correctInputType = function correctInputType(value) {
       }
     });
   }
-  if (!isNumber) {
+  if (!isNumber && !isBoolean) {
     integerKeysSignatures.forEach(function (sig) {
       if (typeof key === 'string' && key.includes(sig)) {
         isInteger = true;
       }
     });
   }
-  var tryValue = isBoolean && value === 'true' ? true : isBoolean && value === 'false' ? false : isNumber ? parseFloat(value) : isInteger ? parseInt(value, 10) : value;
-  // the line below prevents converting 0.00 to 0
-  var theValue = tryValue === value ? value : tryValue;
+  if (!isNumber && !isBoolean && !isInteger) {
+    lowercaseKeysSignatures.forEach(function (sig) {
+      if (typeof key === 'string' && key.includes(sig)) {
+        isLowercase = true;
+      }
+    });
+  }
+  var tryValue = isBoolean && value === 'true' ? true : isBoolean && value === 'false' ? false : isNumber ? parseFloat(value) : isInteger ? parseInt(value, 10) : isLowercase ? ('' + value).toLowerCase() : value;
+  var theValue = tryValue === value ? value : tryValue; // this prevents converting 0.00 to 0
   return theValue;
 };
 
