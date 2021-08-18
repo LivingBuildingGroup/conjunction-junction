@@ -58,10 +58,10 @@ var correctInputType = function correctInputType(value) {
   }
   var tryValue = isBoolean && value === 'true' ? true : isBoolean && value === 'false' ? false : isNumber ? parseFloat(value) : isInteger ? parseInt(value, 10) : isLowercase ? ('' + value).toLowerCase() : value;
   if (isNumber && !isPrimitiveNumber(tryValue)) {
-    tryValue = numberFailure || tryValue;
+    tryValue = typeof numberFailure !== 'undefined' ? numberFailure : tryValue;
   }
   if (isInteger && !isPrimitiveNumber(tryValue)) {
-    tryValue = integerFailure || tryValue;
+    tryValue = typeof integerFailure !== 'undefined' ? integerFailure : tryValue;
   }
   var theValue = tryValue === value ? value : tryValue; // this prevents converting 0.00 to 0
   return theValue;

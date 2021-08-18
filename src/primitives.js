@@ -59,10 +59,10 @@ const correctInputType = (value, key='', options={}) => {
             isLowercase ? `${value}`.toLowerCase() :
               value ;
   if(isNumber && !isPrimitiveNumber(tryValue)){
-    tryValue = numberFailure || tryValue;
+    tryValue = typeof numberFailure !== 'undefined' ? numberFailure : tryValue;
   }
   if(isInteger && !isPrimitiveNumber(tryValue)){
-    tryValue = integerFailure || tryValue;
+    tryValue = typeof integerFailure !== 'undefined' ? integerFailure : tryValue;
   }
   const theValue = tryValue === value ? value : tryValue; // this prevents converting 0.00 to 0
   return theValue;
