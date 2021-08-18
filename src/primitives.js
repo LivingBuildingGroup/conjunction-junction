@@ -18,6 +18,8 @@ const correctInputType = (value, key='', options={}) => {
   const integerKeysSignatures = Array.isArray(options.integerSignatures) ? options.integerSignatures : ['integer','idComponent','idProfile','idCassette', 'idStorm','idTest','initialPlantHealth'];
   const booleanKeysSignatures = Array.isArray(options.booleanSignatures) ? options.booleanSignatures : ['omit'];
   const lowercaseKeysSignatures = Array.isArray(options.lowercaseSignatures) ? options.lowercaseSignatures : [];
+  const integerFailure = options.integerFailure;
+  const numberFailure = options.numberFailure;
 
   let isNumber = false;
   let isInteger = false;
@@ -49,13 +51,19 @@ const correctInputType = (value, key='', options={}) => {
       }
     });
   }
-  const tryValue = 
+  let tryValue = 
     isBoolean && value === 'true' ? true :
       isBoolean && value === 'false' ? false :
-        isNumber ? parseFloat(value)  :
+        isNumber ? parseFloat(value) :
           isInteger ? parseInt(value, 10) :
             isLowercase ? `${value}`.toLowerCase() :
               value ;
+  if(isNumber && !isPrimitiveNumber(tryValue)){
+    tryValue = numberFailure || tryValue;
+  }
+  if(isInteger && !isPrimitiveNumber(tryValue)){
+    tryValue = integerFailure || tryValue;
+  }
   const theValue = tryValue === value ? value : tryValue; // this prevents converting 0.00 to 0
   return theValue;
 };

@@ -23,6 +23,8 @@ var correctInputType = function correctInputType(value) {
   var integerKeysSignatures = Array.isArray(options.integerSignatures) ? options.integerSignatures : ['integer', 'idComponent', 'idProfile', 'idCassette', 'idStorm', 'idTest', 'initialPlantHealth'];
   var booleanKeysSignatures = Array.isArray(options.booleanSignatures) ? options.booleanSignatures : ['omit'];
   var lowercaseKeysSignatures = Array.isArray(options.lowercaseSignatures) ? options.lowercaseSignatures : [];
+  var integerFailure = options.integerFailure;
+  var numberFailure = options.numberFailure;
 
   var isNumber = false;
   var isInteger = false;
@@ -55,6 +57,12 @@ var correctInputType = function correctInputType(value) {
     });
   }
   var tryValue = isBoolean && value === 'true' ? true : isBoolean && value === 'false' ? false : isNumber ? parseFloat(value) : isInteger ? parseInt(value, 10) : isLowercase ? ('' + value).toLowerCase() : value;
+  if (isNumber && !isPrimitiveNumber(tryValue)) {
+    tryValue = numberFailure || tryValue;
+  }
+  if (isInteger && !isPrimitiveNumber(tryValue)) {
+    tryValue = integerFailure || tryValue;
+  }
   var theValue = tryValue === value ? value : tryValue; // this prevents converting 0.00 to 0
   return theValue;
 };
