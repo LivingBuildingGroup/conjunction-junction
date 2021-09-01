@@ -263,7 +263,10 @@ const titleCaseWord = (word, option) => {
   // output: capitalized string
   if(typeof word !== 'string') return;
   const end = word.slice(1,word.length);
-  const endCase = option === 'cC' ? convertScToCc(end) : end ;
+  const isPascal = option === 'cC' || option && option.pascal;
+  const divider = isPascal && option.divider ? option.divider : null;
+  const endCase = 
+    isPascal ? convertScToCc(end, divider) : end ;
   const front = word.slice(0,1);
   return `${front.toUpperCase()}${endCase}`;
 };

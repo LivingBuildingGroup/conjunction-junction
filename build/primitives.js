@@ -257,7 +257,9 @@ var titleCaseWord = function titleCaseWord(word, option) {
   // output: capitalized string
   if (typeof word !== 'string') return;
   var end = word.slice(1, word.length);
-  var endCase = option === 'cC' ? convertScToCc(end) : end;
+  var isPascal = option === 'cC' || option && option.pascal;
+  var divider = isPascal && option.divider ? option.divider : null;
+  var endCase = isPascal ? convertScToCc(end, divider) : end;
   var front = word.slice(0, 1);
   return '' + front.toUpperCase() + endCase;
 };
