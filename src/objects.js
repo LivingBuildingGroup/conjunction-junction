@@ -1,13 +1,14 @@
 'use strict';
 const { 
   convertTimestampToString,
-  dateDelta }       = require('./date-time');
+  dateDelta }         = require('./date-time');
 const { isPrimitiveNumber,
   precisionRound,
-  isObjectLiteral } = require('./basic');
+  isObjectLiteral }   = require('./basic');
 const { convertScToCc,
   titleCaseWord,
-  convertCcToSc } = require('./primitives');
+  convertCcToSc }     = require('./primitives');
+const { isValidDate } = require('./date-time');
 // @@@@@@@@@@@@@@@ OBJECT KEYS @@@@@@@@@@@@@@@@
 
 const convertObjectKeyCase = (object, caseOption='cC') => {
@@ -715,6 +716,76 @@ const filterSequentialItems = (arr, options) => {
   );
 };
 
+const consolidateTimeOrderedArray = (arr, _count, tsKey, keyTypes) => {
+  if(!Array.isArray(arr)){
+    throw {
+      message: 'at consolidateTimeOrderedArray arr is not an array',
+    };
+  }
+  const newArr = [];
+  let hour   = 0;
+  let minute = 0;
+  let newDp  = {};
+  // increments MUST be denominators of 60
+  const count = 60%_count === 0 ? _count : 60;
+
+  arr.forEach((d,i)=>{
+    if(!isValidDate(d[tsKey])){
+      throw {
+        message: `at consolidateTimeOrderedArray ${d[tsKey]} at index ${i} is ${d[tsKey]}, not a date`,
+      };
+    }
+    const thisHour = d[tsKey].getHour();
+    const thisMin  = d[tsKey].getMinutes();
+    const shouldAdvance = thisHour !== hour || thisMin % count === 0;
+    if(shouldAdvance){
+      if(newDp[tsKey]){ // if newDp has been populated at all
+        newArr.push(newDp);
+      }
+      // restart
+      hour   = thisHour;
+      minute = thisMin;
+      newDp  = {};
+    }
+
+    // use the latest timestamp key
+    newDp[tsKey] = d[tsKey];
+
+    for(let key in keyTypes){
+      // if first time visiting this key
+      const aggType = keyTypes[key];
+      // only aggregate numbers
+      if(isPrimitiveNumber(d[key])){
+        // initialize if needed
+        if(typeof newDp[key] === 'undefined'){
+          newDp[key] = 
+            aggType === 'mean' ? [d[key]] :
+              d[key];
+        } else {
+          if(aggType === 'mean'){
+            newDp[key].push(d[key]);
+          } else if(aggType === 'max'){
+            newDp[key] = Math.max(newDp[key], d[key]);
+          } else if(aggType === 'sum'){
+            newDp[key] += d[key];
+          }
+        }
+      }
+    }
+  }); // end loop to populate newArr
+
+  newArr.forEach(d=>{
+    for(let k in d){
+      if(Array.isArray(d[k])){
+        d[k] = averageArray(d[k], false);
+      }
+    }
+  });
+
+  return newArr;
+  
+};
+
 // @@@@@@@@@@@@@@@ ARRAYS @@@@@@@@@@@@@@@@
 
 const totalAndAverageArrays = (compoundArray, precision=4) => {
@@ -918,6 +989,7 @@ module.exports = {
   mergeArraysOfObjectsByKey,
   summarizeValuesByKey,
   filterSequentialItems,
+  consolidateTimeOrderedArray,
   // arrays
   totalAndAverageArrays,
   deltaArray,
