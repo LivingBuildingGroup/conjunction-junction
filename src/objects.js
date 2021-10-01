@@ -735,7 +735,7 @@ const consolidateTimeOrderedArray = (arr, _count, tsKey, keyTypes) => {
         message: `at consolidateTimeOrderedArray ${d[tsKey]} at index ${i} is ${d[tsKey]}, not a date`,
       };
     }
-    const thisHour = d[tsKey].getHour();
+    const thisHour = d[tsKey].getHours();
     const thisMin  = d[tsKey].getMinutes();
     const shouldAdvance = thisHour !== hour || thisMin % count === 0;
     if(shouldAdvance){

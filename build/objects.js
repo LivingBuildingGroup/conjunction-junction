@@ -761,7 +761,7 @@ var consolidateTimeOrderedArray = function consolidateTimeOrderedArray(arr, _cou
         message: 'at consolidateTimeOrderedArray ' + d[tsKey] + ' at index ' + i + ' is ' + d[tsKey] + ', not a date'
       };
     }
-    var thisHour = d[tsKey].getHour();
+    var thisHour = d[tsKey].getHours();
     var thisMin = d[tsKey].getMinutes();
     var shouldAdvance = thisHour !== hour || thisMin % count === 0;
     if (shouldAdvance) {
