@@ -665,8 +665,6 @@ describe('conjunction-junction date-time', () => {
     expectedResult.setSeconds(0);
     expectedResult.setMilliseconds(0);
     const result = convertStringToTimestamp(string);
-    console.log('string', string);
-    console.log('tmstmp', result);
     expect(result).to.deep.equal(expectedResult);
   });
   it('convertStringToTimestamp +00:00', () => {
@@ -680,8 +678,6 @@ describe('conjunction-junction date-time', () => {
     expectedResult.setSeconds(19);
     expectedResult.setMilliseconds(0);
     const result = convertStringToTimestamp(string);
-    console.log('string', string);
-    console.log('tmstmp', result);
     expect(result).to.deep.equal(expectedResult);
   });
   it('convertStringToTimestamp -04:00', () => {
@@ -695,8 +691,6 @@ describe('conjunction-junction date-time', () => {
     expectedResult.setSeconds(19);
     expectedResult.setMilliseconds(0);
     const result = convertStringToTimestamp(string);
-    console.log('string', string);
-    console.log('tmstmp', result);
     expect(result).to.deep.equal(expectedResult);
   });
   it('convertStringToTimestamp space no zone', () => {
@@ -711,8 +705,6 @@ describe('conjunction-junction date-time', () => {
     );
     expectedResult.setMilliseconds(0);
     const result = convertStringToTimestamp(string);
-    console.log('string', string);
-    console.log('tmstmp', result);
     expect(result).to.deep.equal(expectedResult);
   });
 
@@ -765,7 +757,6 @@ describe('conjunction-junction date-time', () => {
     // just converts time stamp to numbers
     // if you want this in Zulu, convert it to zulu first
     // date 1 = 2018-05-17 13:01:00 -0400
-    console.log('date1   ',date1);
     const expectedResult = '20180517130100';
     const result = convertTimestampToString(date1, 'numeric');
     expect(result).to.equal(expectedResult);
@@ -1164,16 +1155,13 @@ describe('conjunction-junction date-time', () => {
   });
 
   it('createTimeframes', () => {
-    const obj = {
-      number:1,
-      number2:2,
-    };
-    const expectedResult = {
-      daysAgo1: 1,
-      number2:2,
-    };
     const result = createTimeframes('string');
-    expect(result).to.deep.equal(expectedResult);
+    expect(isValidDate(result.daysAgo1)).to.equal(true);
+    expect(dateDelta(result.daysAgo2, result.daysAgo1)).to.equal(1440);
+    expect(dateDelta(result.daysAgo7, result.daysAgo1)).to.equal(8640);
+    expect(dateDelta(result.daysAgo14, result.daysAgo1)).to.equal(18720);
+    expect(dateDelta(result.daysAgo21, result.daysAgo1)).to.equal(28800);
+    expect(dateDelta(result.daysAgo30, result.daysAgo1)).to.equal(41760);
   });
 
   it('rangeIsIncluded invalid start date', () => {

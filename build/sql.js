@@ -302,14 +302,14 @@ var prefixCommonKeys = function prefixCommonKeys(tableName, keys, common) {
         if (!p) {
           // common and child
           if (c === 'cC') {
-            return tableName + '.' + key + ' as ' + tableName + titleCaseWord(key, 'cC');
+            return tableName + '.' + key + ' as ' + tableName + titleCaseWord(key, { pascal: true, divider: '_' });
           } else {
             return tableName + '.' + key + ' as ' + tableName + '_' + key;
           }
         } else if (a) {
           // common and parent and always
           if (c === 'cC') {
-            return tableName + '.' + key + ' as ' + tableName + titleCaseWord(key, 'cC');
+            return tableName + '.' + key + ' as ' + tableName + titleCaseWord(key, { pascal: true, divider: '_' });
           } else {
             return tableName + '.' + key + ' as ' + tableName + '_' + key;
           }
@@ -320,7 +320,7 @@ var prefixCommonKeys = function prefixCommonKeys(tableName, keys, common) {
       } else {
         // ALWAYS, BUT NOT COMMON, but always prefix column
         if (c === 'cC') {
-          return key + ' as ' + tableName + titleCaseWord(key, 'cC');
+          return key + ' as ' + tableName + titleCaseWord(key, { pascal: true, divider: '_' });
         } else {
           return key + ' as ' + tableName + '_' + key;
         }

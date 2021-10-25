@@ -18,6 +18,9 @@ const correctInputType = (value, key='', options={}) => {
   const integerKeysSignatures = Array.isArray(options.integerSignatures) ? options.integerSignatures : ['integer','idComponent','idProfile','idCassette', 'idStorm','idTest','initialPlantHealth'];
   const booleanKeysSignatures = Array.isArray(options.booleanSignatures) ? options.booleanSignatures : ['omit'];
   const lowercaseKeysSignatures = Array.isArray(options.lowercaseSignatures) ? options.lowercaseSignatures : [];
+  const stringArraySignatures = Array.isArray(options.stringArraySignatures) ? options.stringArraySignatures : [];
+  const floatArraySignatures = Array.isArray(options.floatArraySignatures) ? options.floatArraySignatures : [];
+  const intArraySignatures = Array.isArray(options.intArraySignatures) ? options.intArraySignatures : [];
   const integerFailure = options.integerFailure;
   const numberFailure = options.numberFailure;
 
@@ -25,6 +28,24 @@ const correctInputType = (value, key='', options={}) => {
   let isInteger = false;
   let isBoolean = false;
   let isLowercase = false;
+  let isStringArray = false;
+  let isFloatArray = false;
+  let isIntArray = false;
+  stringArraySignatures.forEach(sig=>{
+    if(typeof key === 'string' && key.includes(sig)) {
+      isStringArray = true;
+    }
+  });
+  floatArraySignatures.forEach(sig=>{
+    if(typeof key === 'string' && key.includes(sig)) {
+      isFloatArray = true;
+    }
+  });
+  intArraySignatures.forEach(sig=>{
+    if(typeof key === 'string' && key.includes(sig)) {
+      isIntArray = true;
+    }
+  });
   booleanKeysSignatures.forEach(sig=>{
     if(typeof key === 'string' && key.includes(sig)) {
       isBoolean = true;
@@ -51,13 +72,17 @@ const correctInputType = (value, key='', options={}) => {
       }
     });
   }
+
   let tryValue = 
-    isBoolean && value === 'true' ? true :
-      isBoolean && value === 'false' ? false :
-        isNumber ? parseFloat(value) :
-          isInteger ? parseInt(value, 10) :
-            isLowercase ? `${value}`.toLowerCase() :
-              value ;
+  isStringArray && typeof value === 'string' ? value.split(',').map(v=>v.trim()) :
+    isIntArray && typeof value === 'string' ? value.split(',').map(v=>parseInt(v, 10)) :
+      isFloatArray && typeof value === 'string' ? value.split(',').map(v=>parseFloat(v)) :
+        isBoolean && value === 'true' ? true :
+          isBoolean && value === 'false' ? false :
+            isNumber ? parseFloat(value) :
+              isInteger ? parseInt(value, 10) :
+                isLowercase ? `${value}`.toLowerCase() :
+                  value ;
   if(isNumber && !isPrimitiveNumber(tryValue)){
     tryValue = typeof numberFailure !== 'undefined' ? numberFailure : tryValue;
   }
@@ -174,7 +199,7 @@ const formatForPrint = (data, options) => {    //plan to deprecate this, continu
     object: ':(',
     nan: 'NaN',
     triggerSize: 999999,
-    timestampFormat: 'full',
+    timestampFormat: null, // defaults to full time
     trueValue: 'true',
     falseValue: 'false',
     undefinedValue: 'undefined',
@@ -229,11 +254,6 @@ const formatForPrint = (data, options) => {    //plan to deprecate this, continu
   return ':(';
 };
 
-// const print = (data, options) => {
-//   console.warn('The function print is deprecated, use formatForPrint instead');
-//   return formatForPrint(data, options);
-// };
-
 const letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 const letterToNumberHash = {};
 letters.forEach((l,i)=>{
@@ -263,12 +283,13 @@ const titleCaseWord = (word, option) => {
   // output: capitalized string
   if(typeof word !== 'string') return;
   const end = word.slice(1,word.length);
-  const isPascal = option === 'cC' || option && option.pascal;
+  const isPascal = option === 'cC' || (option && option.pascal);
   const divider = isPascal && option.divider ? option.divider : null;
   const endCase = 
     isPascal ? convertScToCc(end, divider) : end ;
   const front = word.slice(0,1);
-  return `${front.toUpperCase()}${endCase}`;
+  const result = `${front.toUpperCase()}${endCase}`;
+  return result;
 };
 
 const lowerCaseWord = word => {
@@ -284,10 +305,14 @@ const convertScToCc = (word, divider='_') => {
   if(isPrimitiveNumber(word)) return `${word}`;
   if(typeof word !== 'string') return '';
   const array = word.split(divider);
-  const first = array[0].toLowerCase();
+  const first = array[0];
+  const firstLetter = first[0].toLowerCase();
+  const endLetters = first.slice(1,first.length);
+  const firstWord = `${firstLetter}${endLetters}`;
   const others = array.slice(1,array.length);
   const othersCamel = others.map(word=>titleCaseWord(word));
-  return `${first}${othersCamel.join('')}`;
+  const result = `${firstWord}${othersCamel.join('')}`;
+  return result;
 };
 
 const caps  = {A:true,B:true,C:true,D:true,E:true,F:true,G:true,H:true,I:true,J:true,K:true,L:true,M:true,N:true,O:true,P:true,Q:true,R:true,S:true,T:true,U:true,V:true,W:true,X:true,Y:true,Z:true};
@@ -325,21 +350,11 @@ const convertCcToSc = (word, divider, options={}) => {
   return newWord;
 };
 
-// const convertCcToSpace = word => {
-//   console.warn('convertCcToSpace is deprecated, use convertCcToSc(word, " ")');
-//   return convertCcToSc(word, ' ');
-// };
-
 const convertScToSpace = (word, divider='_', replacer=' ') => {
   if(typeof word !== 'string') return '';
   const split = word.split(divider);
   return split.join(replacer);
 };
-
-// const convertSpaceToDash = word => {
-//   console.warn('convertSpaceToDash is deprecated, use convertPhraseToPath instead');
-//   return convertPhraseToPath(word);
-// };
 
 const convertPhraseToPath = word => {
   if(typeof word !== 'string') return '';

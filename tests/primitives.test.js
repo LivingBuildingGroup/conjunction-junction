@@ -55,11 +55,6 @@ describe('conjunction-junction primitives', () => {
     expect(result).to.be.within(lower,upper);
   });
 
-  it('print',()=>{
-    const result = print(1.687777,'word');
-    expect(result).to.equal(1.6878);
-  });
-
   const trailingZeros = {
     '0'     : true, 
     '00'    : true, 
@@ -149,28 +144,28 @@ describe('conjunction-junction primitives', () => {
     expect(result).to.equal(1.6871);
   });
 
-  it('formatForPrint if data input varibale is a string but not proper date format',()=>{
+  it('formatForPrint if data input variable is a string but not proper date format',()=>{
     const result = formatForPrint('date','word');
     expect(result).to.equal('date');
   });
 
-  it('formatForPrint if data input varibale is a string (proper date format)',()=>{
+  it('formatForPrint if data input variable is a string (proper date format)',()=>{
     const result = formatForPrint('2018-03-27 11:00:00 -0400','word');
     expect(result).to.equal('Tuesday, March 27, 2018, 11:00 AM');
   });
 
-  // //it('formatForPrint if data input varibale is a string (proper date format)',()=>{
+  // //it('formatForPrint if data input variable is a string (proper date format)',()=>{
   //   const result = formatForPrint("2018-03-27 11:00:00 -0400","word");
   //   expect(result).to.equal("Tuesday, March 27, 2018, 11:00 AM");
   // });
 
-  it('formatForPrint if data input varibale is an array (proper date format) object parameter is not an object',()=>{
+  it('formatForPrint if data input variable is an array (proper date format) object parameter is not an object',()=>{
     const array = [2,3,4,5,6];
     const result = formatForPrint(array,'word');
     expect(result).to.equal('2, 3, 4, 5, 6');
   });
 
-  it('formatForPrint if data input varibale is an array (proper date format), options paramter is an object',()=>{
+  it('formatForPrint if data input variable is an array (proper date format), options paramter is an object',()=>{
     const array = [2,3,4,5,6];
     const obj = {
       number:1,
@@ -231,14 +226,14 @@ describe('conjunction-junction primitives', () => {
       expect(titleWord).to.equal(undefined);
     });
   });
-  it('titleCaseWord valid on valid input', () => { 
+  it('titleCaseWord valid on valid input (snake to Pascal)', () => { 
     lowerStrings.forEach((item, i)=>{
-      const titleWord = titleCaseWord(item);
+      const titleWord = titleCaseWord(item, 'cC', '_');
       expect(titleWord).to.equal(upperStrings[i]);
     });
   });
   it('titleCaseWord valid camelCase on valid input', () => { 
-    const result = titleCaseWord('snake_case', 'cC');
+    const result = titleCaseWord('snake_case', {pascal: true, divider: '_'});
     const expectedResult = 'SnakeCase';
     expect(result).to.equal(expectedResult);
   });
@@ -260,7 +255,7 @@ describe('conjunction-junction primitives', () => {
     ];
     const expectedResult = [
       'snakeCase', 'snake case', 'snakeCase',
-      'SNAKE', 'SnakeCase', 'snake-case',
+      'sNAKE', 'snakeCase', 'snake-case',
       'snakeCase-too', 'snake-caseToo',
       '3', 'snakeCase2', 'snake2Case', 'snake2Case',
       'snake 2 case'

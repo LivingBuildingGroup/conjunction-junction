@@ -641,7 +641,7 @@ const filterSequentialItems = (arr, options) => {
   // input: sorted array, options (see below for options)
   // output: array containing ONLY sequential items, starting with index 0
   // does not sort, does not skip. Checks each item you sent in as supposed to be sequential, and ensures it is actually sequential
-  const returnOnError = { array: [], index: 0, stop: 0 };
+  const returnOnError = { index: 0, stop: 0 };
   if(!Array.isArray(arr))           return Object.assign({}, returnOnError, { message: 'array to check for sequentiality is not an array'});
   if(!isObjectLiteral(options))     return Object.assign({}, returnOnError, { message: 'options for array sequentiality is not an object'});
   const {
@@ -679,10 +679,10 @@ const filterSequentialItems = (arr, options) => {
             const lastValue = key.includes(ks) ? convertTimestampToString(arr[index][key], 'd t z') : arr[index][key];
             if(absDelta > range){
               stop = i;
-              message = `in filterSequentialItems() at record ${i} exceeded range of ${range} (value at last sequential index #${index}/${id}: ${arr[index][id]}: ${lastValue}, ${id}: ${o[id]}, delta: ${delta}, absolute: ${absDelta}, key: ${key}, value at ${i}: ${stopValue})`;
+              message = `in filterSequentialItems() at record ${i} exceeded range of ${range} (value at last sequential index #${index}/${id}: ${arr[index][id]}: ${convertTimestampToString(arr[index][key], 'd t z')}; failure at ${id}: ${o[id]}, delta: ${delta}, absolute: ${absDelta}, key: ${key}, value at ${i}: ${stopValue})`;
               extraValues = {
                 priorValidIndex: index,
-                priorValidId: id,
+                priorValidId: arr[index][id],
                 priorValidValue: arr[index][key],
                 value: o[key],
                 delta,
@@ -728,6 +728,9 @@ const consolidateTimeOrderedArray = (arr, _count, tsKey, keyTypes) => {
   let newDp  = {};
   // increments MUST be denominators of 60
   const count = 60%_count === 0 ? _count : 60;
+  if(60%_count !== 0){
+    console.log(`count requested = ${_count}, but ${count} will be used as ${_count} is not a divisor of 60.`);
+  }
 
   arr.forEach((d,i)=>{
     if(!isValidDate(d[tsKey])){
@@ -737,11 +740,8 @@ const consolidateTimeOrderedArray = (arr, _count, tsKey, keyTypes) => {
     }
     const thisHour = d[tsKey].getHours();
     const thisMin  = d[tsKey].getMinutes();
-    const shouldAdvance = thisHour !== hour || thisMin % count === 0;
+    const shouldAdvance = i === 0 || thisHour !== hour || thisMin % count === 0;
     if(shouldAdvance){
-      if(newDp[tsKey]){ // if newDp has been populated at all
-        newArr.push(newDp);
-      }
       // restart
       hour   = thisHour;
       minute = thisMin;
@@ -754,7 +754,7 @@ const consolidateTimeOrderedArray = (arr, _count, tsKey, keyTypes) => {
     for(let key in keyTypes){
       // if first time visiting this key
       const aggType = keyTypes[key];
-      // only aggregate numbers
+      // only aggregate numbers; do nothing if not a number
       if(isPrimitiveNumber(d[key])){
         // initialize if needed
         if(typeof newDp[key] === 'undefined'){
@@ -771,6 +771,9 @@ const consolidateTimeOrderedArray = (arr, _count, tsKey, keyTypes) => {
           }
         }
       }
+    }
+    if(shouldAdvance){
+      newArr.push(newDp);
     }
   }); // end loop to populate newArr
 

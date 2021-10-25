@@ -421,6 +421,8 @@ describe('conjunction-junction db', ()=> {
       parent: true,
       alwaysPrefix: true,
       case: 'cC',
+      divider: '_',
+      pascal: true,
     };
     const expectedResult = [
       'users.id as usersId',
@@ -448,6 +450,8 @@ describe('conjunction-junction db', ()=> {
     const options = {
       alwaysPrefix: true,
       case: 'cC',
+      pascal: true,
+      divider: '_',
     };
     const expectedResult = [
       'users.id as usersId',
@@ -474,6 +478,7 @@ describe('conjunction-junction db', ()=> {
     const tableName = 'users';
     const options = {
       case: 'cC',
+      divider: '_',
     };
     const expectedResult = [ // child = always tableName. as ~
       'users.id as usersId',

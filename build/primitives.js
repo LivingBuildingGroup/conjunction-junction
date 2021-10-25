@@ -23,6 +23,9 @@ var correctInputType = function correctInputType(value) {
   var integerKeysSignatures = Array.isArray(options.integerSignatures) ? options.integerSignatures : ['integer', 'idComponent', 'idProfile', 'idCassette', 'idStorm', 'idTest', 'initialPlantHealth'];
   var booleanKeysSignatures = Array.isArray(options.booleanSignatures) ? options.booleanSignatures : ['omit'];
   var lowercaseKeysSignatures = Array.isArray(options.lowercaseSignatures) ? options.lowercaseSignatures : [];
+  var stringArraySignatures = Array.isArray(options.stringArraySignatures) ? options.stringArraySignatures : [];
+  var floatArraySignatures = Array.isArray(options.floatArraySignatures) ? options.floatArraySignatures : [];
+  var intArraySignatures = Array.isArray(options.intArraySignatures) ? options.intArraySignatures : [];
   var integerFailure = options.integerFailure;
   var numberFailure = options.numberFailure;
 
@@ -30,6 +33,24 @@ var correctInputType = function correctInputType(value) {
   var isInteger = false;
   var isBoolean = false;
   var isLowercase = false;
+  var isStringArray = false;
+  var isFloatArray = false;
+  var isIntArray = false;
+  stringArraySignatures.forEach(function (sig) {
+    if (typeof key === 'string' && key.includes(sig)) {
+      isStringArray = true;
+    }
+  });
+  floatArraySignatures.forEach(function (sig) {
+    if (typeof key === 'string' && key.includes(sig)) {
+      isFloatArray = true;
+    }
+  });
+  intArraySignatures.forEach(function (sig) {
+    if (typeof key === 'string' && key.includes(sig)) {
+      isIntArray = true;
+    }
+  });
   booleanKeysSignatures.forEach(function (sig) {
     if (typeof key === 'string' && key.includes(sig)) {
       isBoolean = true;
@@ -56,7 +77,14 @@ var correctInputType = function correctInputType(value) {
       }
     });
   }
-  var tryValue = isBoolean && value === 'true' ? true : isBoolean && value === 'false' ? false : isNumber ? parseFloat(value) : isInteger ? parseInt(value, 10) : isLowercase ? ('' + value).toLowerCase() : value;
+
+  var tryValue = isStringArray && typeof value === 'string' ? value.split(',').map(function (v) {
+    return v.trim();
+  }) : isIntArray && typeof value === 'string' ? value.split(',').map(function (v) {
+    return parseInt(v, 10);
+  }) : isFloatArray && typeof value === 'string' ? value.split(',').map(function (v) {
+    return parseFloat(v);
+  }) : isBoolean && value === 'true' ? true : isBoolean && value === 'false' ? false : isNumber ? parseFloat(value) : isInteger ? parseInt(value, 10) : isLowercase ? ('' + value).toLowerCase() : value;
   if (isNumber && !isPrimitiveNumber(tryValue)) {
     tryValue = typeof numberFailure !== 'undefined' ? numberFailure : tryValue;
   }
@@ -169,7 +197,7 @@ var formatForPrint = function formatForPrint(data, options) {
     object: ':(',
     nan: 'NaN',
     triggerSize: 999999,
-    timestampFormat: 'full',
+    timestampFormat: null, // defaults to full time
     trueValue: 'true',
     falseValue: 'false',
     undefinedValue: 'undefined',
@@ -222,11 +250,6 @@ var formatForPrint = function formatForPrint(data, options) {
   return ':(';
 };
 
-// const print = (data, options) => {
-//   console.warn('The function print is deprecated, use formatForPrint instead');
-//   return formatForPrint(data, options);
-// };
-
 var letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 var letterToNumberHash = {};
 letters.forEach(function (l, i) {
@@ -261,7 +284,8 @@ var titleCaseWord = function titleCaseWord(word, option) {
   var divider = isPascal && option.divider ? option.divider : null;
   var endCase = isPascal ? convertScToCc(end, divider) : end;
   var front = word.slice(0, 1);
-  return '' + front.toUpperCase() + endCase;
+  var result = '' + front.toUpperCase() + endCase;
+  return result;
 };
 
 var lowerCaseWord = function lowerCaseWord(word) {
@@ -279,12 +303,16 @@ var convertScToCc = function convertScToCc(word) {
   if (isPrimitiveNumber(word)) return '' + word;
   if (typeof word !== 'string') return '';
   var array = word.split(divider);
-  var first = array[0].toLowerCase();
+  var first = array[0];
+  var firstLetter = first[0].toLowerCase();
+  var endLetters = first.slice(1, first.length);
+  var firstWord = '' + firstLetter + endLetters;
   var others = array.slice(1, array.length);
   var othersCamel = others.map(function (word) {
     return titleCaseWord(word);
   });
-  return '' + first + othersCamel.join('');
+  var result = '' + firstWord + othersCamel.join('');
+  return result;
 };
 
 var caps = { A: true, B: true, C: true, D: true, E: true, F: true, G: true, H: true, I: true, J: true, K: true, L: true, M: true, N: true, O: true, P: true, Q: true, R: true, S: true, T: true, U: true, V: true, W: true, X: true, Y: true, Z: true };
@@ -318,11 +346,6 @@ var convertCcToSc = function convertCcToSc(word, divider) {
   return newWord;
 };
 
-// const convertCcToSpace = word => {
-//   console.warn('convertCcToSpace is deprecated, use convertCcToSc(word, " ")');
-//   return convertCcToSc(word, ' ');
-// };
-
 var convertScToSpace = function convertScToSpace(word) {
   var divider = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '_';
   var replacer = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ' ';
@@ -331,11 +354,6 @@ var convertScToSpace = function convertScToSpace(word) {
   var split = word.split(divider);
   return split.join(replacer);
 };
-
-// const convertSpaceToDash = word => {
-//   console.warn('convertSpaceToDash is deprecated, use convertPhraseToPath instead');
-//   return convertPhraseToPath(word);
-// };
 
 var convertPhraseToPath = function convertPhraseToPath(word) {
   if (typeof word !== 'string') return '';

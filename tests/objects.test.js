@@ -1,14 +1,13 @@
 'use strict';
 
 const chai = require('chai');
+const { addTime } = require('../build/date-time');
 const expect = chai.expect;
 
 const { 
   // object keys
   convertObjectKeyCase, 
   prefixObjectKeys,
-  shiftObjectKeysColumn,
-  shiftArrayKeysColumn,
   getKeyArray, 
   validateObjectKeysPresent,
   validateObjectKeys,
@@ -20,13 +19,10 @@ const {
   convertArrayToObject,
   convertObjectToArray,
   subArrayByKey,
-  totalValuesByKey,
-  averageValuesByKey,
-  minValuesByKey,
-  maxValuesByKey,
   mergeArraysOfObjectsByKey,
   summarizeValuesByKey,
   filterSequentialItems,
+  consolidateTimeOrderedArray,
   // arrays
   totalAndAverageArrays,
   deltaArray,
@@ -117,577 +113,6 @@ describe('conjunction-junction objects', () => {
       const result = convertObjectKeyCase(o);
       expect(result).to.deep.equal({});
     });
-  });
-
-  it('shiftObjectKeysColumn snake to camel', () => {
-    const position1 = 0;
-    const position2 = 1;
-    const key = 'users';
-    const keys = {
-      users: [
-        //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
-    };
-    const object = {
-      id: 1,
-      timestamp_created: 2,
-      username: 'bradgarner',
-      password: 'somethingReallySecure',
-      first_name: 'Brad',
-    };
-    const expectedResult = {
-      id: 1,
-      timestampCreated: 2,
-      username: 'bradgarner',
-      password: 'somethingReallySecure',
-      firstName: 'Brad',
-    };
-    const result = shiftObjectKeysColumn(object, keys, key, position1, position2);
-    expect(result).to.deep.equal(expectedResult);
-  });
-  it('shiftObjectKeysColumn camel to snake', () => {
-    const position1 = 1;
-    const position2 = 0;
-    const key = 'users';
-    const keys = {
-      users: [
-        //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
-    };
-    const object = {
-      id: 1,
-      timestampCreated: 2,
-      username: 'bradgarner',
-      password: 'somethingReallySecure',
-      firstName: 'Brad',
-    };
-    const expectedResult = {
-      id: 1,
-      timestamp_created: 2,
-      username: 'bradgarner',
-      password: 'somethingReallySecure',
-      first_name: 'Brad',
-    };
-    const result = shiftObjectKeysColumn(object, keys, key, position1, position2);
-    expect(result).to.deep.equal(expectedResult);
-  });
-  it('shiftObjectKeysColumn camel to snake ignores extra keys', () => {
-    const position1 = 1;
-    const position2 = 0;
-    const key = 'users';
-    const keys = {
-      users: [
-        //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
-    };
-    const object = {
-      id: 1,
-      timestampCreated: 2,
-      username: 'bradgarner',
-      password: 'somethingReallySecure',
-      firstName: 'Brad',
-      extraKey: 'this should go away!'
-    };
-    const expectedResult = {
-      id: 1,
-      timestamp_created: 2,
-      username: 'bradgarner',
-      password: 'somethingReallySecure',
-      first_name: 'Brad',
-    };
-    const result = shiftObjectKeysColumn(object, keys, key, position1, position2);
-    expect(result).to.deep.equal(expectedResult);
-  });
-  it('shiftObjectKeysColumn empty object on invalid key lookup', () => {
-    const position1 = 1;
-    const position2 = 0;
-    const key = 'components';
-    const keys = {
-      users: [
-        //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
-    };
-    const object = {
-      id: 1,
-      timestampCreated: 2,
-      username: 'bradgarner',
-      password: 'somethingReallySecure',
-      firstName: 'Brad',
-    };
-    const expectedResult = {};
-    const result = shiftObjectKeysColumn(object, keys, key, position1, position2);
-    expect(result).to.deep.equal(expectedResult);
-  });
-  it('shiftObjectKeysColumn empty object on invalid key array', () => {
-    const position1 = 1;
-    const position2 = 0;
-    const key = 'components';
-    const keys = {
-      users: 'whoa! There should be an array here!'
-    };
-    const object = {
-      id: 1,
-      timestampCreated: 2,
-      username: 'bradgarner',
-      password: 'somethingReallySecure',
-      firstName: 'Brad',
-    };
-    const expectedResult = {};
-    const result = shiftObjectKeysColumn(object, keys, key, position1, position2);
-    expect(result).to.deep.equal(expectedResult);
-  });
-  it('shiftObjectKeysColumn empty object on invalid key compound array', () => {
-    const position1 = 1;
-    const position2 = 0;
-    const key = 'components';
-    const keys = {
-      users: ['whoa! There should be a COMPOUND array here!']
-    };
-    const object = {
-      id: 1,
-      timestampCreated: 2,
-      username: 'bradgarner',
-      password: 'somethingReallySecure',
-      firstName: 'Brad',
-    };
-    const expectedResult = {};
-    const result = shiftObjectKeysColumn(object, keys, key, position1, position2);
-    expect(result).to.deep.equal(expectedResult);
-  });
-  it('shiftObjectKeysColumn empty object on invalid position1', () => {
-    const position1 = {notNumber: true};
-    const position2 = 0;
-    const key = 'users';
-    const keys = {
-      users: [
-        //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
-    };
-    const object = {
-      id: 1,
-      timestampCreated: 2,
-      username: 'bradgarner',
-      password: 'somethingReallySecure',
-      firstName: 'Brad',
-    };
-    const expectedResult = {};
-    const result = shiftObjectKeysColumn(object, keys, key, position1, position2);
-    expect(result).to.deep.equal(expectedResult);
-  });
-  it('shiftObjectKeysColumn empty object on invalid position1', () => {
-    const position1 = 2;
-    const position2 = 'invalid!!!!';
-    const key = 'users';
-    const keys = {
-      users: [
-        //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
-    };
-    const object = {
-      id: 1,
-      timestampCreated: 2,
-      username: 'bradgarner',
-      password: 'somethingReallySecure',
-      firstName: 'Brad',
-    };
-    const expectedResult = {};
-    const result = shiftObjectKeysColumn(object, keys, key, position1, position2);
-    expect(result).to.deep.equal(expectedResult);
-  });
-  it('shiftObjectKeysColumn empty object on non-string position1', () => {
-    const position1 = 3; // position 3 is not a string
-    const position2 = 0;
-    const key = 'users';
-    const keys = {
-      users: [
-        //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
-    };
-    const object = {
-      id: 1,
-      timestampCreated: 2,
-      username: 'bradgarner',
-      password: 'somethingReallySecure',
-      firstName: 'Brad',
-    };
-    const expectedResult = {};
-    const result = shiftObjectKeysColumn(object, keys, key, position1, position2);
-    expect(result).to.deep.equal(expectedResult);
-  });
-  it('shiftObjectKeysColumn empty object on non-string position2', () => {
-    const position1 = 0; 
-    const position2 = 2;// position 3 is not a string
-    const key = 'users';
-    const keys = {
-      users: [
-        //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
-    };
-    const object = {
-      id: 1,
-      timestampCreated: 2,
-      username: 'bradgarner',
-      password: 'somethingReallySecure',
-      firstName: 'Brad',
-    };
-    const expectedResult = {};
-    const result = shiftObjectKeysColumn(object, keys, key, position1, position2);
-    expect(result).to.deep.equal(expectedResult);
-  });
-  it('shiftObjectKeysColumn empty object on non-object sent', () => {
-    const position1 = 0; 
-    const position2 = 1;
-    const key = 'users';
-    const keys = {
-      users: [
-        //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
-    };
-    const object = 'not an object';
-    const expectedResult = {};
-    const result = shiftObjectKeysColumn(object, keys, key, position1, position2);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('shiftArrayKeysColumn empty array if no array', () => {
-    const position1 = 0; 
-    const position2 = 1;
-    const key = 'users';
-    const keys = {
-      users: [
-        //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
-    };
-    const array = 'not an array';
-    const expectedResult = [];
-    const result = shiftArrayKeysColumn(array, keys, key, position1, position2);
-    expect(result).to.deep.equal(expectedResult);
-  });
-  it('shiftArrayKeysColumn empty array if no key object', () => {
-    const position1 = 0; 
-    const position2 = 1;
-    const key = 'users';
-    const keys = 'not an object';
-    const array = [
-      'id',
-      'timestamp_created',
-      'username',
-      'password',
-      'first_name',
-      'last_name',
-      'email',
-      'pw_reset',
-      'permissions',
-    ];
-    const expectedResult = [];
-    const result = shiftArrayKeysColumn(array, keys, key, position1, position2);
-    expect(result).to.deep.equal(expectedResult);
-  });
-  it('shiftArrayKeysColumn return array if key not a string', () => {
-    const position1 = 0; 
-    const position2 = 1;
-    const key = ['not a string'];
-    const keys = {
-      users: [
-        //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
-    };
-    const array = [
-      'id',
-      'timestamp_created',
-      'username',
-      'password',
-      'first_name',
-      'last_name',
-      'email',
-      'pw_reset',
-      'permissions',
-    ];
-    const result = shiftArrayKeysColumn(array, keys, key, position1, position2);
-    expect(result).to.deep.equal(array);
-  });
-  it('shiftArrayKeysColumn return array if position 1 NaN', () => {
-    const position1 = null;
-    const position2 = 1;
-    const key = 'users';
-    const keys = {
-      users: [
-        //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
-    };
-    const array = [
-      'id',
-      'timestamp_created',
-      'username',
-      'password',
-      'first_name',
-      'last_name',
-      'email',
-      'pw_reset',
-      'permissions',
-    ];
-    const result = shiftArrayKeysColumn(array, keys, key, position1, position2);
-    expect(result).to.deep.equal(array);
-  });
-  it('shiftArrayKeysColumn return array if position 2 NaN', () => {
-    const position1 = 1;
-    const position2 = null;
-    const key = 'users';
-    const keys = {
-      users: [
-        //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
-    };
-    const array = [
-      'id',
-      'timestamp_created',
-      'username',
-      'password',
-      'first_name',
-      'last_name',
-      'email',
-      'pw_reset',
-      'permissions',
-    ];
-    const result = shiftArrayKeysColumn(array, keys, key, position1, position2);
-    expect(result).to.deep.equal(array);
-  });
-  it('shiftArrayKeysColumn return array if map not found', () => {
-    const position1 = 0; 
-    const position2 = 1;
-    const key = 'invalid key';
-    const keys = {
-      users: [
-        //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
-    };
-    const array = [
-      'id',
-      'timestamp_created',
-      'username',
-      'password',
-      'first_name',
-      'last_name',
-      'email',
-      'pw_reset',
-      'permissions',
-    ];
-    const result = shiftArrayKeysColumn(array, keys, key, position1, position2);
-    expect(result).to.deep.equal(array);
-  });
-  it('shiftArrayKeysColumn return undefined if no match found', () => {
-    const position1 = 0; 
-    const position2 = 1;
-    const key = 'users';
-    const keys = {
-      users: [
-        //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
-    };
-    const array = [
-      'id',
-      'timestamp_created',
-      'username',
-      'password',
-      'first_name',
-      'something_else',
-      'last_name',
-      'email',
-      'pw_reset',
-      'permissions',
-    ];
-    const expectedResult = [
-      'id',
-      'timestampCreated',
-      'username',
-      'password',
-      'firstName',
-      undefined,
-      'lastName',
-      'email',
-      'pwReset',
-      'permissions',
-    ];
-    const result = shiftArrayKeysColumn(array, keys, key, position1, position2);
-    expect(result).to.deep.equal(expectedResult);
-  });
-  it('shiftArrayKeysColumn ok', () => {
-    const position1 = 0; 
-    const position2 = 1;
-    const key = 'users';
-    const keys = {
-      users: [
-        //snake all             cC all              2POST   3POST req. 4PUT  5STRING 6TRIM 7SIZES 8NAME 9DEFINITIONS
-        ['id'               ,'id'                ,false,  false,    false, false,  false, false,'user id'          ,'unique id'],
-        ['timestamp_created','timestampCreated'  ,false,  false,    false, false,  false, false,'timestamp created','date and time of record creation'],
-        ['username'         ,'username'          ,true ,  true ,    true , true ,  true , {min: 1 },'username'     ,'username'], 
-        ['password'         ,'password'          ,true ,  true ,    true , true ,  true , {min: 8, max: 72 },'password','hashed password'],    
-        ['first_name'       ,'firstName'         ,true ,  true ,    true , true ,  false, false,'first name'       ,'user\'s first name'], 
-        ['last_name'        ,'lastName'          ,true ,  true ,    true , true ,  false, false,'last name'        ,'user\'s last name'], 
-        ['email'            ,'email'             ,true ,  true ,    true , true ,  false, false,'user\'s email'    ,'user\'s email is only used for password recovery'], 
-        ['pw_reset'         ,'pwReset'           ,false,  false,    true , true ,  false, false,'password reset'   ,'true if user must reset password'], 
-        ['permissions'      ,'permissions'       ,true ,  true ,    true , false,  false, false,'permissions'      ,'user\'s permissions, including which server endpoints are authorized'], 
-      ],
-    };
-    const array = [
-      'id',
-      'timestamp_created',
-      'username',
-      'password',
-      'first_name',
-      'last_name',
-      'email',
-      'pw_reset',
-      'permissions',
-    ];
-    const expectedResult = [
-      'id',
-      'timestampCreated',
-      'username',
-      'password',
-      'firstName',
-      'lastName',
-      'email',
-      'pwReset',
-      'permissions',
-    ];
-    const result = shiftArrayKeysColumn(array, keys, key, position1, position2);
-    expect(result).to.deep.equal(expectedResult);
   });
 
   it('getKeyArray returns list of column 0, default action', () => {
@@ -1489,324 +914,6 @@ describe('conjunction-junction objects', () => {
     expect(result).to.deep.equal(expectedResult);
   });
 
-  it('totalValuesByKey', () => {
-    const arrayOfObjects = [
-      {
-        platform_runoff1a_gals_tot: 3,
-        platform_runoff1b_gals_tot: 5,
-        platform_runoff2a_gals_tot: 7, 
-      },
-      {
-        platform_runoff1a_gals_tot: 9,
-        platform_runoff1b_gals_tot: 15,
-        platform_runoff2a_gals_tot: 27, 
-      },
-    ];
-    const key = 'platform_runoff1a_gals_tot';
-    const expectedResult = {
-      value: 12,
-      messages: [
-        'index 0 key platform_runoff1a_gals_tot: 3 added >>> new cum. value: 3',
-        'index 1 key platform_runoff1a_gals_tot: 9 added >>> new cum. value: 12',
-      ],
-    };
-    const result = totalValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('totalValuesByKey returns error message if input array is not array', () => {
-    const arrayOfObjects = 'Not an array';
-    const key = 'platform_runoff1a_gals_tot';
-    const expectedResult = {
-      value: null,
-      message: 'no array of objects',
-    };
-    const result = totalValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('totalValuesByKey returns error message if input key is not a string', () => {
-    const arrayOfObjects = [{number:1},{number2:2}];
-    const key = 123;
-    const expectedResult = {
-      value: null,
-      message: 'key must be a string',
-    };
-    const result = totalValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('totalValuesByKey returns object with error messages when key is not present in some of the objects and undefined in one of them', () => {
-    const arrayOfObjects = [{number:1,number3:3},{number:1,number2:null,number3:3},{number:1,number3:3}];
-    const key = 'number2';
-    const expectedResult = {
-      value: 0,
-      messages: [
-        'index 0 key number2: was undefined',
-        'index 1 key number2: was null (not a number)',
-        'index 2 key number2: was undefined'
-      ],
-    };
-    const result = totalValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('totalValuesByKey returns object with error mesage for one object in input array', () => {
-    const arrayOfObjects = [{number:1,number2:'string',number3:3},{number:1,number2:4,number3:3},{number:1,number2:6,number3:3}];
-    const key = 'number2';
-    const expectedResult = {
-      value: 10,
-      messages: [
-        'index 0 key number2: was string (not a number)',
-        'index 1 key number2: 4 added >>> new cum. value: 4',
-        'index 2 key number2: 6 added >>> new cum. value: 10'
-      ],
-    };
-    const result = totalValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('averageValuesByKey returns error message if input array is not array', () => {
-    const arrayOfObjects = 'Not an array';
-    const key = 'platform_runoff1a_gals_tot';
-    const expectedResult = {
-      value: null,
-      message: 'no array of objects',
-    };
-    const result = averageValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('averageValuesByKey returns error message if input key is not a string', () => {
-    const arrayOfObjects = [{number:1},{number2:2}];
-    const key = 123;
-    const expectedResult = {
-      value: null,
-      message: 'key must be a string',
-    };
-    const result = averageValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('averageValuesByKey returns object with error messages when key is not present in some of the objects and undefined in one of them', () => {
-    const arrayOfObjects = [{number:1,number3:3},{number:1,number2:null,number3:3},{number:1,number3:3}];
-    const key = 'number2';
-    const expectedResult = {
-      value: 0,
-      messages: [
-        'index 0 key number2: was undefined',
-        'index 1 key number2: was null (not a number)',
-        'index 2 key number2: was undefined'
-      ],
-    };
-    const result = averageValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('averageValuesByKey returns object with error mesage for one object in input array', () => {
-    const arrayOfObjects = [{number:1,number2:'string',number3:3},{number:1,number2:4,number3:3},{number:1,number2:6,number3:3}];
-    const key = 'number2';
-    const expectedResult = {
-      value: 5,
-      messages: [
-        'index 0 key number2: was string (not a number)',
-        'index 1 key number2: 4 added >>> new cum. value: 4, counter: 1',
-        'index 2 key number2: 6 added >>> new cum. value: 10, counter: 2'
-      ],
-    };
-    const result = averageValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('averageValuesByKey', ()=>{
-    const arrayOfObjects = [
-      {
-        platform_runoff1a_gals_tot: 3,
-        platform_runoff1b_gals_tot: 5,
-        platform_runoff2a_gals_tot: 7, 
-      },
-      {
-        platform_runoff1a_gals_tot: 9,
-        platform_runoff1b_gals_tot: 15,
-        platform_runoff2a_gals_tot: 27, 
-      },
-    ];
-    const key = 'platform_runoff1a_gals_tot';
-    const expectedResult = {
-      value: 6,
-      messages: [
-        'index 0 key platform_runoff1a_gals_tot: 3 added >>> new cum. value: 3, counter: 1',
-        'index 1 key platform_runoff1a_gals_tot: 9 added >>> new cum. value: 12, counter: 2',
-      ],
-    };
-    const result = averageValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);  
-  });
-
-  it('minValuesByKey returns error message if input array is not an array', () => {
-    const arrayOfObjects = 'Not an array';
-    const key = 'platform_runoff1a_gals_tot';
-    const expectedResult = {
-      value: null,
-      message: 'no array of objects',
-    };
-    const result = minValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('minValuesByKey returns error message if input key is not a string', () => {
-    const arrayOfObjects = [{number:1},{number2:2}];
-    const key = 123;
-    const expectedResult = {
-      value: null,
-      message: 'key must be a string',
-    };
-    const result = minValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('minValuesByKey returns object with error messages when key is not present in some of the objects and undefined in one of them', () => {
-    const arrayOfObjects = [{number:1,number3:3},{number:1,number2:null,number3:3},{number:1,number3:3}];
-    const key = 'number2';
-    const expectedResult = {
-      value: undefined,
-      messages: [
-        'index 0 key number2: was undefined',
-        'index 1 key number2: was null (not a number)',
-        'index 2 key number2: was undefined'
-      ],
-    };
-    const result = minValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('minValuesByKey returns object with error mesage for one object in input array', () => {
-    const arrayOfObjects = [{number:1,number2:'string',number3:3},{number:1,number2:4,number3:3},{number:1,number2:6,number3:3}];
-    const key = 'number2';
-    const expectedResult = {
-      value: 4,
-      messages: [
-        'index 0 key number2: was string (not a number)',
-        'index 1 key number2: 4 >>> current lowest value: 4, counter: 1',
-        'index 2 key number2: 6 >>> current lowest value: 4, counter: 2'
-      ],
-    };
-    const result = minValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('minValuesByKey returns object with minumum value of input key (first key is min)', () => {
-    const arrayOfObjects = [{number:1,number2:2,number3:3},{number:1,number2:4,number3:3},{number:1,number2:6,number3:3}];
-    const key = 'number2';
-    const expectedResult = {
-      value: 2,
-      messages: [
-        'index 0 key number2: 2 >>> current lowest value: 2, counter: 1',
-        'index 1 key number2: 4 >>> current lowest value: 2, counter: 2',
-        'index 2 key number2: 6 >>> current lowest value: 2, counter: 3'
-      ],
-    };
-    const result = minValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('minValuesByKey returns object with minumum value of input key', () => {
-    const arrayOfObjects = [{number:1,number2:2,number3:3},{number:1,number2:1,number3:3},{number:1,number2:6,number3:3}];
-    const key = 'number2';
-    const expectedResult = {
-      value: 1,
-      messages: [
-        'index 0 key number2: 2 >>> current lowest value: 2, counter: 1',
-        'index 1 key number2: 1 >>> current lowest value: 1, counter: 2',
-        'index 2 key number2: 6 >>> current lowest value: 1, counter: 3'
-      ],
-    };
-    const result = minValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('maxValuesByKey returns error message if input array is not an array', () => {
-    const arrayOfObjects = 'Not an array';
-    const key = 'platform_runoff1a_gals_tot';
-    const expectedResult = {
-      value: null,
-      message: 'no array of objects',
-    };
-    const result = maxValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('maxValuesByKey returns error message if input key is not a string', () => {
-    const arrayOfObjects = [{number:1},{number2:2}];
-    const key = 123;
-    const expectedResult = {
-      value: null,
-      message: 'key must be a string',
-    };
-    const result = maxValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('maxValuesByKey returns object with error messages when key is not present in some of the objects and undefined in one of them', () => {
-    const arrayOfObjects = [{number:1,number3:3},{number:1,number2:null,number3:3},{number:1,number3:3}];
-    const key = 'number2';
-    const expectedResult = {
-      value: undefined,
-      messages: [
-        'err: index 0 key number2: was undefined',
-        'err: index 1 key number2: was null (not a number)',
-        'err: index 2 key number2: was undefined'
-      ],
-    };
-    const result = maxValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('maxValuesByKey returns object with error mesage for one object in input array', () => {
-    const arrayOfObjects = [{number:1,number2:'string',number3:3},{number:1,number2:4,number3:3},{number:1,number2:6,number3:3}];
-    const key = 'number2';
-    const expectedResult = {
-      value: 6,
-      messages: [
-        'err: index 0 key number2: was string (not a number)',
-        'index 1 key number2: 4 >>> current highest value: 4, counter: 1',
-        'index 2 key number2: 6 >>> current highest value: 6, counter: 2'
-      ],
-    };
-    const result = maxValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('maxValuesByKey returns object with minumum value of input key (first key is max)', () => {
-    const arrayOfObjects = [{number:1,number2:10,number3:3},{number:1,number2:4,number3:3},{number:1,number2:6,number3:3}];
-    const key = 'number2';
-    const expectedResult = {
-      value: 10,
-      messages: [
-        'index 0 key number2: 10 >>> current highest value: 10, counter: 1',
-        'index 1 key number2: 4 >>> current highest value: 10, counter: 2',
-        'index 2 key number2: 6 >>> current highest value: 10, counter: 3'
-      ],
-    };
-    const result = maxValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
-  it('maxValuesByKey returns object with minumum value of input key', () => {
-    const arrayOfObjects = [{number:1,number2:2,number3:3},{number:1,number2:1,number3:3},{number:1,number2:6,number3:3}];
-    const key = 'number2';
-    const expectedResult = {
-      value: 6,
-      messages: [
-        'index 0 key number2: 2 >>> current highest value: 2, counter: 1',
-        'index 1 key number2: 1 >>> current highest value: 2, counter: 2',
-        'index 2 key number2: 6 >>> current highest value: 6, counter: 3'
-      ],
-    };
-    const result = maxValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);
-  });
-
   it('summarizeValuesByKey', () => {
     const arrayOfObjects = [
       {
@@ -1893,87 +1000,62 @@ describe('conjunction-junction objects', () => {
     expect(result).to.deep.equal(expectedResult);
   });
 
-  it('averageValuesByKey', ()=>{
-    const arrayOfObjects = [
-      {
-        platform_runoff1a_gals_tot: 3,
-        platform_runoff1b_gals_tot: 5,
-        platform_runoff2a_gals_tot: 7, 
-      },
-      {
-        platform_runoff1a_gals_tot: 9,
-        platform_runoff1b_gals_tot: 15,
-        platform_runoff2a_gals_tot: 27, 
-      },
-    ];
-    const key = 'platform_runoff1a_gals_tot';
-    const expectedResult = {
-      value: 6,
-      messages: [
-        'index 0 key platform_runoff1a_gals_tot: 3 added >>> new cum. value: 3, counter: 1',
-        'index 1 key platform_runoff1a_gals_tot: 9 added >>> new cum. value: 12, counter: 2',
-      ],
-    };
-    const result = averageValuesByKey(arrayOfObjects, key);
-    expect(result).to.deep.equal(expectedResult);  
-  });
-
   it('mergeArraysOfObjectsByKey empty array if no arr1', () => {
     const o1 = 'not an array';
     const o2 = [
       {
-        timestamp_cr6: date0,
+        timestamp: date0,
         key4: 4,
         key5: 5,
       },
       {
-        timestamp_cr6: date1,
+        timestamp: date1,
         key6: 6,
       },
     ];
     const expectedResult = [];
-    const mergeOptions = {key1: 'timestamp_cr6', key2: 'timestamp_cr6', prefix: 'prefix_'};
+    const mergeOptions = {key1: 'timestamp', key2: 'timestamp', prefix: 'prefix_'};
     const result = mergeArraysOfObjectsByKey(o1, o2, mergeOptions);
     expect(result).to.deep.equal(expectedResult);
   });
   it('mergeArraysOfObjectsByKey arr1 if arr2 not array', () => {
     const o1 = [
       {
-        timestamp_cr6: date0,
+        timestamp: date0,
         key1: 1,
         key2: 2,
       },
       {
-        timestamp_cr6: date1,
+        timestamp: date1,
         key3: 3,
       },
     ];
     const o2 = 'not an array';
     const expectedResult = o1;
-    const mergeOptions = {key1: 'timestamp_cr6', key2: 'timestamp_cr6', prefix: 'prefix_'};
+    const mergeOptions = {key1: 'timestamp', key2: 'timestamp', prefix: 'prefix_'};
     const result = mergeArraysOfObjectsByKey(o1, o2, mergeOptions);
     expect(result).to.deep.equal(expectedResult);
   });
   it('mergeArraysOfObjectsByKey empty array if no options', () => {
     const o1 = [
       {
-        timestamp_cr6: date0,
+        timestamp: date0,
         key1: 1,
         key2: 2,
       },
       {
-        timestamp_cr6: date1,
+        timestamp: date1,
         key3: 3,
       },
     ];
     const o2 = [
       {
-        timestamp_cr6: date0,
+        timestamp: date0,
         key4: 4,
         key5: 5,
       },
       {
-        timestamp_cr6: date1,
+        timestamp: date1,
         key6: 6,
       },
     ];
@@ -1985,28 +1067,28 @@ describe('conjunction-junction objects', () => {
   it('mergeArraysOfObjectsByKey empty array if options key missing', () => {
     const o1 = [
       {
-        timestamp_cr6: date0,
+        timestamp: date0,
         key1: 1,
         key2: 2,
       },
       {
-        timestamp_cr6: date1,
+        timestamp: date1,
         key3: 3,
       },
     ];
     const o2 = [
       {
-        timestamp_cr6: date0,
+        timestamp: date0,
         key4: 4,
         key5: 5,
       },
       {
-        timestamp_cr6: date1,
+        timestamp: date1,
         key6: 6,
       },
     ];
     const expectedResult = [];
-    const requiredOptionsKeys = {key1: 'timestamp_cr6', key2: 'timestamp_cr6'};
+    const requiredOptionsKeys = {key1: 'timestamp', key2: 'timestamp'};
     for(let k in requiredOptionsKeys){
       const mO = Object.assign({}, requiredOptionsKeys, {[k]: undefined});
       const result = mergeArraysOfObjectsByKey(o1, o2, mO);
@@ -2016,50 +1098,50 @@ describe('conjunction-junction objects', () => {
   it('mergeArraysOfObjectsByKey', () => {
     const o1 = [
       {
-        timestamp_cr6: date0,
+        timestamp: date0,
         key1: 1,
         key2: 2,
       },
       {
-        timestamp_cr6: date1,
+        timestamp: date1,
         key3: 3,
       },
     ];
     const o2 = [
       {
-        timestamp_cr6: date0,
+        timestamp: date0,
         key4: 4,
         key5: 5,
       },
       {
-        timestamp_cr6: date1,
+        timestamp: date1,
         key6: 6,
       },
     ];
     const expectedResult = [
       {
-        timestamp_cr6: date0,
-        prefix_timestamp_cr6: date0,
+        timestamp: date0,
+        prefix_timestamp: date0,
         key1: 1,
         key2: 2,
         key4: 4,
         key5: 5,
       },
       {
-        timestamp_cr6: date1,
-        prefix_timestamp_cr6: date1,
+        timestamp: date1,
+        prefix_timestamp: date1,
         key3: 3,
         key6: 6,
       },
     ];
-    const mergeOptions = {key1: 'timestamp_cr6', key2: 'timestamp_cr6', prefix: 'prefix_'};
+    const mergeOptions = {key1: 'timestamp', key2: 'timestamp', prefix: 'prefix_'};
     const result = mergeArraysOfObjectsByKey(o1, o2, mergeOptions);
     expect(result).to.deep.equal(expectedResult);
   });
 
   it('filterSequentialItems all ok 1 minute',()=>{
     const options = {
-      key : 'timestamp_cr6', 
+      key : 'timestamp', 
       increment: 1, 
       tolerance: 0, 
       timestampUnits: 'minutes', 
@@ -2068,32 +1150,18 @@ describe('conjunction-junction objects', () => {
     const arr = [
       {
         id: 1,
-        timestamp_cr6: date0,
+        timestamp: date0,
       },
       {
         id: 2,
-        timestamp_cr6: date1,
+        timestamp: date1,
       },
       {
         id: 3,
-        timestamp_cr6: date2,
+        timestamp: date2,
       },
     ];
     const expectedResult = {
-      array: [
-        {
-          id: 1,
-          timestamp_cr6: date0,
-        },
-        {
-          id: 2,
-          timestamp_cr6: date1,
-        },
-        {
-          id: 3,
-          timestamp_cr6: date2,
-        },
-      ],
       index: 2,
       stop: undefined,
       message: 'ok',
@@ -2103,7 +1171,7 @@ describe('conjunction-junction objects', () => {
   });
   it('filterSequentialItems part ok 1 minute',()=>{
     const options = {
-      key : 'timestamp_cr6', 
+      key : 'timestamp', 
       increment: 1, 
       tolerance: 0, 
       timestampUnits: 'minutes', 
@@ -2112,38 +1180,38 @@ describe('conjunction-junction objects', () => {
     const arr = [
       {
         id: 0,
-        timestamp_cr6: date0,
+        timestamp: date0,
       },
       {
         id: 1,
-        timestamp_cr6: date1,
+        timestamp: date1,
       },
       {
         id: 2,
-        timestamp_cr6: date3,
+        timestamp: date3,
       },
     ];
-    const expectedResult = {
-      array: [
-        {
-          id: 0,
-          timestamp_cr6: date0,
-        },
-        {
-          id: 1,
-          timestamp_cr6: date1,
-        },
-      ],
+    const e = {
+      priorValidIndex: 1,
+      priorValidId: 1,
+      priorValidValue: date1,
+      value: date3,
+      delta: -2,
+      absDelta: 2,
+
       index: 1,
       stop: 2,
-      message: `in filterSequentialItems() at record 2 exceeded range of 1 (id: 2, delta: -2, absolute: 2, key: timestamp_cr6, value at 2: ${convertTimestampToString(date3)}, value at last sequential index #1/id: 1: ${convertTimestampToString(date1)})`,
     };
+    const expectedResult = Object.assign({},
+      e, {
+        message: `in filterSequentialItems() at record ${e.stop} exceeded range of ${options.increment} (value at last sequential index #${e.priorValidIndex}/id: ${e.priorValidId}: ${convertTimestampToString(e.priorValidValue, 'd t z')}; failure at id: ${arr[e.stop].id}, delta: ${e.delta}, absolute: ${e.absDelta}, key: ${options.key}, value at ${e.stop}: ${convertTimestampToString(arr[e.stop].timestamp, 'd t z')})`
+      });
     const result = filterSequentialItems(arr, options);
     expect(result).to.deep.equal(expectedResult);
   });
   it('filterSequentialItems all ok 60 minute',()=>{
     const options = {
-      key : 'timestamp_cr6', 
+      key : 'timestamp', 
       increment: 60, 
       tolerance: 0, 
       timestampUnits: 'minutes', 
@@ -2152,32 +1220,18 @@ describe('conjunction-junction objects', () => {
     const arr = [
       {
         id: 1,
-        timestamp_cr6: hour0,
+        timestamp: hour0,
       },
       {
         id: 2,
-        timestamp_cr6: hour1,
+        timestamp: hour1,
       },
       {
         id: 3,
-        timestamp_cr6: hour2,
+        timestamp: hour2,
       },
     ];
     const expectedResult = {
-      array: [
-        {
-          id: 1,
-          timestamp_cr6: hour0,
-        },
-        {
-          id: 2,
-          timestamp_cr6: hour1,
-        },
-        {
-          id: 3,
-          timestamp_cr6: hour2,
-        },
-      ],
       index: 2,
       stop: undefined,
       message: 'ok',
@@ -2187,7 +1241,7 @@ describe('conjunction-junction objects', () => {
   });
   it('filterSequentialItems part ok 60 minute',()=>{
     const options = {
-      key : 'timestamp_cr6', 
+      key : 'timestamp', 
       increment: 60, 
       tolerance: 0, 
       timestampUnits: 'minutes', 
@@ -2196,48 +1250,46 @@ describe('conjunction-junction objects', () => {
     const arr = [
       {
         id: 0,
-        timestamp_cr6: hour0,
+        timestamp: hour0,
       },
       {
         id: 1,
-        timestamp_cr6: hour1,
+        timestamp: hour1,
       },
       {
         id: 2,
-        timestamp_cr6: hour3,
+        timestamp: hour3,
       },
     ];
-    const expectedResult = {
-      array: [
-        {
-          id: 0,
-          timestamp_cr6: hour0,
-        },
-        {
-          id: 1,
-          timestamp_cr6: hour1,
-        },
-      ],
+    const e = {
+      priorValidIndex: 1,
+      priorValidId: 1,
+      priorValidValue: hour1,
+      value: hour3,
+      delta: -120,
+      absDelta: 120,
       index: 1,
       stop: 2,
-      message: `in filterSequentialItems() at record 2 exceeded range of 60 (id: 2, delta: -120, absolute: 120, key: timestamp_cr6, value at 2: ${convertTimestampToString(hour3)}, value at last sequential index #1/id: 1: ${convertTimestampToString(hour1)})`,
     };
+    const expectedResult = Object.assign({},
+      e, {
+        message: `in filterSequentialItems() at record ${e.stop} exceeded range of ${options.increment} (value at last sequential index #${e.priorValidIndex}/id: ${e.priorValidId}: ${convertTimestampToString(e.priorValidValue, 'd t z')}; failure at id: ${arr[e.stop].id}, delta: ${e.delta}, absolute: ${e.absDelta}, key: ${options.key}, value at ${e.stop}: ${convertTimestampToString(arr[e.stop].timestamp, 'd t z')})`
+      });
     const result = filterSequentialItems(arr, options);
     expect(result).to.deep.equal(expectedResult);
   });
-
   it('filterSequentialItems errs if not array', ()=>{
     const arr = 'not an array';
-    const filterOptions = {
+    const options = {
       key: 'id',
       increment: 1,
       tolerance: 0,
     };
     const expectedResult = {
-      array: [], index: 0, stop: 0,
+      index: 0, stop: 0,
       message: 'array to check for sequentiality is not an array',
     };
-    const result = filterSequentialItems(arr, filterOptions);
+    const result = filterSequentialItems(arr, options);
     expect(result).to.deep.equal(expectedResult);
   });
   it('filterSequentialItems errs if no options object', ()=>{
@@ -2252,12 +1304,13 @@ describe('conjunction-junction objects', () => {
         id: 3,
       }
     ];
-    const filterOptions = 'not an object';
+    const options = 'not an object';
     const expectedResult = {
-      array: [], index: 0, stop: 0,
+      index: 0, 
+      stop: 0,
       message: 'options for array sequentiality is not an object',
     };
-    const result = filterSequentialItems(arr, filterOptions);
+    const result = filterSequentialItems(arr, options);
     expect(result).to.deep.equal(expectedResult);
   });
   it('filterSequentialItems errs if key not a string', ()=>{
@@ -2272,16 +1325,17 @@ describe('conjunction-junction objects', () => {
         id: 3,
       }
     ];
-    const filterOptions = {
+    const options = {
       key: 3,
       increment: 'one',
       tolerance: 0,
     };
     const expectedResult = {
-      array: [], index: 0, stop: 0,
+      index: 0, 
+      stop: 0,
       message: 'key to check for sequentiality is not a string',
     };
-    const result = filterSequentialItems(arr, filterOptions);
+    const result = filterSequentialItems(arr, options);
     expect(result).to.deep.equal(expectedResult);
   });
   it('filterSequentialItems errs if increment NaN', ()=>{
@@ -2296,16 +1350,17 @@ describe('conjunction-junction objects', () => {
         id: 3,
       }
     ];
-    const filterOptions = {
+    const options = {
       key: 'id',
       increment: 'one',
       tolerance: 0,
     };
     const expectedResult = {
-      array: [], index: 0, stop: 0,
+      index: 0, 
+      stop: 0,
       message: 'increment to check for sequentiality is not a number',
     };
-    const result = filterSequentialItems(arr, filterOptions);
+    const result = filterSequentialItems(arr, options);
     expect(result).to.deep.equal(expectedResult);
   });
   it('filterSequentialItems errs if tolerance NaN', ()=>{
@@ -2320,95 +1375,17 @@ describe('conjunction-junction objects', () => {
         id: 3,
       }
     ];
-    const filterOptions = {
+    const options = {
       key: 'id',
       increment: 1,
       tolerance: 'zero',
     };
     const expectedResult = {
-      array: [], index: 0, stop: 0,
+      index: 0, 
+      stop: 0,
       message: 'tolerance to check for sequentiality is not a number',
     };
-    const result = filterSequentialItems(arr, filterOptions);
-    expect(result).to.deep.equal(expectedResult);
-  });
-  it('filterSequentialItems returns full array integer key', ()=>{
-    const arr = [
-      {
-        id: 1,
-      },
-      {
-        id: 2,
-      },
-      {
-        id: 3,
-      }
-    ];
-    const filterOptions = {
-      key: 'id',
-      increment: 1,
-      tolerance: 0,
-    };
-    const result = filterSequentialItems(arr, filterOptions);
-    const expectedResult = {
-      array: arr,
-      index: 2,
-      stop: undefined,
-      message: 'ok',
-    };
-    expect(result).to.deep.equal(expectedResult);
-  });
-  it('filterSequentialItems returns full array timestamp key', ()=>{
-    const arr = [
-      {
-        timestamp: date0,
-      },
-      {
-        timestamp: date1,
-      },
-      {
-        timestamp: date2,
-      }
-    ];
-    const filterOptions = {
-      key: 'timestamp',
-      increment: 1,
-      tolerance: 0,
-    };
-    const result = filterSequentialItems(arr, filterOptions);
-    const expectedResult = {
-      array: arr,
-      index: 2,
-      stop: undefined,
-      message: 'ok',
-    };
-    expect(result).to.deep.equal(expectedResult);
-  });
-  it('filterSequentialItems returns full array hours', ()=>{
-    const arr = [
-      {
-        timestamp: hour0,
-      },
-      {
-        timestamp: hour1,
-      },
-      {
-        timestamp: hour2,
-      }
-    ];
-    const filterOptions = {
-      key: 'timestamp',
-      increment: 1,
-      tolerance: 0,
-      timestampUnits: 'hours',
-    };
-    const result = filterSequentialItems(arr, filterOptions);
-    const expectedResult = {
-      array: arr,
-      index: 2,
-      stop: undefined,
-      message: 'ok',
-    };
+    const result = filterSequentialItems(arr, options);
     expect(result).to.deep.equal(expectedResult);
   });
   it('filterSequentialItems omits trailing gap integer key', ()=>{
@@ -2423,25 +1400,27 @@ describe('conjunction-junction objects', () => {
         id: 4,
       }
     ];
-    const filterOptions = {
+    const options = {
       key: 'id',
       increment: 1,
       tolerance: 0,
     };
-    const result = filterSequentialItems(arr, filterOptions);
-    const expectedResult = {
-      array: [      
-        {
-          id: 1,
-        },
-        {
-          id: 2,
-        },
-      ],
+    const result = filterSequentialItems(arr, options);
+    const e = {
+      priorValidIndex: 1,
+      priorValidId: 2,
+      priorValidValue: 2,
+      value: 4,
+      delta: 2,
+      absDelta: 2,
+
       index: 1,
       stop: 2,
-      message: 'in filterSequentialItems() at record 2 exceeded range of 1 (id: 4, delta: 2, absolute: 2, key: id, value at 2: 4, value at last sequential index #1/id: 2: 2)',
     };
+    const expectedResult = Object.assign({},
+      e, {
+        message: `in filterSequentialItems() at record ${e.stop} exceeded range of ${options.increment} (value at last sequential index #${e.priorValidIndex}/id: ${e.priorValidId}: ${convertTimestampToString(e.priorValidValue, 'd t z')}; failure at id: ${arr[e.stop].id}, delta: ${e.delta}, absolute: ${e.absDelta}, key: ${options.key}, value at ${e.stop}: ${arr[e.stop].id})`
+      });
     expect(result).to.deep.equal(expectedResult);
   });
   it('filterSequentialItems omits trailing gap timestamp key', ()=>{
@@ -2456,25 +1435,27 @@ describe('conjunction-junction objects', () => {
         timestamp: date5,
       }
     ];
-    const filterOptions = {
+    const options = {
       key: 'timestamp',
       increment: 1,
       tolerance: 0,
     };
-    const result = filterSequentialItems(arr, filterOptions);
-    const expectedResult = {
-      array: [      
-        {
-          timestamp: date0,
-        },
-        {
-          timestamp: date1,
-        },
-      ],
+    const result = filterSequentialItems(arr, options);
+    const e = {
+      priorValidIndex: 1,
+      priorValidId: undefined,
+      priorValidValue: date1,
+      value: date5,
+      delta: -4,
+      absDelta: 4,
+
       index: 1,
       stop: 2,
-      message: 'in filterSequentialItems() at record 2 exceeded range of 1 (id: undefined, delta: -4, absolute: 4, key: timestamp, value at 2: Thursday, May 17, 2018, 1:05 PM, value at last sequential index #1/id: undefined: Thursday, May 17, 2018, 1:01 PM)',
     };
+    const expectedResult = Object.assign({},
+      e, {
+        message: `in filterSequentialItems() at record ${e.stop} exceeded range of ${options.increment} (value at last sequential index #${e.priorValidIndex}/id: ${e.priorValidId}: ${convertTimestampToString(e.priorValidValue, 'd t z')}; failure at id: ${arr[e.stop].id}, delta: ${e.delta}, absolute: ${e.absDelta}, key: ${options.key}, value at ${e.stop}: ${convertTimestampToString(arr[e.stop].timestamp, 'd t z')})`
+      });
     expect(result).to.deep.equal(expectedResult);
   });
   it('filterSequentialItems omits trailing gap timestamp key hours', ()=>{
@@ -2489,26 +1470,28 @@ describe('conjunction-junction objects', () => {
         timestamp: hour5,
       }
     ];
-    const filterOptions = {
+    const options = {
       key: 'timestamp',
       increment: 1,
       tolerance: 0,
       timestampUnits: 'hours',
     };
-    const result = filterSequentialItems(arr, filterOptions);
-    const expectedResult = {
-      array: [      
-        {
-          timestamp: hour0,
-        },
-        {
-          timestamp: hour1,
-        },
-      ],
+    const result = filterSequentialItems(arr, options);
+    const e = {
+      priorValidIndex: 1,
+      priorValidId: undefined,
+      priorValidValue: hour1,
+      value: hour5,
+      delta: -4,
+      absDelta: 4,
+
       index: 1,
-      stop: 2,
-      message: 'in filterSequentialItems() at record 2 exceeded range of 1 (id: undefined, delta: -4, absolute: 4, key: timestamp, value at 2: Thursday, May 17, 2018, 6:00 PM, value at last sequential index #1/id: undefined: Thursday, May 17, 2018, 2:00 PM)',
+      stop: 2
     };
+    const expectedResult = Object.assign({},
+      e, {
+        message: `in filterSequentialItems() at record ${e.stop} exceeded range of ${options.increment} (value at last sequential index #${e.priorValidIndex}/id: ${e.priorValidId}: ${convertTimestampToString(e.priorValidValue, 'd t z')}; failure at id: ${arr[e.stop].id}, delta: ${e.delta}, absolute: ${e.absDelta}, key: ${options.key}, value at ${e.stop}: ${convertTimestampToString(arr[e.stop].timestamp, 'd t z')})`
+      });
     expect(result).to.deep.equal(expectedResult);
   });
   it('filterSequentialItems omits trailing negative gap integer key', ()=>{
@@ -2523,25 +1506,27 @@ describe('conjunction-junction objects', () => {
         id: 2,
       }
     ];
-    const filterOptions = {
+    const options = {
       key: 'id',
       increment: 1,
       tolerance: 0,
     };
-    const result = filterSequentialItems(arr, filterOptions);
-    const expectedResult = {
-      array: [      
-        {
-          id: 5,
-        },
-        {
-          id: 6,
-        },
-      ],
+    const result = filterSequentialItems(arr, options);
+    const e = {
+      priorValidIndex: 1,
+      priorValidId: 6,
+      priorValidValue: 6,
+      value: 2,
+      delta: -4,
+      absDelta: 4,
+
       index: 1,
       stop: 2,
-      message: 'in filterSequentialItems() at record 2 exceeded range of 1 (id: 2, delta: -4, absolute: 4, key: id, value at 2: 2, value at last sequential index #1/id: 6: 6)',
     };
+    const expectedResult = Object.assign({},
+      e, {
+        message: `in filterSequentialItems() at record ${e.stop} exceeded range of ${options.increment} (value at last sequential index #${e.priorValidIndex}/id: ${e.priorValidId}: ${convertTimestampToString(e.priorValidValue, 'd t z')}; failure at id: ${arr[e.stop].id}, delta: ${e.delta}, absolute: ${e.absDelta}, key: ${options.key}, value at ${e.stop}: ${arr[e.stop].id})`
+      });
     expect(result).to.deep.equal(expectedResult);
   });
   it('filterSequentialItems omits trailing negative gap timestamp key', ()=>{
@@ -2556,26 +1541,28 @@ describe('conjunction-junction objects', () => {
         timestamp: date0,
       }
     ];
-    const filterOptions = {
+    const options = {
       key: 'timestamp',
       increment: 1,
       tolerance: 0,
       timestampUnits: 'minutes',
     };
-    const result = filterSequentialItems(arr, filterOptions);
-    const expectedResult = {
-      array: [      
-        {
-          timestamp: date1,
-        },
-        {
-          timestamp: date2,
-        },
-      ],
+    const result = filterSequentialItems(arr, options);
+    const e = {
+      priorValidIndex: 1,
+      priorValidId: undefined,
+      priorValidValue: date2,
+      value: date0,
+      delta: 2,
+      absDelta: 2,
+
       index: 1,
       stop: 2,
-      message: 'in filterSequentialItems() at record 2 exceeded range of 1 (id: undefined, delta: 2, absolute: 2, key: timestamp, value at 2: Thursday, May 17, 2018, 1:00 PM, value at last sequential index #1/id: undefined: Thursday, May 17, 2018, 1:02 PM)',
     };
+    const expectedResult = Object.assign({},
+      e, {
+        message: `in filterSequentialItems() at record ${e.stop} exceeded range of ${options.increment} (value at last sequential index #${e.priorValidIndex}/id: ${e.priorValidId}: ${convertTimestampToString(e.priorValidValue, 'd t z')}; failure at id: ${arr[e.stop].id}, delta: ${e.delta}, absolute: ${e.absDelta}, key: ${options.key}, value at ${e.stop}: ${convertTimestampToString(arr[e.stop].timestamp, 'd t z')})`
+      });
     expect(result).to.deep.equal(expectedResult);
   });
   it('filterSequentialItems omits trailing negative gap timestamp key hours', ()=>{
@@ -2590,26 +1577,27 @@ describe('conjunction-junction objects', () => {
         timestamp: hour0,
       }
     ];
-    const filterOptions = {
+    const options = {
       key: 'timestamp',
       increment: 1,
       tolerance: 0,
       timestampUnits: 'hours',
     };
-    const result = filterSequentialItems(arr, filterOptions);
-    const expectedResult = {
-      array: [      
-        {
-          timestamp: hour1,
-        },
-        {
-          timestamp: hour2,
-        },
-      ],
+    const result = filterSequentialItems(arr, options);
+    const e = {
+      priorValidIndex: 1,
+      priorValidId: undefined,
+      priorValidValue: hour2,
+      value: hour0,
+      delta: 2,
+      absDelta: 2,
       index: 1,
       stop: 2,
-      message: 'in filterSequentialItems() at record 2 exceeded range of 1 (id: undefined, delta: 2, absolute: 2, key: timestamp, value at 2: Thursday, May 17, 2018, 1:00 PM, value at last sequential index #1/id: undefined: Thursday, May 17, 2018, 3:00 PM)',
     };
+    const expectedResult = Object.assign({},
+      e, {
+        message: `in filterSequentialItems() at record ${e.stop} exceeded range of ${options.increment} (value at last sequential index #${e.priorValidIndex}/id: ${e.priorValidId}: ${convertTimestampToString(e.priorValidValue, 'd t z')}; failure at id: ${arr[e.stop].id}, delta: ${e.delta}, absolute: ${e.absDelta}, key: ${options.key}, value at ${e.stop}: ${convertTimestampToString(arr[e.stop].timestamp, 'd t z')})`
+      });
     expect(result).to.deep.equal(expectedResult);
   });
   it('filterSequentialItems returns 1st item only if not sequential integer key', ()=>{
@@ -2624,22 +1612,27 @@ describe('conjunction-junction objects', () => {
         id: 20,
       }
     ];
-    const filterOptions = {
+    const options = {
       key: 'id',
       increment: 1,
       tolerance: 0,
     };
-    const result = filterSequentialItems(arr, filterOptions);
-    const expectedResult = {
-      array: [      
-        {
-          id: 5,
-        },
-      ],
+    const result = filterSequentialItems(arr, options);
+    const e = {
+      priorValidIndex: 0,
+      priorValidId: 5,
+      priorValidValue: 5,
+      value: 16,
+      delta: 11,
+      absDelta: 11,
+
       index: 0,
       stop: 1,
-      message: 'in filterSequentialItems() at record 1 exceeded range of 1 (id: 16, delta: 11, absolute: 11, key: id, value at 1: 16, value at last sequential index #0/id: 5: 5)',
     };
+    const expectedResult = Object.assign({},
+      e, {
+        message: `in filterSequentialItems() at record ${e.stop} exceeded range of ${options.increment} (value at last sequential index #${e.priorValidIndex}/id: ${e.priorValidId}: ${convertTimestampToString(e.priorValidValue, 'd t z')}; failure at id: ${arr[e.stop].id}, delta: ${e.delta}, absolute: ${e.absDelta}, key: ${options.key}, value at ${e.stop}: ${arr[e.stop].id})`
+      });
     expect(result).to.deep.equal(expectedResult);
   });
   it('filterSequentialItems returns 1st item only if not sequential timestamp key', ()=>{
@@ -2654,22 +1647,27 @@ describe('conjunction-junction objects', () => {
         timestamp: date2,
       }
     ];
-    const filterOptions = {
+    const options = {
       key: 'timestamp',
       increment: 1,
       tolerance: 0,
     };
-    const result = filterSequentialItems(arr, filterOptions);
-    const expectedResult = {
-      array: [      
-        {
-          timestamp: date0,
-        },
-      ],
+    const result = filterSequentialItems(arr, options);
+    const e = {
+      priorValidIndex: 0,
+      priorValidId: undefined,
+      priorValidValue: date0,
+      value: date5,
+      delta: -5,
+      absDelta: 5,
+      
       index: 0,
       stop: 1,
-      message: 'in filterSequentialItems() at record 1 exceeded range of 1 (id: undefined, delta: -5, absolute: 5, key: timestamp, value at 1: Thursday, May 17, 2018, 1:05 PM, value at last sequential index #0/id: undefined: Thursday, May 17, 2018, 1:00 PM)',
     };
+    const expectedResult = Object.assign({},
+      e, {
+        message: `in filterSequentialItems() at record ${e.stop} exceeded range of ${options.increment} (value at last sequential index #${e.priorValidIndex}/id: ${e.priorValidId}: ${convertTimestampToString(e.priorValidValue, 'd t z')}; failure at id: ${arr[e.stop].id}, delta: ${e.delta}, absolute: ${e.absDelta}, key: ${options.key}, value at ${e.stop}: ${convertTimestampToString(arr[e.stop].timestamp, 'd t z')})`
+      });
     expect(result).to.deep.equal(expectedResult);
   });
   it('filterSequentialItems returns 1st item only if not sequential timestamp key hours', ()=>{
@@ -2684,23 +1682,71 @@ describe('conjunction-junction objects', () => {
         timestamp: hour2,
       }
     ];
-    const filterOptions = {
+    const options = {
       key: 'timestamp',
       increment: 1,
       tolerance: 0,
       timestampUnits: 'hours',
     };
-    const result = filterSequentialItems(arr, filterOptions);
-    const expectedResult = {
-      array: [      
-        {
-          timestamp: hour0,
-        },
-      ],
+    const result = filterSequentialItems(arr, options);
+    const e = {
+      priorValidIndex: 0,
+      priorValidId: undefined,
+      priorValidValue: hour0,
+      value: hour5,
+      delta: -5,
+      absDelta: 5,
+
       index: 0,
       stop: 1,
-      message: 'in filterSequentialItems() at record 1 exceeded range of 1 (id: undefined, delta: -5, absolute: 5, key: timestamp, value at 1: Thursday, May 17, 2018, 6:00 PM, value at last sequential index #0/id: undefined: Thursday, May 17, 2018, 1:00 PM)',
     };
+    const expectedResult = Object.assign({},
+      e, {
+        message: `in filterSequentialItems() at record ${e.stop} exceeded range of ${options.increment} (value at last sequential index #${e.priorValidIndex}/id: ${e.priorValidId}: ${convertTimestampToString(e.priorValidValue, 'd t z')}; failure at id: ${arr[e.stop].id}, delta: ${e.delta}, absolute: ${e.absDelta}, key: ${options.key}, value at ${e.stop}: ${convertTimestampToString(arr[e.stop].timestamp, 'd t z')})`
+      });
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('consolidateTimeOrderedArray', ()=>{
+    const tsKey = 'timestamp';
+    const count = 5;
+    const startTime = new Date(2021,0,1,10,3);
+    const keyTypes = {
+      mean: 'mean',
+      max: 'max',
+      sum: 'sum',
+    };
+    const arr = [
+      {
+        mean: 0,
+        max: 1,
+        sum: 2,
+      },
+      {
+        mean: 0,
+        max: 1,
+        sum: 2,
+      },
+      {
+        mean: 0,
+        max: 1,
+        sum: 2,
+      },
+    ];
+    arr.forEach((x,i)=>{
+      x.timestamp = addTime(startTime, i, 'minute');
+    });
+    const expectedResult = [
+      {
+        mean: 0,
+        max: 1,
+        sum: 6,
+        timestamp: addTime(startTime, arr.length-1, 'minute')
+      }
+    ];
+    const result = consolidateTimeOrderedArray(arr, count, tsKey, keyTypes);
+    console.log('expectedResult',expectedResult)
+    console.log('result',result)
     expect(result).to.deep.equal(expectedResult);
   });
 
