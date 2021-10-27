@@ -297,6 +297,7 @@ var lowerCaseWord = function lowerCaseWord(word) {
 
 var convertScToCc = function convertScToCc(word) {
   var divider = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '_';
+  var isPascal = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
   // input: string in snake_case
   // disregards any other type of formatting, such as spaces and hyphens
@@ -308,7 +309,7 @@ var convertScToCc = function convertScToCc(word) {
   }
   var array = word.split(divider);
   var first = array[0];
-  var firstLetter = first[0].toLowerCase();
+  var firstLetter = isPascal ? titleCaseWord(first[0]) : first[0].toLowerCase();
   var endLetters = first.slice(1, first.length);
   var firstWord = '' + firstLetter + endLetters;
   var others = array.slice(1, array.length);

@@ -299,7 +299,7 @@ const lowerCaseWord = word => {
   return `${front.toLowerCase()}${end}`;
 };
 
-const convertScToCc = (word, divider='_') => {
+const convertScToCc = (word, divider='_', isPascal=false) => {
   // input: string in snake_case
   // disregards any other type of formatting, such as spaces and hyphens
   if(isPrimitiveNumber(word)) {
@@ -310,7 +310,7 @@ const convertScToCc = (word, divider='_') => {
   }
   const array = word.split(divider);
   const first = array[0];
-  const firstLetter = first[0].toLowerCase();
+  const firstLetter = isPascal ? titleCaseWord(first[0]) : first[0].toLowerCase();
   const endLetters = first.slice(1,first.length);
   const firstWord = `${firstLetter}${endLetters}`;
   const others = array.slice(1,array.length);
