@@ -21,6 +21,7 @@ const {
   lowerCaseWord,
   convertScToCc,
   convertCcToSc,
+  convertMixedStringToCc,
   convertScToSpace,
   isValidEmail,
 } = require('../index');
@@ -79,6 +80,21 @@ describe('conjunction-junction primitives', () => {
     '0.00000': true,
     ''       : true,
   };
+
+  const mixedStrings = [
+    ['abc'       ,'abc'],
+    ['a bc'      ,'aBc'],
+    ['ABc'       ,'abc'],
+    ['a b c'     ,'aBC'],
+    ['a baby cat','aBabyCat'],
+    ['a long  set       of   99spaces3 2','aLongSetOf99spaces32'],
+    ['front gr soil  1'                  ,'frontGrSoil1'],
+    ['Adafruit #3 Soil moisture '        ,'adafruit3SoilMoisture'],
+    [
+      'this has a l0t o% $h!t$ *n #@) (&we ~`+e="\'/|> don\'t.>?< want{}[]it',
+      'thisHasAL0tOHTNWeEDonTWantIt'
+    ],
+  ];
 
   it('parseFloatInput leading decimal ok',()=>{
     for(let num in leadingDecimals){
@@ -347,6 +363,12 @@ describe('conjunction-junction primitives', () => {
   it('convertScToSpace returns input string without underscores (multiple underscores)', () => { 
     const result = convertScToSpace('Hello_W_o_r_l_d');
     expect(result).to.equal('Hello W o r l d');
+  });
+  mixedStrings.forEach(arr=>{
+    it(`convertMixedStringToCc ${arr[0]} >> ${arr[1]}`, ()=>{
+      const result = convertMixedStringToCc(arr[0]);
+      expect(result).to.equal(arr[1]);
+    });
   });
 
 

@@ -300,8 +300,12 @@ var convertScToCc = function convertScToCc(word) {
 
   // input: string in snake_case
   // disregards any other type of formatting, such as spaces and hyphens
-  if (isPrimitiveNumber(word)) return '' + word;
-  if (typeof word !== 'string') return '';
+  if (isPrimitiveNumber(word)) {
+    return '' + word;
+  }
+  if (typeof word !== 'string') {
+    return '';
+  }
   var array = word.split(divider);
   var first = array[0];
   var firstLetter = first[0].toLowerCase();
@@ -313,6 +317,33 @@ var convertScToCc = function convertScToCc(word) {
   });
   var result = '' + firstWord + othersCamel.join('');
   return result;
+};
+
+var convertMixedStringToCc = function convertMixedStringToCc(word) {
+  if (typeof word !== 'string') {
+    return '';
+  }
+  var re = /[^a-zA-Z0-9\d\s]/gi;
+  var conformedWord = word.replace(re, ' '); // all non alphanumeric to space
+  var wordArr = conformedWord.split(' '); // split on spaces
+  var filteredArr = wordArr.map(function (t) {
+    return t.trim();
+  }) // trim extra space
+  .filter(function (t) {
+    return !!t;
+  }) // remove cells with only empty spaces
+  .map(function (t) {
+    return t.toLowerCase();
+  }) // all lowercase
+  .map(function (t, i) {
+    // first lowercase, rest title case
+    if (i === 0) {
+      return t;
+    }
+    return titleCaseWord(t);
+  });
+  var camel = filteredArr.join('');
+  return camel;
 };
 
 var caps = { A: true, B: true, C: true, D: true, E: true, F: true, G: true, H: true, I: true, J: true, K: true, L: true, M: true, N: true, O: true, P: true, Q: true, R: true, S: true, T: true, U: true, V: true, W: true, X: true, Y: true, Z: true };
@@ -406,6 +437,7 @@ module.exports = {
   lowerCaseWord: lowerCaseWord,
   convertScToCc: convertScToCc,
   convertCcToSc: convertCcToSc,
+  convertMixedStringToCc: convertMixedStringToCc,
   convertScToSpace: convertScToSpace,
   convertPhraseToPath: convertPhraseToPath,
   isValidEmail: isValidEmail,

@@ -302,8 +302,12 @@ const lowerCaseWord = word => {
 const convertScToCc = (word, divider='_') => {
   // input: string in snake_case
   // disregards any other type of formatting, such as spaces and hyphens
-  if(isPrimitiveNumber(word)) return `${word}`;
-  if(typeof word !== 'string') return '';
+  if(isPrimitiveNumber(word)) {
+    return `${word}`;
+  }
+  if(typeof word !== 'string') {
+    return '';
+  }
   const array = word.split(divider);
   const first = array[0];
   const firstLetter = first[0].toLowerCase();
@@ -313,6 +317,26 @@ const convertScToCc = (word, divider='_') => {
   const othersCamel = others.map(word=>titleCaseWord(word));
   const result = `${firstWord}${othersCamel.join('')}`;
   return result;
+};
+
+const convertMixedStringToCc = word => {
+  if(typeof word !== 'string') {
+    return '';
+  }
+  const re = /[^a-zA-Z0-9\d\s]/gi;
+  const conformedWord = word.replace(re, ' '); // all non alphanumeric to space
+  const wordArr = conformedWord.split(' '); // split on spaces
+  const filteredArr = wordArr.map(t=>t.trim()) // trim extra space
+    .filter(t=>!!t) // remove cells with only empty spaces
+    .map(t=>t.toLowerCase()) // all lowercase
+    .map((t,i)=>{ // first lowercase, rest title case
+      if(i===0){
+        return t;
+      }
+      return titleCaseWord(t);
+    }); 
+  const camel = filteredArr.join('');
+  return camel;
 };
 
 const caps  = {A:true,B:true,C:true,D:true,E:true,F:true,G:true,H:true,I:true,J:true,K:true,L:true,M:true,N:true,O:true,P:true,Q:true,R:true,S:true,T:true,U:true,V:true,W:true,X:true,Y:true,Z:true};
@@ -407,6 +431,7 @@ module.exports = {
   lowerCaseWord,
   convertScToCc,
   convertCcToSc,
+  convertMixedStringToCc,
   convertScToSpace,
   convertPhraseToPath,
   isValidEmail,
