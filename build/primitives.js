@@ -320,6 +320,8 @@ var convertScToCc = function convertScToCc(word) {
 };
 
 var convertMixedStringToCc = function convertMixedStringToCc(word) {
+  var isPascal = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
   if (typeof word !== 'string') {
     return '';
   }
@@ -337,7 +339,7 @@ var convertMixedStringToCc = function convertMixedStringToCc(word) {
   }) // all lowercase
   .map(function (t, i) {
     // first lowercase, rest title case
-    if (i === 0) {
+    if (!isPascal && i === 0) {
       return t;
     }
     return titleCaseWord(t);

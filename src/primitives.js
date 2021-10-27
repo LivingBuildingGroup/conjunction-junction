@@ -319,7 +319,7 @@ const convertScToCc = (word, divider='_') => {
   return result;
 };
 
-const convertMixedStringToCc = word => {
+const convertMixedStringToCc = (word, isPascal=false) => {
   if(typeof word !== 'string') {
     return '';
   }
@@ -330,7 +330,7 @@ const convertMixedStringToCc = word => {
     .filter(t=>!!t) // remove cells with only empty spaces
     .map(t=>t.toLowerCase()) // all lowercase
     .map((t,i)=>{ // first lowercase, rest title case
-      if(i===0){
+      if(!isPascal && i===0){
         return t;
       }
       return titleCaseWord(t);
