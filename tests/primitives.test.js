@@ -30,7 +30,8 @@ const {
   nonObjects,
   nonStringPrimitives,
   lowerStrings,
-  upperStrings,
+  titleStrings,
+  pascalStrings,
   nonStringNonNumbers,
   nonCompoundArrays,
   date0, 
@@ -242,10 +243,16 @@ describe('conjunction-junction primitives', () => {
       expect(titleWord).to.equal(undefined);
     });
   });
-  it('titleCaseWord valid on valid input (snake to Pascal)', () => { 
+  it('titleCaseWord valid on valid input (lower to title)', () => { 
     lowerStrings.forEach((item, i)=>{
-      const titleWord = titleCaseWord(item, 'cC', '_');
-      expect(titleWord).to.equal(upperStrings[i]);
+      const titleWord = titleCaseWord(item, 'cC');
+      expect(titleWord).to.equal(titleStrings[i]);
+    });
+  });
+  it('titleCaseWord valid on valid input (Pascal to Pascal)', () => { 
+    pascalStrings.forEach(item=>{
+      const titleWord = titleCaseWord(item, {pascal: true, doNotForceLowerCase: true});
+      expect(titleWord).to.equal(item);
     });
   });
   it('titleCaseWord valid camelCase on valid input', () => { 

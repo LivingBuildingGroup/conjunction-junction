@@ -41,7 +41,7 @@ const {
   nonNumberArrays,
   nonStringPrimitives,
   lowerStrings,
-  upperStrings,
+  titleStrings,
   nonStringNonNumbers,
   nonCompoundArrays,  // uniqueNumber0,uniqueNumber1,uniqueNumber2,uniqueNumber3,uniqueNumber4,uniqueNumber5,uniqueNumber6,uniqueNumber7,uniqueNumber8,uniqueNumber9,
 } = require('./helper-data');
@@ -80,7 +80,7 @@ describe('conjunction-junction date-time', () => {
       ...nonNumberArrays,
       ...nonStringPrimitives,
       ...lowerStrings,
-      ...upperStrings,
+      ...titleStrings,
       ...nonStringNonNumbers,
       ...nonCompoundArrays,
     ];

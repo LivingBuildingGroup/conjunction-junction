@@ -13,7 +13,8 @@ const nonNumberObjects  = [{x: 'string'}, {x: undefined}, {x: null}, {x: []}, {x
 const nonNumberArrays   = [['string'], [undefined], [null], [[]], [[1,2]], [['string']] ];
 const nonStringPrimitives=[...numbers, undefined, null];
 const lowerStrings      = ['rabbit', 'bunny', 'cat', 'dog', 'mouse'];
-const upperStrings      = ['Rabbit', 'Bunny', 'Cat', 'Dog', 'Mouse'];
+const titleStrings      = ['Rabbit', 'Bunny', 'Cat', 'Dog', 'Mouse'];
+const pascalStrings     = ['RaBbit', 'BunNy', 'CaT', 'DOg', 'MousE'];
 const nonStringNonNumbers=[undefined, null, ...nonNumberArrays, ...nonNumberObjects];
 const nonCompoundArrays = [['string'], [undefined], [null], ['x'], [1,2], ['string'] ];
   
@@ -163,7 +164,8 @@ module.exports = {
   nonNumberArrays,
   nonStringPrimitives,
   lowerStrings,
-  upperStrings,
+  titleStrings,
+  pascalStrings,
   nonStringNonNumbers,
   nonCompoundArrays,
   date1StringDtzDef,

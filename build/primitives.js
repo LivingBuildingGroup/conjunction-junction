@@ -282,7 +282,8 @@ var titleCaseWord = function titleCaseWord(word, option) {
   var end = word.slice(1, word.length);
   var isPascal = option === 'cC' || option && option.pascal;
   var divider = isPascal && option.divider ? option.divider : null;
-  var endCase = isPascal ? convertScToCc(end, divider) : end;
+  var doNotForceLowerCase = option && option.doNotForceLowerCase;
+  var endCase = doNotForceLowerCase ? end : isPascal ? convertScToCc(end, divider) : end;
   var front = word.slice(0, 1);
   var result = '' + front.toUpperCase() + endCase;
   return result;
@@ -313,10 +314,25 @@ var convertScToCc = function convertScToCc(word) {
   var endLetters = first.slice(1, first.length);
   var firstWord = '' + firstLetter + endLetters;
   var others = array.slice(1, array.length);
+  var option = isPascal ? { pascal: true } : null;
   var othersCamel = others.map(function (word) {
-    return titleCaseWord(word);
+    return titleCaseWord(word, option);
   });
   var result = '' + firstWord + othersCamel.join('');
+  console.log({
+    word: word,
+    divider: divider,
+    isPascal: isPascal,
+    array: array,
+    first: first,
+    firstLetter: firstLetter,
+    endLetters: endLetters,
+    firstWord: firstWord,
+    others: others,
+    option: option,
+    othersCamel: othersCamel,
+    result: result
+  });
   return result;
 };
 
@@ -327,6 +343,7 @@ var convertMixedStringToCc = function convertMixedStringToCc(word) {
     return '';
   }
   var re = /[^a-zA-Z0-9\d\s]/gi;
+  var option = isPascal ? { pascal: true, doNotForceLowerCase: true } : null;
   var conformedWord = word.replace(re, ' '); // all non alphanumeric to space
   var wordArr = conformedWord.split(' '); // split on spaces
   var filteredArr = wordArr.map(function (t) {
@@ -343,7 +360,7 @@ var convertMixedStringToCc = function convertMixedStringToCc(word) {
     if (!isPascal && i === 0) {
       return t;
     }
-    return titleCaseWord(t);
+    return titleCaseWord(t, option);
   });
   var camel = filteredArr.join('');
   return camel;

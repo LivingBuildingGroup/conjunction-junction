@@ -188,14 +188,10 @@ const {
   precisionRound,
 } = require('../index');
 const {
-  numbers, 
   nonNumbers, 
-  nonObjects,
   nonNumberObjects, 
   nonNumberArrays,
-  nonStringPrimitives,
-  lowerStrings,
-  upperStrings         } = require('./helper-data');
+} = require('./helper-data');
 
 
 describe('conjunction-junction conversions', () => { 

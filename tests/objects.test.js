@@ -38,9 +38,6 @@ const {
 const {
   nonObjects,
   nonStringPrimitives,
-  lowerStrings,
-  upperStrings,
-  nonStringNonNumbers,
   nonCompoundArrays,
   date0, 
   date1,

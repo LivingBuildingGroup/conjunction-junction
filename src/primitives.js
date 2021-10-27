@@ -285,7 +285,9 @@ const titleCaseWord = (word, option) => {
   const end = word.slice(1,word.length);
   const isPascal = option === 'cC' || (option && option.pascal);
   const divider = isPascal && option.divider ? option.divider : null;
+  const doNotForceLowerCase = option && option.doNotForceLowerCase;
   const endCase = 
+  doNotForceLowerCase ? end :
     isPascal ? convertScToCc(end, divider) : end ;
   const front = word.slice(0,1);
   const result = `${front.toUpperCase()}${endCase}`;
@@ -314,8 +316,23 @@ const convertScToCc = (word, divider='_', isPascal=false) => {
   const endLetters = first.slice(1,first.length);
   const firstWord = `${firstLetter}${endLetters}`;
   const others = array.slice(1,array.length);
-  const othersCamel = others.map(word=>titleCaseWord(word));
+  const option = isPascal ? {pascal: true} : null ;
+  const othersCamel = others.map(word=>titleCaseWord(word, option));
   const result = `${firstWord}${othersCamel.join('')}`;
+  console.log({
+    word,
+    divider,
+    isPascal,
+    array,
+    first,
+    firstLetter,
+    endLetters,
+    firstWord,
+    others,
+    option,
+    othersCamel,
+    result
+  });
   return result;
 };
 
@@ -324,6 +341,7 @@ const convertMixedStringToCc = (word, isPascal=false) => {
     return '';
   }
   const re = /[^a-zA-Z0-9\d\s]/gi;
+  const option = isPascal ? {pascal: true, doNotForceLowerCase: true} : null ;
   const conformedWord = word.replace(re, ' '); // all non alphanumeric to space
   const wordArr = conformedWord.split(' '); // split on spaces
   const filteredArr = wordArr.map(t=>t.trim()) // trim extra space
@@ -333,7 +351,7 @@ const convertMixedStringToCc = (word, isPascal=false) => {
       if(!isPascal && i===0){
         return t;
       }
-      return titleCaseWord(t);
+      return titleCaseWord(t, option);
     }); 
   const camel = filteredArr.join('');
   return camel;
