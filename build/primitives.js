@@ -319,20 +319,6 @@ var convertScToCc = function convertScToCc(word) {
     return titleCaseWord(word, option);
   });
   var result = '' + firstWord + othersCamel.join('');
-  console.log({
-    word: word,
-    divider: divider,
-    isPascal: isPascal,
-    array: array,
-    first: first,
-    firstLetter: firstLetter,
-    endLetters: endLetters,
-    firstWord: firstWord,
-    others: others,
-    option: option,
-    othersCamel: othersCamel,
-    result: result
-  });
   return result;
 };
 

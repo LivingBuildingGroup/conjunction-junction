@@ -319,20 +319,6 @@ const convertScToCc = (word, divider='_', isPascal=false) => {
   const option = isPascal ? {pascal: true} : null ;
   const othersCamel = others.map(word=>titleCaseWord(word, option));
   const result = `${firstWord}${othersCamel.join('')}`;
-  console.log({
-    word,
-    divider,
-    isPascal,
-    array,
-    first,
-    firstLetter,
-    endLetters,
-    firstWord,
-    others,
-    option,
-    othersCamel,
-    result
-  });
   return result;
 };
 
