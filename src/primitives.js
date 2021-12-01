@@ -332,7 +332,7 @@ const convertMixedStringToCc = (word, isPascal=false) => {
   const wordArr = conformedWord.split(' '); // split on spaces
   const filteredArr = wordArr.map(t=>t.trim()) // trim extra space
     .filter(t=>!!t) // remove cells with only empty spaces
-    .map(t=>t.toLowerCase()) // all lowercase
+    .map(t=>isPascal? t.toLowerCase() : t) // all lowercase
     .map((t,i)=>{ // first lowercase, rest title case
       if(!isPascal && i===0){
         return t;

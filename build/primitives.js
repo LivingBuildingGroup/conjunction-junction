@@ -339,7 +339,7 @@ var convertMixedStringToCc = function convertMixedStringToCc(word) {
     return !!t;
   }) // remove cells with only empty spaces
   .map(function (t) {
-    return t.toLowerCase();
+    return isPascal ? t.toLowerCase() : t;
   }) // all lowercase
   .map(function (t, i) {
     // first lowercase, rest title case
