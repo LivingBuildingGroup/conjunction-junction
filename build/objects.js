@@ -992,6 +992,35 @@ var interpolateArrayValues = function interpolateArrayValues(arr, decimal, hi, l
   return precisionRound(value, 4);
 };
 
+var _getType = function _getType(o) {
+  return Array.isArray(o) ? 'array' : isObjectLiteral(o) ? 'object' : isPrimitiveNumber(o) ? 'number' : o === null ? 'null' : typeof o === 'undefined' ? 'undefined' : _typeof(o); // boolean, string
+};
+
+var _diffObjectsInner = function _diffObjectsInner(o1, o2) {
+  var type1 = _getType(o1);
+  var type2 = _getType(o2);
+  var o3 = {};
+  if (type1 !== type2) {
+    o3 = type1 + ' vs ' + type2;
+  } else if (type1 === 'object') {
+    for (var k in o1) {
+      o3[k] = _diffObjectsInner(o1[k], o2[k]);
+    }
+  } else if (type1 === 'array') {
+    o3 = o1.map(function (o1sub, i) {
+      return _diffObjectsInner(o1sub, o2[i]);
+    });
+  } else {
+    o3 = o1 === o2 ? '' : o1 + ' vs ' + o2;
+  }
+  return o3;
+};
+
+var diffObjects = function diffObjects(o1, o2) {
+  var o3 = _diffObjectsInner(o1, o2);
+  return o3;
+};
+
 module.exports = {
   // object keys
   convertObjectKeyCase: convertObjectKeyCase,
@@ -1026,5 +1055,6 @@ module.exports = {
   removeAllItemsFromArray: removeAllItemsFromArray,
   addAllItemsToArray: addAllItemsToArray,
   getPositionToInterpolate: getPositionToInterpolate,
-  interpolateArrayValues: interpolateArrayValues
+  interpolateArrayValues: interpolateArrayValues,
+  diffObjects: diffObjects
 };

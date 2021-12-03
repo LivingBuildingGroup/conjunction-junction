@@ -293,6 +293,8 @@ var prefixCommonKeys = function prefixCommonKeys(tableName, keys, common) {
   // profiles.unique_field as profiles_unique_field
   var a = options.alwaysPrefix === true ? true : false;
   var c = options.case === 'cC' ? 'cC' : 'Sc'; // limit to Cc or Sc
+  var divider = '_';
+  var isPascal = true;
   var newKeys = keys.map(function (key) {
     var isIncluded = common.includes(key);
     if (isIncluded || a) {
@@ -302,14 +304,14 @@ var prefixCommonKeys = function prefixCommonKeys(tableName, keys, common) {
         if (!p) {
           // common and child
           if (c === 'cC') {
-            return tableName + '.' + key + ' as ' + tableName + titleCaseWord(key, { pascal: true, divider: '_' });
+            return tableName + '.' + key + ' as ' + tableName + convertScToCc(key, divider, isPascal);
           } else {
             return tableName + '.' + key + ' as ' + tableName + '_' + key;
           }
         } else if (a) {
           // common and parent and always
           if (c === 'cC') {
-            return tableName + '.' + key + ' as ' + tableName + titleCaseWord(key, { pascal: true, divider: '_' });
+            return tableName + '.' + key + ' as ' + tableName + convertScToCc(key, divider, isPascal);
           } else {
             return tableName + '.' + key + ' as ' + tableName + '_' + key;
           }
@@ -320,7 +322,7 @@ var prefixCommonKeys = function prefixCommonKeys(tableName, keys, common) {
       } else {
         // ALWAYS, BUT NOT COMMON, but always prefix column
         if (c === 'cC') {
-          return key + ' as ' + tableName + titleCaseWord(key, { pascal: true, divider: '_' });
+          return key + ' as ' + tableName + convertScToCc(key, divider, isPascal);
         } else {
           return key + ' as ' + tableName + '_' + key;
         }

@@ -271,19 +271,21 @@ const prefixCommonKeys = (tableName, keys, common, options={}) => {
   // profiles.unique_field as profiles_unique_field
   const a = options.alwaysPrefix === true ? true : false ;
   const c = options.case === 'cC' ? 'cC' : 'Sc' ; // limit to Cc or Sc
+  const divider = '_';
+  const isPascal = true;
   const newKeys = keys.map(key=>{
     const isIncluded = common.includes(key);
     if(isIncluded || a){ // something gets edited
       if(isIncluded){    // COMMON: table gets dot prefix
         if(!p) {                   // common and child
           if(c==='cC'){
-            return `${tableName}.${key} as ${tableName}${titleCaseWord(key, {pascal: true, divider: '_'})}`;
+            return `${tableName}.${key} as ${tableName}${convertScToCc(key, divider, isPascal)}`;
           } else {
             return `${tableName}.${key} as ${tableName}_${key}`; 
           }
         } else if(a) {             // common and parent and always
           if(c==='cC'){
-            return `${tableName}.${key} as ${tableName}${titleCaseWord(key, {pascal: true, divider: '_'})}`;
+            return `${tableName}.${key} as ${tableName}${convertScToCc(key, divider, isPascal)}`;
           } else {
             return `${tableName}.${key} as ${tableName}_${key}`; 
           }
@@ -292,7 +294,7 @@ const prefixCommonKeys = (tableName, keys, common, options={}) => {
         }
       } else {                     // ALWAYS, BUT NOT COMMON, but always prefix column
         if(c==='cC'){
-          return `${key} as ${tableName}${titleCaseWord(key, {pascal: true, divider: '_'})}`;
+          return `${key} as ${tableName}${convertScToCc(key, divider, isPascal)}`;
         } else {
           return `${key} as ${tableName}_${key}`; 
         }

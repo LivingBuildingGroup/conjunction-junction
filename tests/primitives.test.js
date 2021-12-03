@@ -256,8 +256,8 @@ describe('conjunction-junction primitives', () => {
     });
   });
   it('titleCaseWord valid camelCase on valid input', () => { 
-    const result = titleCaseWord('snake_case', {pascal: true, divider: '_'});
-    const expectedResult = 'SnakeCase';
+    const result = titleCaseWord('snake_case');
+    const expectedResult = 'Snake_case';
     expect(result).to.equal(expectedResult);
   });
   it('lowerCaseWord returns input string with first letter lower case',()=>{

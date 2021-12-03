@@ -278,13 +278,13 @@ var titleCaseWord = function titleCaseWord(word, option) {
   // input: string
   // option: 'cC' if the string is snake_case and you want camelCase (returned as SnakeCase or CamelCase)
   // output: capitalized string
-  if (typeof word !== 'string') return;
-  var end = word.slice(1, word.length);
-  var isPascal = option === 'cC' || option && option.pascal;
-  var divider = isPascal && option.divider ? option.divider : null;
-  var doNotForceLowerCase = option && option.doNotForceLowerCase;
-  var endCase = doNotForceLowerCase ? end : isPascal ? convertScToCc(end, divider) : end;
+  if (typeof word !== 'string') {
+    return;
+  }
   var front = word.slice(0, 1);
+  var end = word.slice(1, word.length);
+  var doNotForceLowerCase = option && option.doNotForceLowerCase;
+  var endCase = doNotForceLowerCase ? end : end.toLowerCase();
   var result = '' + front.toUpperCase() + endCase;
   return result;
 };
@@ -314,9 +314,8 @@ var convertScToCc = function convertScToCc(word) {
   var endLetters = first.slice(1, first.length);
   var firstWord = '' + firstLetter + endLetters;
   var others = array.slice(1, array.length);
-  var option = isPascal ? { pascal: true } : null;
   var othersCamel = others.map(function (word) {
-    return titleCaseWord(word, option);
+    return titleCaseWord(word);
   });
   var result = '' + firstWord + othersCamel.join('');
   return result;
@@ -329,25 +328,23 @@ var convertMixedStringToCc = function convertMixedStringToCc(word) {
     return '';
   }
   var re = /[^a-zA-Z0-9\d\s]/gi;
-  var option = isPascal ? { pascal: true, doNotForceLowerCase: true } : null;
+  var option = { doNotForceLowerCase: true };
   var conformedWord = word.replace(re, ' '); // all non alphanumeric to space
   var wordArr = conformedWord.split(' '); // split on spaces
   var filteredArr = wordArr.map(function (t) {
     return t.trim();
   }) // trim extra space
   .filter(function (t) {
-    return !!t;
+    return t !== '';
   }) // remove cells with only empty spaces
-  .map(function (t) {
-    return isPascal ? t.toLowerCase() : t;
-  }) // all lowercase
   .map(function (t, i) {
-    // first lowercase, rest title case
-    if (!isPascal && i === 0) {
-      return t;
+    if (isPascal && i === 0) {
+      return titleCaseWord(t, option);
+    } else if (i === 0) {
+      return t.toLowerCase();
     }
     return titleCaseWord(t, option);
-  });
+  }); // all lowercase
   var camel = filteredArr.join('');
   return camel;
 };

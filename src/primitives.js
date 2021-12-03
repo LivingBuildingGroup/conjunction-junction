@@ -281,15 +281,13 @@ const titleCaseWord = (word, option) => {
   // input: string
   // option: 'cC' if the string is snake_case and you want camelCase (returned as SnakeCase or CamelCase)
   // output: capitalized string
-  if(typeof word !== 'string') return;
-  const end = word.slice(1,word.length);
-  const isPascal = option === 'cC' || (option && option.pascal);
-  const divider = isPascal && option.divider ? option.divider : null;
-  const doNotForceLowerCase = option && option.doNotForceLowerCase;
-  const endCase = 
-  doNotForceLowerCase ? end :
-    isPascal ? convertScToCc(end, divider) : end ;
+  if(typeof word !== 'string') {
+    return;
+  }
   const front = word.slice(0,1);
+  const end = word.slice(1,word.length);
+  const doNotForceLowerCase = option && option.doNotForceLowerCase;
+  const endCase = doNotForceLowerCase ? end : end.toLowerCase() ;
   const result = `${front.toUpperCase()}${endCase}`;
   return result;
 };
@@ -316,8 +314,7 @@ const convertScToCc = (word, divider='_', isPascal=false) => {
   const endLetters = first.slice(1,first.length);
   const firstWord = `${firstLetter}${endLetters}`;
   const others = array.slice(1,array.length);
-  const option = isPascal ? {pascal: true} : null ;
-  const othersCamel = others.map(word=>titleCaseWord(word, option));
+  const othersCamel = others.map(word=>titleCaseWord(word));
   const result = `${firstWord}${othersCamel.join('')}`;
   return result;
 };
@@ -327,18 +324,19 @@ const convertMixedStringToCc = (word, isPascal=false) => {
     return '';
   }
   const re = /[^a-zA-Z0-9\d\s]/gi;
-  const option = isPascal ? {pascal: true, doNotForceLowerCase: true} : null ;
+  const option = {doNotForceLowerCase: true};
   const conformedWord = word.replace(re, ' '); // all non alphanumeric to space
   const wordArr = conformedWord.split(' '); // split on spaces
   const filteredArr = wordArr.map(t=>t.trim()) // trim extra space
-    .filter(t=>!!t) // remove cells with only empty spaces
-    .map(t=>isPascal? t.toLowerCase() : t) // all lowercase
-    .map((t,i)=>{ // first lowercase, rest title case
-      if(!isPascal && i===0){
-        return t;
+    .filter(t=>t!=='') // remove cells with only empty spaces
+    .map((t,i)=>{
+      if(isPascal && i===0){
+        return titleCaseWord(t, option);
+      } else if(i===0){
+        return t.toLowerCase();
       }
       return titleCaseWord(t, option);
-    }); 
+    }); // all lowercase
   const camel = filteredArr.join('');
   return camel;
 };

@@ -32,7 +32,8 @@ const {
   addAllItemsToArray,
   getPositionToInterpolate,
   interpolateArrayValues,
-  convertTimestampToString
+  convertTimestampToString,
+  diffObjects
 } = require('../index');
 
 const {
@@ -2311,6 +2312,34 @@ describe('conjunction-junction objects', () => {
     const lo = 33;
     const expectedResult = undefined;
     const result = interpolateArrayValues(arr, decimal, hi, lo);
+    expect(result).to.deep.equal(expectedResult);
+  });
+
+  it('diffObjects 1', () => {
+    const a = {a:1,b:2,c:null,d:[1,2],e:[{x:false,y:true},{w:false,z:true}]};
+    const b = {a:1,b:3,c:null,d:[1,4],e:[{x:false,y:true},{w:false,z:false}]};
+    const expectedResult = {
+      a:'',
+      b:'2 vs 3',
+      c:'',
+      d:['','2 vs 4'],
+      e:[{x:'',y:''},{w:'',z:'true vs false'}]
+    };
+    const result = diffObjects(a,b);
+    expect(result).to.deep.equal(expectedResult);
+  });
+  it('diffObjects 2', () => {
+    let x;
+    const a = {a:1,b:2,c:x,d:[1,2],e:[{x:false,y:true},{w:false,z:[5,6,7,8]}]};
+    const b = {a:null,b:3,c:null,d:[1,4],e:[{x:false,y:true},{w:false,z:[5,6,8]}]};
+    const expectedResult = {
+      a:'number vs null',
+      b:'2 vs 3',
+      c:'undefined vs null',
+      d:['','2 vs 4'],
+      e:[{x:'',y:''},{w:'',z:['','','7 vs 8','number vs undefined']}]
+    };
+    const result = diffObjects(a,b);
     expect(result).to.deep.equal(expectedResult);
   });
 
