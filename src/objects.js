@@ -980,7 +980,7 @@ const _diffObjectsInner = (o1, o2) => {
   const type2 = _getType(o2);
   let o3 = {};
   if(type1 !== type2){
-    o3 = `${type1} vs ${type2}`;
+    o3 = `!DIFF! ${type1} vs ${type2} !DIFF!`;
   } else if(type1 === 'object'){
     for(let k in o1){
       o3[k] = _diffObjectsInner(o1[k], o2[k]);
@@ -991,7 +991,7 @@ const _diffObjectsInner = (o1, o2) => {
     });
   } else {
     o3 = o1 === o2 ? '' :
-      `${o1} vs ${o2}`;
+      `!DIFF! ${o1} vs ${o2} !DIFF!`;
   }
   return o3;
 };

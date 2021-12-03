@@ -1001,7 +1001,7 @@ var _diffObjectsInner = function _diffObjectsInner(o1, o2) {
   var type2 = _getType(o2);
   var o3 = {};
   if (type1 !== type2) {
-    o3 = type1 + ' vs ' + type2;
+    o3 = '!DIFF! ' + type1 + ' vs ' + type2 + ' !DIFF!';
   } else if (type1 === 'object') {
     for (var k in o1) {
       o3[k] = _diffObjectsInner(o1[k], o2[k]);
@@ -1011,7 +1011,7 @@ var _diffObjectsInner = function _diffObjectsInner(o1, o2) {
       return _diffObjectsInner(o1sub, o2[i]);
     });
   } else {
-    o3 = o1 === o2 ? '' : o1 + ' vs ' + o2;
+    o3 = o1 === o2 ? '' : '!DIFF! ' + o1 + ' vs ' + o2 + ' !DIFF!';
   }
   return o3;
 };

@@ -2320,10 +2320,10 @@ describe('conjunction-junction objects', () => {
     const b = {a:1,b:3,c:null,d:[1,4],e:[{x:false,y:true},{w:false,z:false}]};
     const expectedResult = {
       a:'',
-      b:'2 vs 3',
+      b:'!DIFF! 2 vs 3 !DIFF!',
       c:'',
-      d:['','2 vs 4'],
-      e:[{x:'',y:''},{w:'',z:'true vs false'}]
+      d:['','!DIFF! 2 vs 4 !DIFF!'],
+      e:[{x:'',y:''},{w:'',z:'!DIFF! true vs false !DIFF!'}]
     };
     const result = diffObjects(a,b);
     expect(result).to.deep.equal(expectedResult);
@@ -2333,11 +2333,11 @@ describe('conjunction-junction objects', () => {
     const a = {a:1,b:2,c:x,d:[1,2],e:[{x:false,y:true},{w:false,z:[5,6,7,8]}]};
     const b = {a:null,b:3,c:null,d:[1,4],e:[{x:false,y:true},{w:false,z:[5,6,8]}]};
     const expectedResult = {
-      a:'number vs null',
-      b:'2 vs 3',
-      c:'undefined vs null',
-      d:['','2 vs 4'],
-      e:[{x:'',y:''},{w:'',z:['','','7 vs 8','number vs undefined']}]
+      a:'!DIFF! number vs null !DIFF!',
+      b:'!DIFF! 2 vs 3 !DIFF!',
+      c:'!DIFF! undefined vs null !DIFF!',
+      d:['','!DIFF! 2 vs 4 !DIFF!'],
+      e:[{x:'',y:''},{w:'',z:['','','!DIFF! 7 vs 8 !DIFF!','!DIFF! number vs undefined !DIFF!']}]
     };
     const result = diffObjects(a,b);
     expect(result).to.deep.equal(expectedResult);
