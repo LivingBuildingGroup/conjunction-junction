@@ -2333,11 +2333,11 @@ describe('conjunction-junction objects', () => {
     const a = {a:1,b:2,c:x,d:[1,2],e:[{x:false,y:true},{w:false,z:[5,6,7,8]}]};
     const b = {a:null,b:3,c:null,d:[1,4],e:[{x:false,y:true},{w:false,z:[5,6,8]}]};
     const expectedResult = {
-      a:'!DIFF! number vs null !DIFF!',
+      a:'!DIFF! number 1 vs null !DIFF!',
       b:'!DIFF! 2 vs 3 !DIFF!',
       c:'!DIFF! undefined vs null !DIFF!',
       d:['','!DIFF! 2 vs 4 !DIFF!'],
-      e:[{x:'',y:''},{w:'',z:['','','!DIFF! 7 vs 8 !DIFF!','!DIFF! number vs undefined !DIFF!']}]
+      e:[{x:'',y:''},{w:'',z:['','','!DIFF! 7 vs 8 !DIFF!','!DIFF! number 8 vs undefined !DIFF!']}]
     };
     const result = diffObjects(a,b);
     expect(result).to.deep.equal(expectedResult);
