@@ -186,6 +186,30 @@ var parseEvent = function parseEvent(event) {
   return value;
 };
 
+var isValidHex = function isValidHex(str) {
+  if (typeof str !== 'string') {
+    return false;
+  }
+  if (str.length !== 4) {
+    return false;
+  }
+  if (str[0] !== '0') {
+    return false;
+  }
+  if (str[1] !== 'x') {
+    return false;
+  }
+  var re = /[0-9A-Fa-f]/g;
+  if (!re.test(str[2])) {
+    return false;
+  }
+  re.lastIndex = 0;
+  if (!re.test(str[3])) {
+    return false;
+  }
+  return true;
+};
+
 // @@@@@@@@@@@@@@@ MIXED TYPES @@@@@@@@@@@@@@@@
 
 var formatForPrint = function formatForPrint(data, options) {
@@ -430,6 +454,7 @@ module.exports = {
   asNum: asNum,
   parseFloatInput: parseFloatInput,
   parseEvent: parseEvent,
+  isValidHex: isValidHex,
   // mixed types
   formatForPrint: formatForPrint,
   // print,

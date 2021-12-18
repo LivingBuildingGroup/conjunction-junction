@@ -189,6 +189,30 @@ const parseEvent = event => {
   return value;
 };
 
+const isValidHex = str => {
+  if(typeof str !== 'string'){
+    return false;
+  }
+  if(str.length !== 4){
+    return false;
+  }
+  if(str[0] !== '0'){
+    return false;
+  }
+  if(str[1] !== 'x'){
+    return false;
+  }
+  const re = /[0-9A-Fa-f]/g;
+  if(!re.test(str[2])){
+    return false;
+  }
+  re.lastIndex = 0;
+  if(!re.test(str[3])){
+    return false;
+  }
+  return true;
+};
+
 // @@@@@@@@@@@@@@@ MIXED TYPES @@@@@@@@@@@@@@@@
 
 const formatForPrint = (data, options) => {    //plan to deprecate this, continue function but rename
@@ -423,6 +447,7 @@ module.exports = {
   asNum,
   parseFloatInput,
   parseEvent,
+  isValidHex,
   // mixed types
   formatForPrint,
   // print,
