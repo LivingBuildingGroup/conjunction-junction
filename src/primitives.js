@@ -213,6 +213,13 @@ const isValidHexAddress = str => {
   return true;
 };
 
+const isValidIpAddress = str => { 
+  if(/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(str)){
+    return true;
+  }
+  return false;
+};
+
 // @@@@@@@@@@@@@@@ MIXED TYPES @@@@@@@@@@@@@@@@
 
 const formatForPrint = (data, options) => {    //plan to deprecate this, continue function but rename
@@ -448,6 +455,7 @@ module.exports = {
   parseFloatInput,
   parseEvent,
   isValidHexAddress,
+  isValidIpAddress,
   // mixed types
   formatForPrint,
   // print,

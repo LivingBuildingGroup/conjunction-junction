@@ -210,6 +210,13 @@ var isValidHexAddress = function isValidHexAddress(str) {
   return true;
 };
 
+var isValidIpAddress = function isValidIpAddress(str) {
+  if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(str)) {
+    return true;
+  }
+  return false;
+};
+
 // @@@@@@@@@@@@@@@ MIXED TYPES @@@@@@@@@@@@@@@@
 
 var formatForPrint = function formatForPrint(data, options) {
@@ -455,6 +462,7 @@ module.exports = {
   parseFloatInput: parseFloatInput,
   parseEvent: parseEvent,
   isValidHexAddress: isValidHexAddress,
+  isValidIpAddress: isValidIpAddress,
   // mixed types
   formatForPrint: formatForPrint,
   // print,
