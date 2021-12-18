@@ -186,7 +186,7 @@ var parseEvent = function parseEvent(event) {
   return value;
 };
 
-var isValidHex = function isValidHex(str) {
+var isValidHexAddress = function isValidHexAddress(str) {
   if (typeof str !== 'string') {
     return false;
   }
@@ -454,7 +454,7 @@ module.exports = {
   asNum: asNum,
   parseFloatInput: parseFloatInput,
   parseEvent: parseEvent,
-  isValidHex: isValidHex,
+  isValidHexAddress: isValidHexAddress,
   // mixed types
   formatForPrint: formatForPrint,
   // print,
