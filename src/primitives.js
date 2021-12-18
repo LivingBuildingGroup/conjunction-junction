@@ -189,7 +189,7 @@ const parseEvent = event => {
   return value;
 };
 
-const isValidHex = str => {
+const isValidHexAddress = str => {
   if(typeof str !== 'string'){
     return false;
   }
@@ -447,7 +447,7 @@ module.exports = {
   asNum,
   parseFloatInput,
   parseEvent,
-  isValidHex,
+  isValidHexAddress,
   // mixed types
   formatForPrint,
   // print,
