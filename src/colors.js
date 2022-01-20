@@ -97,19 +97,29 @@ const convertRgbToHsl = rgb => {
 
 const hexToRgb = hex => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  const final =  result ? {
+  const rgb =  result ? {
     r: parseInt(result[1], 16),
     g: parseInt(result[2], 16),
     b: parseInt(result[3], 16)
   } : null;
-  if(final){
-    final.luma = precisionRound(0.2126 * final.r + 0.7152 * final.g + 0.0722 * final.b, 2);
+  if(rgb){
+    rgb.luma = precisionRound(0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b, 2);
   }
 	
-  const hsl = final ? convertRgbToHsl(final) : {};
+  const hsl = rgb ? convertRgbToHsl(rgb) : {};
+  /* final API {
+    rgb,
+    r, g, b,
+    h, s, l,
+    groupName,
+    groupOrder
+  } */
   return Object.assign({},
-    final,
-    hsl
+    rgb,
+    hsl,
+    {
+      rgb: `${rgb.r},${rgb.g},${rgb.b}`,
+    }
   );
 };
 
@@ -128,7 +138,7 @@ const createColorsFullObject = colors => {
       if(!colorsFull.groups[rgb.groupName]){
         colorsFull.groups[rgb.groupName] = rgb.groupOrder;
       }
-      const rgbString = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+      const rgbString = rgb.rgb;
       colorsFull.arraysByGroup[rgb.groupName].push(Object.assign({},
         rgb,
         {

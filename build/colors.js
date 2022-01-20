@@ -84,17 +84,26 @@ var convertRgbToHsl = function convertRgbToHsl(rgb) {
 
 var hexToRgb = function hexToRgb(hex) {
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  var final = result ? {
+  var rgb = result ? {
     r: parseInt(result[1], 16),
     g: parseInt(result[2], 16),
     b: parseInt(result[3], 16)
   } : null;
-  if (final) {
-    final.luma = precisionRound(0.2126 * final.r + 0.7152 * final.g + 0.0722 * final.b, 2);
+  if (rgb) {
+    rgb.luma = precisionRound(0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b, 2);
   }
 
-  var hsl = final ? convertRgbToHsl(final) : {};
-  return Object.assign({}, final, hsl);
+  var hsl = rgb ? convertRgbToHsl(rgb) : {};
+  /* final API {
+    rgb,
+    r, g, b,
+    h, s, l,
+    groupName,
+    groupOrder
+  } */
+  return Object.assign({}, rgb, hsl, {
+    rgb: rgb.r + ',' + rgb.g + ',' + rgb.b
+  });
 };
 
 var createColorsFullObject = function createColorsFullObject(colors) {
@@ -112,7 +121,7 @@ var createColorsFullObject = function createColorsFullObject(colors) {
       if (!colorsFull.groups[rgb.groupName]) {
         colorsFull.groups[rgb.groupName] = rgb.groupOrder;
       }
-      var rgbString = 'rgb(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ')';
+      var rgbString = rgb.rgb;
       colorsFull.arraysByGroup[rgb.groupName].push(Object.assign({}, rgb, {
         hex: colors[color],
         rgbString: rgbString,
