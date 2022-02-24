@@ -138,6 +138,15 @@ var asNum = function asNum(num, def) {
   return defResult;
 };
 
+var numberWithCommas = function numberWithCommas(x) {
+  if (!isPrimitiveNumber(x)) {
+    return '0';
+  }
+  var parts = x.toString().split('.');
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return parts.join('.');
+};
+
 var trailingZeros = {
   '': true,
   '0': true,
@@ -460,6 +469,7 @@ module.exports = {
   numberToModNumber: numberToModNumber,
   printNumber: printNumber,
   asNum: asNum,
+  numberWithCommas: numberWithCommas,
   parseFloatInput: parseFloatInput,
   parseEvent: parseEvent,
   isValidHexAddress: isValidHexAddress,
