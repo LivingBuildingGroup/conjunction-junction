@@ -342,7 +342,9 @@ const convertSimpleDateToTimestamp = string => {
 };
 
 const convertStringToTimestamp = rawString => {
-  if(rawString instanceof Date) return rawString;
+  if(rawString instanceof Date) {
+    return rawString;
+  }
   // input: string in ISO 8601 format; 
   // if the offset is not included in the string, zulu time is assumed
   // output: Date object in specified ZULU time zone
@@ -455,6 +457,7 @@ const _convertTimestampToStringInner = (ts, option) => {
   if(f === 'd t z')       return `${y}-${m0}-${d0} ${h0}:${min0}:${seconds0} ${offsetFormattedNoColon}`;
   if(f === 'numeric')     return `${y}${m0}${d0}${h0}${min0}${seconds0}`;
   if(f === 'time')        return `${h0}:${min0}:${seconds0}`;
+  if(f === 'hh:mm')       return `${h0}:${min0}`;
   if(f === 'm d')         return `${m}/${d}`;
   if(f === 'm d y')       return `${m}/${d}/${y}`;
   if(f === 'M d')         return `${M} ${d}`;
