@@ -130,7 +130,8 @@ const createColorsFullObject = colors => {
     groups: {},
   };
   for(let color in colors){
-    const rgb = hexToRgb(colors[color].slice(1,7));
+    const rgb = typeof colors[color] === 'string' ?
+		  hexToRgb(colors[color].slice(1,7)) : null ;
     if(rgb){
       if(!Array.isArray(colorsFull.arraysByGroup[rgb.groupName])){
         colorsFull.arraysByGroup[rgb.groupName] = [];

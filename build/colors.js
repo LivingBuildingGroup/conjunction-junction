@@ -113,7 +113,7 @@ var createColorsFullObject = function createColorsFullObject(colors) {
     groups: {}
   };
   for (var color in colors) {
-    var rgb = hexToRgb(colors[color].slice(1, 7));
+    var rgb = typeof colors[color] === 'string' ? hexToRgb(colors[color].slice(1, 7)) : null;
     if (rgb) {
       if (!Array.isArray(colorsFull.arraysByGroup[rgb.groupName])) {
         colorsFull.arraysByGroup[rgb.groupName] = [];

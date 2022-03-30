@@ -403,19 +403,19 @@ const validateRawKnex = (data, label, camel, options={}) => {
       if(options.returnInvalid){
         return options.returnInvalid;
       }
-      return Object.assign({},first);
+      return Object.assign({},first); // UNESCAPE OBJECTS HERE AND TEST
     }
 
     if(camel){
       return convertObjectKeyCase(first,'cC');
     }
-    return Object.assign({},first);
+    return Object.assign({},first); // UNESCAPE OBJECTS HERE AND TEST
   }
 
   if(camel){
-    return data.rows.map(r=>convertObjectKeyCase(r,'cC'));
+    return data.rows.map(r=>convertObjectKeyCase(r,'cC')); // UNESCAPE OBJECTS HERE AND TEST
   }
-  return [...data.rows];
+  return [...data.rows]; // UNESCAPE OBJECTS HERE AND TEST
 };
 
 module.exports = { 

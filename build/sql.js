@@ -442,21 +442,21 @@ var validateRawKnex = function validateRawKnex(data, label, camel) {
       if (options.returnInvalid) {
         return options.returnInvalid;
       }
-      return Object.assign({}, first);
+      return Object.assign({}, first); // UNESCAPE OBJECTS HERE AND TEST
     }
 
     if (camel) {
       return convertObjectKeyCase(first, 'cC');
     }
-    return Object.assign({}, first);
+    return Object.assign({}, first); // UNESCAPE OBJECTS HERE AND TEST
   }
 
   if (camel) {
     return data.rows.map(function (r) {
       return convertObjectKeyCase(r, 'cC');
-    });
+    }); // UNESCAPE OBJECTS HERE AND TEST
   }
-  return [].concat(_toConsumableArray(data.rows));
+  return [].concat(_toConsumableArray(data.rows)); // UNESCAPE OBJECTS HERE AND TEST
 };
 
 module.exports = {

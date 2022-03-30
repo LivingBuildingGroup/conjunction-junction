@@ -916,7 +916,7 @@ var immutableArraySplice = function immutableArraySplice(index, array) {
   // output: new array with item removed
   // invalid index does nothing
   if (!Array.isArray(array)) return [];
-  if (isNaN(index) || index < 0) return array;
+  if (!isPrimitiveNumber(index) || index < 0) return array;
   if (index > array.length - 1) return array;
   if (index === 0) {
     return array.slice(1, array.length);
