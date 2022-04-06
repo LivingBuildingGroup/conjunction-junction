@@ -427,10 +427,11 @@ var validateRawKnex = function validateRawKnex(data, label, camel) {
   if (camel) {
     if (options.returnFirst) {
       final = convertObjectKeyCase(final, 'cC');
+    } else {
+      final = final.map(function (f) {
+        return convertObjectKeyCase(f, 'cC');
+      });
     }
-    final = final.map(function (f) {
-      return convertObjectKeyCase(f, 'cC');
-    });
   }
 
   final = unEscapeObject(final);

@@ -388,8 +388,9 @@ const validateRawKnex = (data, label, camel, options={}) => {
   if(camel){
     if(options.returnFirst){
       final = convertObjectKeyCase(final,'cC');
+    } else {
+      final = final.map(f=>convertObjectKeyCase(f,'cC'));
     }
-    final = final.map(f=>convertObjectKeyCase(f,'cC'));
   }
 
   final = unEscapeObject(final);
