@@ -288,6 +288,36 @@ describe('conjunction-junction primitives', () => {
       expect(result).to.equal(expectedResult[i]);
     });
   });
+  it('convertScToCc kebab to cC SINGLE', () => { 
+    const divider = '-';
+    const isPascal = true;
+    const result = convertScToCc('snake-case', divider, isPascal);
+    expect(result).to.equal('SnakeCase');
+  });
+  it('convertScToCc kebab to cC', () => { 
+    const strings = [
+      'snakeCase', 'snake-case', // acceptable use cases
+      'snake_case', 'snake case', // other cases
+      'SNAKE', 'SnakeCase', 
+      'snake_case-too', 'snake-case_too',
+      3, 'snakeCase2', 'snake2Case', 'snake_2_case',
+      'snake 2 case'
+    ];
+    const expectedResult = [
+      'SnakeCase', 'SnakeCase',
+      'Snake_case', 'Snake case', 
+      'SNAKE', 'SnakeCase', 
+      'Snake_caseToo', 'SnakeCase_too',
+      '3', 'SnakeCase2', 'Snake2Case', 'Snake_2_case',
+      'Snake 2 case'
+    ];
+    const divider = '-';
+    const isPascal = true;
+    strings.forEach((x,i)=>{
+      const result = convertScToCc(x, divider, isPascal);
+      expect(result).to.equal(expectedResult[i]);
+    });
+  });
   it('convertScToCc empty string on invalid input', () => { 
     nonStringNonNumbers.forEach((x,i)=>{
       const result = convertScToCc(x);

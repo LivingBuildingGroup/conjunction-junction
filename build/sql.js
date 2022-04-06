@@ -406,57 +406,34 @@ var validateRawKnex = function validateRawKnex(data, label, camel) {
   // IMPROVE THIS AS AN ALL-PURPOSE FUNCTION
   // make sure data argument is Raw format (key of rows)
   if (!isObjectLiteral(data)) {
-    if (options.returnInvalid !== undefined) {
-      return options.returnInvalid;
-    }
-    return { message: flag + ' is not an object' };
+    return options.returnInvalid || { message: flag + ' is not an object' };
   }
   if (!data.rows) {
-    if (options.returnInvalid !== undefined) {
-      return options.returnInvalid;
-    }
-    return { message: flag + ' does not include rows' };
+    return options.returnInvalid || { message: flag + ' does not include rows' };
   }
   if (!Array.isArray(data.rows)) {
-    if (options.returnInvalid !== undefined) {
-      return options.returnInvalid;
-    }
-    return { message: flag + ' rows is not an array' };
+    return options.returnInvalid || { message: flag + ' rows is not an array' };
   }
   if (data.rows.length <= 0) {
-    if (options.returnInvalid !== undefined) {
-      return options.returnInvalid;
-    }
-    return { message: flag + ' rows is empty, stopping' };
+    return options.returnInvalid || { message: flag + ' rows is empty, stopping' };
   }
   if (!isObjectLiteral(data.rows[0])) {
-    if (options.returnInvalid !== undefined) {
-      return options.returnInvalid;
-    }
-    return { message: flag + ' row 0 is not an object, stopping' };
+    return options.returnInvalid || { message: flag + ' row 0 is not an object, stopping' };
   }
+
+  var final = options.returnFirst ? data.rows[0] : [].concat(_toConsumableArray(data.rows));
   // passed, now move onto options
-  if (options.returnFirst) {
-    var first = data.rows[0];
-    if (!isObjectLiteral(first)) {
-      if (options.returnInvalid) {
-        return options.returnInvalid;
-      }
-      return Object.assign({}, first); // UNESCAPE OBJECTS HERE AND TEST
-    }
 
-    if (camel) {
-      return convertObjectKeyCase(first, 'cC');
-    }
-    return Object.assign({}, first); // UNESCAPE OBJECTS HERE AND TEST
+  if (camel && !options.returnFirst) {
+    final = convertObjectKeyCase(final, 'cC');
+  } else if (camel) {
+    final = final.map(function (f) {
+      return convertObjectKeyCase(f, 'cC');
+    });
   }
 
-  if (camel) {
-    return data.rows.map(function (r) {
-      return convertObjectKeyCase(r, 'cC');
-    }); // UNESCAPE OBJECTS HERE AND TEST
-  }
-  return [].concat(_toConsumableArray(data.rows)); // UNESCAPE OBJECTS HERE AND TEST
+  final = unEscapeObject(final);
+  return final;
 };
 
 module.exports = {

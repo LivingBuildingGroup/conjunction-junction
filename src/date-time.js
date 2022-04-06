@@ -465,6 +465,7 @@ const _convertTimestampToStringInner = (ts, option) => {
   if(f === 'm d h')       return `${m}/${d} ${hour}${meridien}`;
   if(f === 'm d h m')     return `${m}/${d} ${hour}:${min0}${meridien}`;
   if(f === 'y m d h m')   return `${y}/${m}/${d} ${hour}:${min0}${meridien}`;
+  if(f === 'dow d M y')   return `${dows[dow]} ${d} ${M} ${y}`;
   if(f === 'dow m d')     return `${dows[dow]} ${m}/${d}`;
   if(f === 'dow d h')     return `${dows[dow]} ${d} ${hour}${meridien}`;
   if(f === 'dow d h m')   return `${dows[dow]} ${d} ${hour}:${min}${meridien}`;
