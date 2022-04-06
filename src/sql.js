@@ -385,9 +385,10 @@ const validateRawKnex = (data, label, camel, options={}) => {
   let final = options.returnFirst ? data.rows[0] : [...data.rows];
   // passed, now move onto options
 
-  if(camel && !options.returnFirst){
-    final = convertObjectKeyCase(final,'cC');
-  } else if(camel){
+  if(camel){
+    if(options.returnFirst){
+      final = convertObjectKeyCase(final,'cC');
+    }
     final = final.map(f=>convertObjectKeyCase(f,'cC'));
   }
 

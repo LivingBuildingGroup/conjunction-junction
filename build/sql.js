@@ -424,9 +424,10 @@ var validateRawKnex = function validateRawKnex(data, label, camel) {
   var final = options.returnFirst ? data.rows[0] : [].concat(_toConsumableArray(data.rows));
   // passed, now move onto options
 
-  if (camel && !options.returnFirst) {
-    final = convertObjectKeyCase(final, 'cC');
-  } else if (camel) {
+  if (camel) {
+    if (options.returnFirst) {
+      final = convertObjectKeyCase(final, 'cC');
+    }
     final = final.map(function (f) {
       return convertObjectKeyCase(f, 'cC');
     });
