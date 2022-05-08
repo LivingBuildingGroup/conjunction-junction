@@ -582,6 +582,33 @@ var convertIntegersToTimestamp = function convertIntegersToTimestamp(year) {
   return adjustedTimestamp;
 };
 
+var convertAllTimestampsFromStrings = function convertAllTimestampsFromStrings(object) {
+  if (Array.isArray(object)) {
+    return object.map(function (o) {
+      return convertAllTimestampsFromStrings(o);
+    });
+  }
+  if (!isObjectLiteral(object)) {
+    return object; // do nothing
+  }
+  var newObject = {};
+  for (var fieldName in object) {
+    if (typeof object[fieldName] === 'string' && fieldName.includes('imestamp')) {
+      var theTs = convertStringToTimestamp(object[fieldName]);
+      newObject[fieldName] = isValidDate(theTs) ? theTs : object[fieldName];
+    } else if (isObjectLiteral(object[fieldName])) {
+      newObject[fieldName] = convertAllTimestampsFromStrings(object[fieldName]);
+    } else if (Array.isArray(object[fieldName])) {
+      newObject[fieldName] = object[fieldName].map(function (o) {
+        return convertAllTimestampsFromStrings(o);
+      });
+    } else {
+      newObject[fieldName] = object[fieldName];
+    }
+  }
+  return newObject;
+};
+
 var totalMinsHoursDays = function totalMinsHoursDays(minOrObjInput) {
   // input: option 1) primitive number of minutes, can be a float or integer
   // option 2) object with days, minutes, hours keys, can be float or integer
@@ -786,6 +813,7 @@ module.exports = {
   convertDoyToDate: convertDoyToDate,
   convertTimestampToIntegers: convertTimestampToIntegers,
   convertIntegersToTimestamp: convertIntegersToTimestamp,
+  convertAllTimestampsFromStrings: convertAllTimestampsFromStrings,
   totalMinsHoursDays: totalMinsHoursDays,
   dateDelta: dateDelta,
   addTime: addTime,
