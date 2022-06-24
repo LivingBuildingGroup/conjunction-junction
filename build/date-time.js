@@ -736,6 +736,8 @@ var createTimeframes = function createTimeframes(option) {
 // @@@@@@@@@@@@@@@@ RANGES @@@@@@@@@@@@@@@
 
 var rangeIsIncluded = function rangeIsIncluded(eventStartIn, eventEndIn, rangeStartIn, rangeEndIn) {
+  var units = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'minutes';
+
   var eventStart = eventStartIn instanceof Date ? eventStartIn : typeof eventStartIn === 'string' ? convertStringToTimestamp(eventStartIn) : null;
   var eventEnd = eventEndIn instanceof Date ? eventEndIn : typeof eventEndIn === 'string' ? convertStringToTimestamp(eventEndIn) : null;
   var rangeStart = rangeStartIn instanceof Date ? rangeStartIn : typeof rangeStartIn === 'string' ? convertStringToTimestamp(rangeStartIn) : null;
@@ -744,15 +746,15 @@ var rangeIsIncluded = function rangeIsIncluded(eventStartIn, eventEndIn, rangeSt
     desc: 'error: at least one date is invalid',
     code: 11
   };
-  if (dateDelta(eventStart, eventEnd) < 0 || dateDelta(rangeStart, rangeEnd) < 0) return {
+  if (dateDelta(eventStart, eventEnd, units) < 0 || dateDelta(rangeStart, rangeEnd, units) < 0) return {
     desc: 'error: dates are mis-ordered',
     code: 12
   };
 
-  var deltaStartStart = dateDelta(rangeStart, eventStart);
-  var deltaStartEnd = dateDelta(rangeStart, eventEnd);
-  var deltaEndStart = dateDelta(rangeEnd, eventStart);
-  var deltaEndEnd = dateDelta(rangeEnd, eventEnd);
+  var deltaStartStart = dateDelta(rangeStart, eventStart, units);
+  var deltaStartEnd = dateDelta(rangeStart, eventEnd, units);
+  var deltaEndStart = dateDelta(rangeEnd, eventStart, units);
+  var deltaEndEnd = dateDelta(rangeEnd, eventEnd, units);
 
   var startsBeforeStart = deltaStartStart >= 0 ? true : false;
   var endsBeforeStart = deltaEndStart >= 0 ? true : false;

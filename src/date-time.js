@@ -829,7 +829,7 @@ const createTimeframes = option => {
 
 // @@@@@@@@@@@@@@@@ RANGES @@@@@@@@@@@@@@@
 
-const rangeIsIncluded = (eventStartIn, eventEndIn, rangeStartIn, rangeEndIn) => {
+const rangeIsIncluded = (eventStartIn, eventEndIn, rangeStartIn, rangeEndIn, units='minutes') => {
   const eventStart = 
     eventStartIn instanceof Date ? eventStartIn :
       typeof eventStartIn === 'string' ? convertStringToTimestamp(eventStartIn) :
@@ -856,17 +856,17 @@ const rangeIsIncluded = (eventStartIn, eventEndIn, rangeStartIn, rangeEndIn) => 
     code: 11,
   };
   if(
-    (dateDelta(eventStart, eventEnd)<0) ||
-    (dateDelta(rangeStart, rangeEnd)<0)
+    (dateDelta(eventStart, eventEnd, units)<0) ||
+    (dateDelta(rangeStart, rangeEnd, units)<0)
   ) return {
     desc: 'error: dates are mis-ordered',
     code: 12,
   };
 
-  const deltaStartStart = dateDelta(rangeStart, eventStart);
-  const deltaStartEnd   = dateDelta(rangeStart, eventEnd);
-  const deltaEndStart   = dateDelta(rangeEnd,   eventStart);
-  const deltaEndEnd     = dateDelta(rangeEnd,   eventEnd);
+  const deltaStartStart = dateDelta(rangeStart, eventStart, units);
+  const deltaStartEnd   = dateDelta(rangeStart, eventEnd,   units);
+  const deltaEndStart   = dateDelta(rangeEnd,   eventStart, units);
+  const deltaEndEnd     = dateDelta(rangeEnd,   eventEnd,   units);
 
   const startsBeforeStart = deltaStartStart >=0 ? true : false ;
   const endsBeforeStart   = deltaEndStart   >=0 ? true : false ;

@@ -1,1 +1,0 @@
-This is a collection of pure helper functions.  More info to come.
