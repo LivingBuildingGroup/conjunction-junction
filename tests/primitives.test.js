@@ -14,7 +14,7 @@ const {
   parseFloatInput,
   // mixed types
   formatForPrint,
-  print,
+  createAlphanumericArray,
   numberToLetter,
   // strings
   titleCaseWord, 
@@ -224,7 +224,76 @@ describe('conjunction-junction primitives', () => {
     const result = formatForPrint(res,'word');
     expect(result).to.equal('null');
   });
-  
+
+  it('createAlphanumericArray default [1-9 a-z A-Z]', () => {
+    const arr = createAlphanumericArray();
+    expect(arr).to.deep.equal([
+      1,2,3,4,5,6,7,8,9,
+      'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+      'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+    ]);
+  });
+  it('createAlphanumericArray [0-9 a-z A-Z]', () => {
+    const arr = createAlphanumericArray({include0:true});
+    expect(arr).to.deep.equal([
+      0,1,2,3,4,5,6,7,8,9,
+      'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+      'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+    ]);
+  });
+  it('createAlphanumericArray [0-9 A-Z]', () => {
+    const arr = createAlphanumericArray({include0:true, allCaps: true});
+    expect(arr).to.deep.equal([
+      0,1,2,3,4,5,6,7,8,9,
+      'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+    ]);
+  });
+  it('createAlphanumericArray [0-9 a-z]', () => {
+    const arr = createAlphanumericArray({include0:true, allLower: true});
+    expect(arr).to.deep.equal([
+      0,1,2,3,4,5,6,7,8,9,
+      'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+    ]);
+  });
+  it('createAlphanumericArray [1-9 A-Z]', () => {
+    const arr = createAlphanumericArray({allCaps: true});
+    expect(arr).to.deep.equal([
+      1,2,3,4,5,6,7,8,9,
+      'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+    ]);
+  });
+  it('createAlphanumericArray [1-9 a-z]', () => {
+    const arr = createAlphanumericArray({allLower: true});
+    expect(arr).to.deep.equal([
+      1,2,3,4,5,6,7,8,9,
+      'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+    ]);
+  });
+  it('createAlphanumericArray [0-9 a-z A-Z] correct allCaps && allLower', () => {
+    const arr = createAlphanumericArray({include0:true, allCaps: true, allLower: true});
+    expect(arr).to.deep.equal([
+      0,1,2,3,4,5,6,7,8,9,
+      'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+      'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+    ]);
+  });
+  it('createAlphanumericArray [a-z A-Z 0-9]', () => {
+    const arr = createAlphanumericArray({include0:true, numbersLast: true});
+    expect(arr).to.deep.equal([
+      'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+      'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+      0,1,2,3,4,5,6,7,8,9,
+    ]);
+  });
+  it('createAlphanumericArray [a-z A-Z 1-9]', () => {
+    const arr = createAlphanumericArray({include0: true, numbersLast: true});
+    expect(arr).to.deep.equal([
+      'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+      'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+      0,1,2,3,4,5,6,7,8,9,
+    ]);
+  });
+
   it('numberToLetter',()=>{
     const letter = numberToLetter(3);
     expect(letter).to.equal('C');

@@ -1,5 +1,7 @@
 'use strict';
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 var _require = require('./date-time'),
     convertStringToTimestamp = _require.convertStringToTimestamp,
     convertTimestampToString = _require.convertTimestampToString,
@@ -291,26 +293,73 @@ var formatForPrint = function formatForPrint(data, options) {
   return ':(';
 };
 
-var letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-var letterToNumberHash = {};
-letters.forEach(function (l, i) {
-  letterToNumberHash[l] = i + 1;
+var numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+var lettersCaps = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+var lettersLower = lettersCaps.map(function (l) {
+  return l.toLowerCase();
+});
+var letterCapsNumericHash = {};
+var letterLowerNumericHash = {};
+lettersCaps.forEach(function (l, i) {
+  letterCapsNumericHash[l] = i + 1;
+});
+lettersLower.forEach(function (l, i) {
+  letterLowerNumericHash[l] = i + 1;
 });
 
+var createAlphanumericArray = function createAlphanumericArray(options) {
+  var o = options || {};
+  var allCaps = !!o.allCaps && !o.allLower;
+  var allLower = !!o.allLower && !o.allCaps;
+  var numbersLast = !!o.numbersLast;
+  var include0 = !!o.include0;
+  console.log({
+    allCaps: allCaps, allLower: allLower, numbersLast: numbersLast, include0: include0
+  });
+  var lettersArr = allCaps ? lettersCaps : allLower ? lettersLower : [].concat(_toConsumableArray(lettersLower), lettersCaps);
+  var numbersArr = include0 ? numbers : numbers.slice(1, numbers.length);
+  console.log({ lettersArr: lettersArr, numbersArr: numbersArr });
+  var fullArr = numbersLast ? [].concat(_toConsumableArray(lettersArr), _toConsumableArray(numbersArr)) : [].concat(_toConsumableArray(numbersArr), _toConsumableArray(lettersArr));
+  return fullArr;
+};
+
 var numberToLetter = function numberToLetter(num) {
-  //took out option that did wasn't used in function
-  // 1-indexed, not 0-indexed, so subtract 1
-  // move to conjunction-junction
-  // make A if neg, Z if over
-  // round number
-  // exercise option for caps or lowercase
-  var rawLetter = letters[num - 1];
-  return rawLetter;
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  var lower = !!options.lower; // default [backwards compatible] = caps
+  var returnOnlyValid = !!options.returnOnlyValid;
+  var lettersArr = lower ? lettersLower : lettersCaps;
+  // 1-indexed, so 'A' = 1, not 0
+  var theLetter = lettersArr[num - 1];
+  if (returnOnlyValid) {
+    if (num <= 0) {
+      // negative
+      return lettersArr[0];
+    }
+    if (!theLetter) {
+      // not integer
+      theLetter = lettersArr[precisionRound(num, 0) - 1];
+    }
+    if (!theLetter) {
+      // exceeding 26
+      theLetter = lettersArr[lettersArr.length - 1];
+    }
+  }
+  return theLetter;
 };
 
 var letterToNumber = function letterToNumber(letter) {
-  if (typeof letter !== 'string') return;
-  return letterToNumberHash[letter.toUpperCase()];
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  var returnOnlyValid = !!options.returnOnlyValid;
+  if (typeof letter !== 'string') {
+    return returnOnlyValid ? 0 : null;
+  }
+  var theNumber = letterCapsNumericHash[letter] || letterLowerNumericHash[letter];
+  if (!theNumber && returnOnlyValid) {
+    return 0;
+  }
+  return theNumber;
 };
 
 // @@@@@@@@@@@@@@@ STRINGS @@@@@@@@@@@@@@@@
@@ -476,7 +525,7 @@ module.exports = {
   isValidIpAddress: isValidIpAddress,
   // mixed types
   formatForPrint: formatForPrint,
-  // print,
+  createAlphanumericArray: createAlphanumericArray,
   numberToLetter: numberToLetter,
   letterToNumber: letterToNumber,
   // strings

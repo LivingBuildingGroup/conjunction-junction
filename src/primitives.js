@@ -295,25 +295,71 @@ const formatForPrint = (data, options) => {    //plan to deprecate this, continu
   return ':(';
 };
 
-const letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-const letterToNumberHash = {};
-letters.forEach((l,i)=>{
-  letterToNumberHash[l] = i+1;
+const numbers = [0,1,2,3,4,5,6,7,8,9];
+const lettersCaps = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+const lettersLower = lettersCaps.map(l=>l.toLowerCase());
+const letterCapsNumericHash = {};
+const letterLowerNumericHash = {};
+lettersCaps.forEach((l,i)=>{
+  letterCapsNumericHash[l] = i+1;
+});
+lettersLower.forEach((l,i)=>{
+  letterLowerNumericHash[l] = i+1;
 });
 
-const numberToLetter = num => {     //took out option that did wasn't used in function
-  // 1-indexed, not 0-indexed, so subtract 1
-  // move to conjunction-junction
-  // make A if neg, Z if over
-  // round number
-  // exercise option for caps or lowercase
-  const rawLetter = letters[num-1];
-  return rawLetter;
+const createAlphanumericArray = options => {
+  const o = options || {};
+  const allCaps     = !!o.allCaps && !o.allLower;
+  const allLower    = !!o.allLower && !o.allCaps;
+  const numbersLast = !!o.numbersLast;
+  const include0    = !!o.include0;
+  console.log({
+    allCaps, allLower,numbersLast, include0
+  });
+  const lettersArr  = 
+    allCaps ? lettersCaps :
+      allLower ? lettersLower :
+        [...lettersLower, ...lettersCaps];
+  const numbersArr = include0 ?
+    numbers : 
+    numbers.slice(1,numbers.length) ;
+  console.log({lettersArr, numbersArr})
+  const fullArr = numbersLast ?
+    [...lettersArr, ...numbersArr] :
+    [...numbersArr, ...lettersArr] ;
+  return fullArr;
 };
 
-const letterToNumber = letter => {
-  if(typeof letter !== 'string') return;
-  return letterToNumberHash[letter.toUpperCase()];
+const numberToLetter = (num, options={}) => {
+  const lower = !!options.lower; // default [backwards compatible] = caps
+  const returnOnlyValid = !!options.returnOnlyValid;
+  const lettersArr = lower ? lettersLower : lettersCaps;
+  // 1-indexed, so 'A' = 1, not 0
+  let theLetter = lettersArr[num-1];
+  if(returnOnlyValid){
+    if(num <= 0){ // negative
+      return lettersArr[0];
+    }
+    if(!theLetter){ // not integer
+      theLetter = lettersArr[precisionRound(num, 0)-1];
+    }
+    if(!theLetter){ // exceeding 26
+      theLetter = lettersArr[lettersArr.length-1];
+    }
+  }
+  return theLetter;
+};
+
+const letterToNumber = (letter, options={}) => {
+  const returnOnlyValid = !!options.returnOnlyValid;
+  if(typeof letter !== 'string'){
+    return returnOnlyValid ? 0 : null ;
+  }
+  let theNumber = letterCapsNumericHash[letter] || letterLowerNumericHash[letter];
+  if(!theNumber && returnOnlyValid){
+    return 0;
+  }
+  return theNumber;
 };
 
 // @@@@@@@@@@@@@@@ STRINGS @@@@@@@@@@@@@@@@
@@ -469,7 +515,7 @@ module.exports = {
   isValidIpAddress,
   // mixed types
   formatForPrint,
-  // print,
+  createAlphanumericArray,
   numberToLetter,
   letterToNumber,
   // strings
