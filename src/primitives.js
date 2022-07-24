@@ -313,9 +313,6 @@ const createAlphanumericArray = options => {
   const allLower    = !!o.allLower && !o.allCaps;
   const numbersLast = !!o.numbersLast;
   const include0    = !!o.include0;
-  console.log({
-    allCaps, allLower,numbersLast, include0
-  });
   const lettersArr  = 
     allCaps ? lettersCaps :
       allLower ? lettersLower :
@@ -323,7 +320,6 @@ const createAlphanumericArray = options => {
   const numbersArr = include0 ?
     numbers : 
     numbers.slice(1,numbers.length) ;
-  console.log({lettersArr, numbersArr})
   const fullArr = numbersLast ?
     [...lettersArr, ...numbersArr] :
     [...numbersArr, ...lettersArr] ;

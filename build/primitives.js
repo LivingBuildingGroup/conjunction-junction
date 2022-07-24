@@ -313,12 +313,8 @@ var createAlphanumericArray = function createAlphanumericArray(options) {
   var allLower = !!o.allLower && !o.allCaps;
   var numbersLast = !!o.numbersLast;
   var include0 = !!o.include0;
-  console.log({
-    allCaps: allCaps, allLower: allLower, numbersLast: numbersLast, include0: include0
-  });
   var lettersArr = allCaps ? lettersCaps : allLower ? lettersLower : [].concat(_toConsumableArray(lettersLower), lettersCaps);
   var numbersArr = include0 ? numbers : numbers.slice(1, numbers.length);
-  console.log({ lettersArr: lettersArr, numbersArr: numbersArr });
   var fullArr = numbersLast ? [].concat(_toConsumableArray(lettersArr), _toConsumableArray(numbersArr)) : [].concat(_toConsumableArray(numbersArr), _toConsumableArray(lettersArr));
   return fullArr;
 };
