@@ -1023,6 +1023,25 @@ var diffObjects = function diffObjects(o1, o2) {
   return o3;
 };
 
+var reCopy = function reCopy(obj) {
+  if (isValidDate(obj)) {
+    return new Date(obj.getTime());
+  }
+  if (isObjectLiteral(obj)) {
+    var n = {};
+    for (var k in obj) {
+      n[k] = reCopy(obj[k]);
+    }
+    return n;
+  }
+  if (Array.isArray(obj)) {
+    return obj.map(function (o) {
+      return reCopy(o);
+    });
+  }
+  return obj;
+};
+
 module.exports = {
   // object keys
   convertObjectKeyCase: convertObjectKeyCase,
@@ -1058,5 +1077,6 @@ module.exports = {
   addAllItemsToArray: addAllItemsToArray,
   getPositionToInterpolate: getPositionToInterpolate,
   interpolateArrayValues: interpolateArrayValues,
-  diffObjects: diffObjects
+  diffObjects: diffObjects,
+  reCopy: reCopy
 };

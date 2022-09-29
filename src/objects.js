@@ -1015,6 +1015,23 @@ const diffObjects = (o1, o2) => {
   return o3;
 };
 
+const reCopy = obj => {
+  if(isValidDate(obj)){
+    return new Date(obj.getTime());
+  }
+  if(isObjectLiteral(obj)){
+    const n = {};
+    for(let k in obj){
+      n[k] = reCopy(obj[k]);
+    }
+    return n;
+  }
+  if(Array.isArray(obj)){
+    return obj.map(o=>reCopy(o));
+  }
+  return obj;
+};
+
 module.exports = { 
   // object keys
   convertObjectKeyCase, 
@@ -1050,5 +1067,6 @@ module.exports = {
   addAllItemsToArray,
   getPositionToInterpolate,
   interpolateArrayValues,
-  diffObjects
+  diffObjects,
+  reCopy
 };
