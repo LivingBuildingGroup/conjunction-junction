@@ -358,6 +358,14 @@ const letterToNumber = (letter, options={}) => {
   return theNumber;
 };
 
+const isStringifiedNumber = s => {
+  const n = parseFloat(s);
+  if(`${s}` !== `${n}`){
+    return;
+  }
+  return true;
+};
+
 // @@@@@@@@@@@@@@@ STRINGS @@@@@@@@@@@@@@@@
 
 const titleCaseWord = (word, option) => {
@@ -514,6 +522,7 @@ module.exports = {
   createAlphanumericArray,
   numberToLetter,
   letterToNumber,
+  isStringifiedNumber,
   // strings
   titleCaseWord, 
   lowerCaseWord,

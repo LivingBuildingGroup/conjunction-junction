@@ -358,6 +358,14 @@ var letterToNumber = function letterToNumber(letter) {
   return theNumber;
 };
 
+var isStringifiedNumber = function isStringifiedNumber(s) {
+  var n = parseFloat(s);
+  if ('' + s !== '' + n) {
+    return;
+  }
+  return true;
+};
+
 // @@@@@@@@@@@@@@@ STRINGS @@@@@@@@@@@@@@@@
 
 var titleCaseWord = function titleCaseWord(word, option) {
@@ -524,6 +532,7 @@ module.exports = {
   createAlphanumericArray: createAlphanumericArray,
   numberToLetter: numberToLetter,
   letterToNumber: letterToNumber,
+  isStringifiedNumber: isStringifiedNumber,
   // strings
   titleCaseWord: titleCaseWord,
   lowerCaseWord: lowerCaseWord,
