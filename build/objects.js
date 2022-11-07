@@ -1001,8 +1001,8 @@ var _diffObjectsInner = function _diffObjectsInner(o1, o2) {
   var type2 = _getType(o2);
   var o3 = {};
   if (type1 !== type2) {
-    var o1Print = type1 === 'object' || type1 === 'array' ? ' ' + JSON.stringify(o1, null, 2) : type1 === 'null' || type1 === 'undefined' ? '' : ' ' + o1;
-    var o2Print = type2 === 'object' || type2 === 'array' ? ' ' + JSON.stringify(o2, null, 2) : type2 === 'null' || type2 === 'undefined' ? '' : ' ' + o2;
+    var o1Print = type1 === 'object' || type1 === 'array' ? ' ' + JSON.stringify(o1, null, 2) : type1 === 'null' || type1 === 'undefined' ? type1 : ' ' + o1;
+    var o2Print = type2 === 'object' || type2 === 'array' ? ' ' + JSON.stringify(o2, null, 2) : type2 === 'null' || type2 === 'undefined' ? type2 : ' ' + o2;
     o3 = '!DIFF! ' + type1 + o1Print + ' vs ' + type2 + o2Print + ' !DIFF!';
   } else if (type1 === 'object') {
     for (var k in o1) {
@@ -1013,7 +1013,7 @@ var _diffObjectsInner = function _diffObjectsInner(o1, o2) {
       return _diffObjectsInner(o1sub, o2[i]);
     });
   } else {
-    o3 = o1 === o2 ? '' : '!DIFF! ' + o1 + ' vs ' + o2 + ' !DIFF!';
+    o3 = o1 === o2 ? o1 : '!DIFF! ' + o1 + ' vs ' + o2 + ' !DIFF!';
   }
   return o3;
 };
