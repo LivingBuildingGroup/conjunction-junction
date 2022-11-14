@@ -31,46 +31,87 @@ const correctInputType = (value, key='', options={}) => {
   let isStringArray = false;
   let isFloatArray = false;
   let isIntArray = false;
-  stringArraySignatures.forEach(sig=>{
-    if(typeof key === 'string' && key.includes(sig)) {
-      isStringArray = true;
-    }
-  });
-  floatArraySignatures.forEach(sig=>{
-    if(typeof key === 'string' && key.includes(sig)) {
-      isFloatArray = true;
-    }
-  });
-  intArraySignatures.forEach(sig=>{
-    if(typeof key === 'string' && key.includes(sig)) {
-      isIntArray = true;
-    }
-  });
-  booleanKeysSignatures.forEach(sig=>{
-    if(typeof key === 'string' && key.includes(sig)) {
-      isBoolean = true;
-    }
-  });
-  if(!isBoolean){
+
+  let exactMatchFound = false;
+
+  if(!exactMatchFound){
+    stringArraySignatures.forEach(sig=>{
+      if(key === sig) { isStringArray = true; exactMatchFound = true; }
+  	});
+  }
+  if(!exactMatchFound){
+    floatArraySignatures.forEach(sig=>{
+      if(key === sig) { isFloatArray = true; exactMatchFound = true; }
+  	});
+  }
+  if(!exactMatchFound){
+    intArraySignatures.forEach(sig=>{
+      if(key === sig) { isIntArray = true; exactMatchFound = true; }
+  	});
+  }
+  if(!exactMatchFound){
+    booleanKeysSignatures.forEach(sig=>{
+    	if(key === sig) { isBoolean = true; exactMatchFound = true; }
+  	});
+  }
+  if(!exactMatchFound){
     numberKeysSignatures.forEach(sig=>{
-      if(typeof key === 'string' && key.includes(sig)) {
-        isNumber = true;
-      }
-    });
+    	if(key === sig) { isNumber = true; exactMatchFound = true; }
+ 	  });
   }
-  if(!isNumber && !isBoolean){
+  if(!exactMatchFound){
     integerKeysSignatures.forEach(sig=>{
-      if(typeof key === 'string' && key.includes(sig)) {
-        isInteger = true;
-      }
+    	if(key === sig) { isInteger = true; exactMatchFound = true; }
+  	});
+  }
+  if(!exactMatchFound){
+    lowercaseKeysSignatures.forEach(sig=>{
+    	if(key === sig) { isLowercase = true; exactMatchFound = true; }
     });
   }
-  if(!isNumber && !isBoolean && !isInteger){
-    lowercaseKeysSignatures.forEach(sig=>{
+
+  if(!exactMatchFound){
+    stringArraySignatures.forEach(sig=>{
       if(typeof key === 'string' && key.includes(sig)) {
-        isLowercase = true;
+        isStringArray = true;
       }
     });
+    floatArraySignatures.forEach(sig=>{
+      if(typeof key === 'string' && key.includes(sig)) {
+        isFloatArray = true;
+      }
+    });
+    intArraySignatures.forEach(sig=>{
+      if(typeof key === 'string' && key.includes(sig)) {
+        isIntArray = true;
+      }
+    });
+    booleanKeysSignatures.forEach(sig=>{
+      if(typeof key === 'string' && key.includes(sig)) {
+        isBoolean = true;
+      }
+    });
+    if(!isBoolean){
+      numberKeysSignatures.forEach(sig=>{
+        if(typeof key === 'string' && key.includes(sig)) {
+          isNumber = true;
+        }
+      });
+    }
+    if(!isNumber && !isBoolean){
+      integerKeysSignatures.forEach(sig=>{
+        if(typeof key === 'string' && key.includes(sig)) {
+          isInteger = true;
+        }
+      });
+    }
+    if(!isNumber && !isBoolean && !isInteger){
+      lowercaseKeysSignatures.forEach(sig=>{
+        if(typeof key === 'string' && key.includes(sig)) {
+          isLowercase = true;
+        }
+      });
+    }
   }
 
   let tryValue = 
@@ -83,6 +124,7 @@ const correctInputType = (value, key='', options={}) => {
               isInteger ? parseInt(value, 10) :
                 isLowercase ? `${value}`.toLowerCase() :
                   value ;
+
   if(isNumber && !isPrimitiveNumber(tryValue)){
     tryValue = typeof numberFailure !== 'undefined' ? numberFailure : tryValue;
   }

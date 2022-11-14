@@ -38,46 +38,101 @@ var correctInputType = function correctInputType(value) {
   var isStringArray = false;
   var isFloatArray = false;
   var isIntArray = false;
-  stringArraySignatures.forEach(function (sig) {
-    if (typeof key === 'string' && key.includes(sig)) {
-      isStringArray = true;
-    }
-  });
-  floatArraySignatures.forEach(function (sig) {
-    if (typeof key === 'string' && key.includes(sig)) {
-      isFloatArray = true;
-    }
-  });
-  intArraySignatures.forEach(function (sig) {
-    if (typeof key === 'string' && key.includes(sig)) {
-      isIntArray = true;
-    }
-  });
-  booleanKeysSignatures.forEach(function (sig) {
-    if (typeof key === 'string' && key.includes(sig)) {
-      isBoolean = true;
-    }
-  });
-  if (!isBoolean) {
+
+  var exactMatchFound = false;
+
+  if (!exactMatchFound) {
+    stringArraySignatures.forEach(function (sig) {
+      if (key === sig) {
+        isStringArray = true;exactMatchFound = true;
+      }
+    });
+  }
+  if (!exactMatchFound) {
+    floatArraySignatures.forEach(function (sig) {
+      if (key === sig) {
+        isFloatArray = true;exactMatchFound = true;
+      }
+    });
+  }
+  if (!exactMatchFound) {
+    intArraySignatures.forEach(function (sig) {
+      if (key === sig) {
+        isIntArray = true;exactMatchFound = true;
+      }
+    });
+  }
+  if (!exactMatchFound) {
+    booleanKeysSignatures.forEach(function (sig) {
+      if (key === sig) {
+        isBoolean = true;exactMatchFound = true;
+      }
+    });
+  }
+  if (!exactMatchFound) {
     numberKeysSignatures.forEach(function (sig) {
-      if (typeof key === 'string' && key.includes(sig)) {
-        isNumber = true;
+      if (key === sig) {
+        isNumber = true;exactMatchFound = true;
       }
     });
   }
-  if (!isNumber && !isBoolean) {
+  if (!exactMatchFound) {
     integerKeysSignatures.forEach(function (sig) {
-      if (typeof key === 'string' && key.includes(sig)) {
-        isInteger = true;
+      if (key === sig) {
+        isInteger = true;exactMatchFound = true;
       }
     });
   }
-  if (!isNumber && !isBoolean && !isInteger) {
+  if (!exactMatchFound) {
     lowercaseKeysSignatures.forEach(function (sig) {
-      if (typeof key === 'string' && key.includes(sig)) {
-        isLowercase = true;
+      if (key === sig) {
+        isLowercase = true;exactMatchFound = true;
       }
     });
+  }
+
+  if (!exactMatchFound) {
+    stringArraySignatures.forEach(function (sig) {
+      if (typeof key === 'string' && key.includes(sig)) {
+        isStringArray = true;
+      }
+    });
+    floatArraySignatures.forEach(function (sig) {
+      if (typeof key === 'string' && key.includes(sig)) {
+        isFloatArray = true;
+      }
+    });
+    intArraySignatures.forEach(function (sig) {
+      if (typeof key === 'string' && key.includes(sig)) {
+        isIntArray = true;
+      }
+    });
+    booleanKeysSignatures.forEach(function (sig) {
+      if (typeof key === 'string' && key.includes(sig)) {
+        isBoolean = true;
+      }
+    });
+    if (!isBoolean) {
+      numberKeysSignatures.forEach(function (sig) {
+        if (typeof key === 'string' && key.includes(sig)) {
+          isNumber = true;
+        }
+      });
+    }
+    if (!isNumber && !isBoolean) {
+      integerKeysSignatures.forEach(function (sig) {
+        if (typeof key === 'string' && key.includes(sig)) {
+          isInteger = true;
+        }
+      });
+    }
+    if (!isNumber && !isBoolean && !isInteger) {
+      lowercaseKeysSignatures.forEach(function (sig) {
+        if (typeof key === 'string' && key.includes(sig)) {
+          isLowercase = true;
+        }
+      });
+    }
   }
 
   var tryValue = isStringArray && typeof value === 'string' ? value.split(',').map(function (v) {
@@ -87,6 +142,7 @@ var correctInputType = function correctInputType(value) {
   }) : isFloatArray && typeof value === 'string' ? value.split(',').map(function (v) {
     return parseFloat(v);
   }) : isBoolean && value === 'true' ? true : isBoolean && value === 'false' ? false : isNumber ? parseFloat(value) : isInteger ? parseInt(value, 10) : isLowercase ? ('' + value).toLowerCase() : value;
+
   if (isNumber && !isPrimitiveNumber(tryValue)) {
     tryValue = typeof numberFailure !== 'undefined' ? numberFailure : tryValue;
   }
