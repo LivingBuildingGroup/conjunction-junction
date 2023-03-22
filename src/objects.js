@@ -992,7 +992,7 @@ const _diffObjectsInner = (o1, o2) => {
         type2 === 'null' || type2 === 'undefined' ?
           type2 :
           ` ${o2}`;
-    o3 = `!DIFF! ${type1}${o1Print} vs ${type2}${o2Print} !DIFF!`;
+    o3 = `!DIFF! ${type1} ${o1Print} vs ${type2} ${o2Print} !DIFF!`;
   } else if(type1 === 'object'){
     for(let k in o1){
       o3[k] = _diffObjectsInner(o1[k], o2[k]);
@@ -1007,8 +1007,6 @@ const _diffObjectsInner = (o1, o2) => {
   }
   return o3;
 };
-
-
 
 const diffObjects = (o1, o2) => {
   const o3 = _diffObjectsInner(o1, o2);
