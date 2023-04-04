@@ -370,11 +370,13 @@ var createAlphanumericArray = function createAlphanumericArray(options) {
   var o = options || {};
   var allCaps = !!o.allCaps && !o.allLower;
   var allLower = !!o.allLower && !o.allCaps;
+  var capsFirst = !!o.capsFirst;
   var numbersLast = !!o.numbersLast;
+  var onlyLetters = !!o.onlyLetters;
   var include0 = !!o.include0;
-  var lettersArr = allCaps ? lettersCaps : allLower ? lettersLower : [].concat(_toConsumableArray(lettersLower), lettersCaps);
+  var lettersArr = allCaps ? lettersCaps : allLower ? lettersLower : capsFirst ? [].concat(lettersCaps, _toConsumableArray(lettersLower)) : [].concat(_toConsumableArray(lettersLower), lettersCaps);
   var numbersArr = include0 ? numbers : numbers.slice(1, numbers.length);
-  var fullArr = numbersLast ? [].concat(_toConsumableArray(lettersArr), _toConsumableArray(numbersArr)) : [].concat(_toConsumableArray(numbersArr), _toConsumableArray(lettersArr));
+  var fullArr = onlyLetters ? lettersArr : numbersLast ? [].concat(_toConsumableArray(lettersArr), _toConsumableArray(numbersArr)) : [].concat(_toConsumableArray(numbersArr), _toConsumableArray(lettersArr));
   return fullArr;
 };
 

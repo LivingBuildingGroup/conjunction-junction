@@ -356,18 +356,24 @@ const createAlphanumericArray = options => {
   const o = options || {};
   const allCaps     = !!o.allCaps && !o.allLower;
   const allLower    = !!o.allLower && !o.allCaps;
+  const capsFirst   = !!o.capsFirst;
   const numbersLast = !!o.numbersLast;
+  const onlyLetters = !!o.onlyLetters;
   const include0    = !!o.include0;
   const lettersArr  = 
     allCaps ? lettersCaps :
       allLower ? lettersLower :
+      capsFirst ?
+        [...lettersCaps, ...lettersLower] :
         [...lettersLower, ...lettersCaps];
   const numbersArr = include0 ?
     numbers : 
     numbers.slice(1,numbers.length) ;
-  const fullArr = numbersLast ?
-    [...lettersArr, ...numbersArr] :
-    [...numbersArr, ...lettersArr] ;
+  const fullArr = onlyLetters ?
+    lettersArr: 
+    numbersLast ?
+      [...lettersArr, ...numbersArr] :
+      [...numbersArr, ...lettersArr] ;
   return fullArr;
 };
 
