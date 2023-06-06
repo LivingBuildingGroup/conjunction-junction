@@ -25,11 +25,11 @@ var asFunction = function asFunction(x) {
   return function () {};
 };
 
-var asString = function asString(x) {
+var asString = function asString(x, def) {
   if (typeof x === 'string') {
     return x;
   }
-  return '';
+  return typeof def === 'string' ? def : '';
 };
 
 var asNumber = function asNumber(x, def) {

@@ -23,11 +23,11 @@ const asFunction = x => {
   return ()=>{};
 };
 
-const asString = x => {
+const asString = (x, def) => {
   if(typeof x === 'string'){
     return x;
   }
-  return '';
+  return typeof def === 'string' ? def : '';
 };
 
 const asNumber = (x, def) => {
