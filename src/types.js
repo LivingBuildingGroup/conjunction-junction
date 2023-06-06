@@ -1,7 +1,6 @@
 'use strict';
 
-const { isPrimitiveNumber, 
-  isObjectLiteral } = require('./basic');
+const { isObjectLiteral, isPrimitiveNumber } = require('./basic');
 
 const asArray = x => {
   if(Array.isArray(x)){
@@ -24,8 +23,27 @@ const asFunction = x => {
   return ()=>{};
 };
 
+const asString = x => {
+  if(typeof x === 'string'){
+    return x;
+  }
+  return '';
+};
+
+const asNumber = (x, def) => {
+  if(typeof def === 'undefined'){
+    console.warn('please specify a default value when using asNumber')
+  }
+  if(isPrimitiveNumber(x)){
+    return x;
+  }
+  return def;
+};
+
 module.exports = {
   asArray,
   asObject,
   asFunction,
+  asString,
+  asNumber,
 };

@@ -1,8 +1,8 @@
 'use strict';
 
 var _require = require('./basic'),
-    isPrimitiveNumber = _require.isPrimitiveNumber,
-    isObjectLiteral = _require.isObjectLiteral;
+    isObjectLiteral = _require.isObjectLiteral,
+    isPrimitiveNumber = _require.isPrimitiveNumber;
 
 var asArray = function asArray(x) {
   if (Array.isArray(x)) {
@@ -25,8 +25,27 @@ var asFunction = function asFunction(x) {
   return function () {};
 };
 
+var asString = function asString(x) {
+  if (typeof x === 'string') {
+    return x;
+  }
+  return '';
+};
+
+var asNumber = function asNumber(x, def) {
+  if (typeof def === 'undefined') {
+    console.warn('please specify a default value when using asNumber');
+  }
+  if (isPrimitiveNumber(x)) {
+    return x;
+  }
+  return def;
+};
+
 module.exports = {
   asArray: asArray,
   asObject: asObject,
-  asFunction: asFunction
+  asFunction: asFunction,
+  asString: asString,
+  asNumber: asNumber
 };
