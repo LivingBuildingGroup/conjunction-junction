@@ -22,6 +22,9 @@ var mmToInchesRound = function mmToInchesRound(mm) {
   // input: number, output: either a number or undefined;
   // precision: 4 decimal places, set here
   if (!isPrimitiveNumber(mm)) return;
+  if (mm > 0 && mm < 12.5) {
+    return 0.5;
+  }
   return precisionRound(mm / 25, 0);
 };
 
