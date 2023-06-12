@@ -276,6 +276,16 @@ const isValidIpAddress = str => {
   return false;
 };
 
+const r5 = num => {
+  return Math.round(num/5) * 5;
+};
+const r10 = num => {
+  return Math.round(num/10) * 10;
+};
+const r20 = num => {
+  return Math.round(num/20) * 20;
+};
+
 // @@@@@@@@@@@@@@@ MIXED TYPES @@@@@@@@@@@@@@@@
 
 const formatForPrint = (data, options) => {    //plan to deprecate this, continue function but rename
@@ -569,6 +579,9 @@ module.exports = {
   parseEvent,
   isValidHexAddress,
   isValidIpAddress,
+  r5,
+  r10,
+  r20,
   // mixed types
   formatForPrint,
   createAlphanumericArray,

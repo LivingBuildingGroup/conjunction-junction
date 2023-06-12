@@ -12,6 +12,9 @@ const {
   printNumber,
   asNum,
   parseFloatInput,
+  r5,
+  r10,
+  r20,
   // mixed types
   formatForPrint,
   createAlphanumericArray,
@@ -154,6 +157,47 @@ describe('conjunction-junction primitives', () => {
       const result = parseFloatInput(rawNum);
       expect(result).to.equal(expectedResult);
     }
+  });
+
+  it('r5 1.68>>0',()=>{
+    const result = r5(1.687123);
+    expect(result).to.equal(0);
+  });
+  it('r5 11.68>>10',()=>{
+    const result = r5(11.687123);
+    expect(result).to.equal(10);
+  });
+  it('r5 23.36>>25',()=>{
+    const result = r5(23.36);
+    expect(result).to.equal(25);
+  });
+  it('r10 18.4>>20',()=>{
+    const result = r10(18.4);
+    expect(result).to.equal(20);
+  });
+  it('r10 14.7>>10',()=>{
+    const result = r10(14.7);
+    expect(result).to.equal(10);
+  });
+  it('r20 1.68>>0',()=>{
+    const result = r20(1.687123);
+    expect(result).to.equal(0);
+  });
+  it('r20 14.9>>0',()=>{
+    const result = r20(14.9);
+    expect(result).to.equal(20);
+  });
+  it('r20 24.9>>0',()=>{
+    const result = r20(24.9);
+    expect(result).to.equal(20);
+  });
+  it('r20 15.1>>20',()=>{
+    const result = r20(15.1);
+    expect(result).to.equal(20);
+  });
+  it('r20 181>>180',()=>{
+    const result = r20(181);
+    expect(result).to.equal(180);
   });
 
   it('formatForPrint if data input variable is input',()=>{

@@ -289,6 +289,16 @@ var isValidIpAddress = function isValidIpAddress(str) {
   return false;
 };
 
+var r5 = function r5(num) {
+  return Math.round(num / 5) * 5;
+};
+var r10 = function r10(num) {
+  return Math.round(num / 10) * 10;
+};
+var r20 = function r20(num) {
+  return Math.round(num / 20) * 20;
+};
+
 // @@@@@@@@@@@@@@@ MIXED TYPES @@@@@@@@@@@@@@@@
 
 var formatForPrint = function formatForPrint(data, options) {
@@ -589,6 +599,9 @@ module.exports = {
   parseEvent: parseEvent,
   isValidHexAddress: isValidHexAddress,
   isValidIpAddress: isValidIpAddress,
+  r5: r5,
+  r10: r10,
+  r20: r20,
   // mixed types
   formatForPrint: formatForPrint,
   createAlphanumericArray: createAlphanumericArray,

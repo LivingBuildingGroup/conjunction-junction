@@ -97,5 +97,11 @@ describe('conjunction-junction basic', () => {
   it('precisionRound rounds to -1 (10)', () => { 
     expect(precisionRound(7, -1)).to.equal(10);
   });
+  it('precisionRound rounds to -1 (10)', () => { 
+    expect(precisionRound(5, -1)).to.equal(10);
+  });
+  it('precisionRound rounds to -1 (10)', () => { 
+    expect(precisionRound(4, -1)).to.equal(0);
+  });
 
 });
