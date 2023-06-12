@@ -22,7 +22,9 @@ var asFunction = function asFunction(x) {
   if (typeof x === 'function') {
     return x;
   }
-  return function () {};
+  return function () {
+    console.warn('no function provided');
+  };
 };
 
 var asString = function asString(x, def) {

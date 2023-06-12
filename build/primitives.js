@@ -189,6 +189,7 @@ var numberToModNumber = function numberToModNumber(value, consolidateBy) {
 };
 
 var asNum = function asNum(num, def) {
+  console.warn('asNum is deprecated, please use "asNumber"');
   if (isPrimitiveNumber(num)) {
     return num;
   }

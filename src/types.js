@@ -20,7 +20,7 @@ const asFunction = x => {
   if(typeof x === 'function'){
     return x;
   }
-  return ()=>{};
+  return ()=>{console.warn('no function provided')};
 };
 
 const asString = (x, def) => {

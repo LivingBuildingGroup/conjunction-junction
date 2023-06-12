@@ -173,6 +173,7 @@ const numberToModNumber = (value, consolidateBy) => {
 };
 
 const asNum = (num,def) => {
+  console.warn('asNum is deprecated, please use "asNumber"');
   if(isPrimitiveNumber(num)){
     return num;
   }
