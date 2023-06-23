@@ -43,6 +43,7 @@ var inchesToMmRound = function inchesToMmRound(inches) {
   // input: number, output: either a number or undefined;
   if (!isPrimitiveNumber(inches)) return;
   if (round === 'half') {
+    // this is used in profile-properties
     var halves = precisionRound(inches / 0.5, 0);
     return Math.floor(halves * 0.5 * 25);
   }

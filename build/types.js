@@ -34,6 +34,13 @@ var asString = function asString(x, def) {
   return typeof def === 'string' ? def : '';
 };
 
+var asBoolean = function asBoolean(x, def) {
+  if (typeof x === 'boolean') {
+    return x;
+  }
+  return !!def;
+};
+
 var asNumber = function asNumber(x, def) {
   if (typeof def === 'undefined') {
     console.warn('please specify a default value when using asNumber');
@@ -49,5 +56,6 @@ module.exports = {
   asObject: asObject,
   asFunction: asFunction,
   asString: asString,
+  asBoolean: asBoolean,
   asNumber: asNumber
 };

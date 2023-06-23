@@ -36,7 +36,7 @@ const inchesToMm = (inches, round=4) => {
 const inchesToMmRound = (inches, round=0) => {
   // input: number, output: either a number or undefined;
   if(!isPrimitiveNumber(inches)) return ;
-  if(round === 'half'){
+  if(round === 'half'){ // this is used in profile-properties
     const halves = precisionRound(inches/0.5, 0);
     return Math.floor(halves * 0.5 * 25);
   }
