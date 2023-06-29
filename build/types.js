@@ -11,8 +11,13 @@ var asArray = function asArray(x) {
   return [];
 };
 
-var asObject = function asObject(x) {
+var asObject = function asObject(x, copy) {
   if (isObjectLiteral(x)) {
+    if (copy === 'deep') {
+      return JSON.parse(JSON.stringify(x));
+    } else if (copy === 'shallow') {
+      return Object.assign({}, x);
+    }
     return x;
   }
   return {};

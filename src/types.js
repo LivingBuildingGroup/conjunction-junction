@@ -9,8 +9,13 @@ const asArray = x => {
   return [];
 };
 
-const asObject = x => {
+const asObject = (x, copy) => {
   if(isObjectLiteral(x)){
+    if(copy === 'deep'){
+      return JSON.parse(JSON.stringify(x));
+    } else if(copy === 'shallow'){
+      return Object.assign({}, x);
+    }
     return x;
   }
   return {};
